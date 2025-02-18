@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../tsconfig.json",
+  "include": ["**/*.tsx", "**/*.ts", "**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    /* Type Checking */
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "strict": true,
+
+    /* Modules */
+    "baseUrl": "./",
+    "module": "NodeNext",
+    "resolveJsonModule": false,
+    "types": ["vite/client"],
+
+    /* Language and Environment */
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM"],
+    "target": "ESNext"
+  }
+}
