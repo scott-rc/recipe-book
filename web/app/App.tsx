@@ -1,7 +1,7 @@
 import { Provider as GadgetProvider } from "@gadgetinc/react";
 import { Skeleton, Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
-import { Suspense, type ReactElement } from "react";
+import { Suspense, useState, type ReactElement } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { api } from "../api";
 import { ForgotPassword } from "./auth/ForgotPassword";
@@ -11,6 +11,7 @@ import { SignIn } from "./auth/SignIn";
 import { SignUp } from "./auth/SignUp";
 import { VerifyEmail } from "./auth/VerifyEmail";
 import { Root } from "./Root";
+import { ThemeSwitcherContext } from "./hooks/theme";
 
 const router = createBrowserRouter([
   Root.route,
@@ -23,13 +24,17 @@ const router = createBrowserRouter([
 ]);
 
 export function App(): ReactElement {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
   return (
-    <Theme appearance="dark" scaling="110%" accentColor="pink" radius="large">
-      <Suspense fallback={<Skeleton />}>
-        <GadgetProvider api={api} navigate={(path) => void router.navigate(path)} auth={window.gadgetConfig.authentication}>
-          <RouterProvider router={router} />
-        </GadgetProvider>
-      </Suspense>
-    </Theme>
+    <ThemeSwitcherContext.Provider value={{ theme, setTheme }}>
+      <Theme className={theme} scaling="110%" accentColor="pink" radius="large">
+        <Suspense fallback={<Skeleton />}>
+          <GadgetProvider api={api} navigate={(path) => void router.navigate(path)} auth={window.gadgetConfig.authentication}>
+            <RouterProvider router={router} />
+          </GadgetProvider>
+        </Suspense>
+      </Theme>
+    </ThemeSwitcherContext.Provider>
   );
 }
