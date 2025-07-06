@@ -1,12 +1,12 @@
 import { SignedInOrRedirect, useUser } from "@gadgetinc/react";
-import { Avatar, Box, Container, Flex, Heading, IconButton } from "@radix-ui/themes";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { Avatar, Box, Container, Flex, Heading, IconButton } from "@radix-ui/themes";
 import { type ReactElement } from "react";
 import { Outlet, type RouteObject } from "react-router-dom";
 import { api } from "../api";
 import { Link } from "./components/Link";
-import { Recipes } from "./recipe/Recipes";
 import { useThemeSwitcher } from "./hooks/theme";
+import { Recipes } from "./recipe/Recipes";
 
 Root.route = {
   path: "/",

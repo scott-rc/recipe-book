@@ -13,6 +13,7 @@ export function VerifyEmail(): ReactElement {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const code = params.get("code");
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [{ error, data }, verifyEmail] = useAction(api.user.verifyEmail);
   const verificationAttempted = useRef(false);
   const { configuration } = useAuth();

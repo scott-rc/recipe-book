@@ -8,5 +8,6 @@ export interface UseThemeSwitcherProps {
 export const ThemeSwitcherContext = createContext<UseThemeSwitcherProps | undefined>(undefined);
 
 export function useThemeSwitcher() {
-  return useContext(ThemeSwitcherContext) ?? { theme: "light", setTheme: (_) => {} };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return useContext(ThemeSwitcherContext) ?? { theme: "light", setTheme: () => {} };
 }

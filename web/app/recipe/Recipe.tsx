@@ -1,7 +1,7 @@
 import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
 import { useActionForm, useFindBy } from "@gadgetinc/react";
 import { CheckIcon, Cross2Icon, Pencil2Icon } from "@radix-ui/react-icons";
-import { Box, DataList, Flex, Heading, IconButton, Text, TextArea, TextField, Switch } from "@radix-ui/themes";
+import { Box, DataList, Flex, Heading, IconButton, Switch, Text, TextArea, TextField } from "@radix-ui/themes";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { useNavigate, useParams, type RouteObject } from "react-router-dom";
@@ -198,9 +198,9 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
     }
 
     try {
-      const parsed = ms(prepTime);
+      const parsed = ms(prepTime as ms.StringValue);
       form.setValue("prepTime", parsed);
-    } catch (error) {
+    } catch {
       console.log("invalid prep time", prepTime);
       form.setError("prepTime", { message: "Invalid prep time" });
     }
@@ -236,9 +236,9 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
     }
 
     try {
-      const parsed = ms(cookTime);
+      const parsed = ms(cookTime as ms.StringValue);
       form.setValue("cookTime", parsed);
-    } catch (error) {
+    } catch {
       console.log("invalid prep time", cookTime);
     }
   }, [form, cookTime]);
@@ -414,7 +414,6 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
 
 type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe extends PartialExcept<Recipe, "id" | TProperty>>({
   recipe,
   property,

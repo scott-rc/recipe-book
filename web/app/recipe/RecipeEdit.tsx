@@ -32,9 +32,9 @@ export function RecipeEdit(): ReactElement {
     }
 
     try {
-      const parsed = ms(prepTime);
+      const parsed = ms(prepTime as ms.StringValue);
       setValue("prepTime", parsed);
-    } catch (error) {
+    } catch {
       console.log("invalid prep time", prepTime);
     }
   }, [prepTime]);

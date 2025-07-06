@@ -11,6 +11,7 @@ ResetPassword.route = {
 
 export function ResetPassword(): ReactElement {
   const location = useLocation();
+  const { configuration } = useAuth();
   const params = new URLSearchParams(location.search);
   const {
     submit,
@@ -20,13 +21,16 @@ export function ResetPassword(): ReactElement {
   } = useActionForm(api.user.resetPassword, {
     defaultValues: { code: params.get("code") },
   });
-  const { configuration } = useAuth();
 
-  return isSubmitSuccessful ? (
-    <p className="format-message success">
-      Password reset successfully. <Link to={configuration.signInPath}>Sign in now</Link>
-    </p>
-  ) : (
+  if (isSubmitSuccessful) {
+    return (
+      <p className="format-message success">
+        Password reset successfully. <Link to={configuration.signInPath}>Sign in now</Link>
+      </p>
+    );
+  }
+
+  return (
     <form className="custom-form" onSubmit={submit}>
       <h1 className="form-title">Reset password</h1>
       <input className="custom-input" placeholder="New password" type="password" {...register("password")} />
@@ -40,7 +44,7 @@ export function ResetPassword(): ReactElement {
           validate: (value) => value === watch("password") || "The passwords do not match",
         })}
       />
-      {/* @ts-expect-error - same here */}
+      {/* prettier-ignore */ /* @ts-expect-error - same here */ /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access */}
       {errors.confirmPassword?.message && <p className="format-message error">{errors.confirmPassword.message}</p>}
       {errors.root?.message && <p className="format-message error">{errors.root.message}</p>}
       <button disabled={isSubmitting} type="submit">

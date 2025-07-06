@@ -10,8 +10,8 @@ import { SignedIn } from "./auth/SignedIn";
 import { SignIn } from "./auth/SignIn";
 import { SignUp } from "./auth/SignUp";
 import { VerifyEmail } from "./auth/VerifyEmail";
-import { Root } from "./Root";
 import { ThemeSwitcherContext } from "./hooks/theme";
+import { Root } from "./Root";
 
 const router = createBrowserRouter([
   Root.route,

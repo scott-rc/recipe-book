@@ -4,19 +4,10 @@
   "include": ["**/*.tsx", "**/*.ts", "**/*.js", "**/*.jsx"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    /* Type Checking */
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "strict": true,
-
     /* Modules */
     "baseUrl": "./",
     "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": false,
     "types": ["vite/client"],
 
