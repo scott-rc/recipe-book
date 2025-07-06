@@ -11,7 +11,7 @@
     "lint:eslint": "eslint . --max-warnings=0 --cache --cache-location=node_modules/.cache/eslint/.eslintcache",
     "lint:fix": "eslint . --fix --cache && prettier . --write --cache",
     "lint:prettier": "prettier . --check --cache",
-    "lint:typescript": "tsc --project tsconfig.json && tsc --project web/tsconfig.json"
+    "lint:typescript": "tsc --project tsconfig.json && tsc --project tsconfig.api.json && tsc --project tsconfig.web.json"
   },
   "dependencies": {
     "@gadget-client/recipe-book": "link:.gadget/client",
