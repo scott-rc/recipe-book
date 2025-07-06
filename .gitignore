@@ -2,3 +2,4 @@
 .gadget/
 .vscode/
 node_modules/
+*.tsbuildinfo
