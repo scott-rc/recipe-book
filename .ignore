@@ -1,4 +1,2 @@
-.vscode
-.eslintrc.json
-.prettierrc.json
-.prettierignore
+.vscode/
+*.local.*

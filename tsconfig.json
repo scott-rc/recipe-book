@@ -1,44 +1,30 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "include": [".", "api"],
   "exclude": ["node_modules", "web"],
   "compilerOptions": {
-    /* Type Checking */
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "strict": true,
-
-    /* Modules */
-    "baseUrl": "./",
-    "module": "ES2022",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "types": ["node"],
-
-    /* Emit */
-    "noEmit": true,
-
-    /* JavaScript Support */
     "allowJs": true,
+    "baseUrl": "./",
     "checkJs": true,
-
-    /* Interop Constraints */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-
-    /* Language and Environment */
     "lib": ["es2021"],
-    "target": "es2021",
-    "useDefineForClassFields": true,
-
-    /* Completeness */
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2021",
+    "types": ["node"],
+    "useDefineForClassFields": true
   }
 }
