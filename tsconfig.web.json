@@ -2,15 +2,36 @@
   "extends": "./tsconfig.json",
   "include": ["web/**/*", ".react-router/types/**/*", "web/**/.server/**/*", "web/**/.client/**/*"],
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
     "composite": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["vite/client"],
-    "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "paths": { "@/*": ["./web/*"] },
+    "resolveJsonModule": true,
     "rootDirs": [".", "./.react-router/types"],
-    "paths": {
-      "@/*": ["./web/*"]
-    }
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2022",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.web.tsbuildinfo",
+    "types": ["vite/client"],
+    "useDefineForClassFields": true
   }
 }
