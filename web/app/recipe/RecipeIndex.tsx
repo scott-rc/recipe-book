@@ -1,15 +1,15 @@
 import { useFindMany } from "@gadgetinc/react";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Box, Card, Grid, Heading, Skeleton, Text, TextField } from "@radix-ui/themes";
 import { Suspense, useState, type ReactElement } from "react";
 import { Form, useSearchParams, type RouteObject } from "react-router-dom";
 import { api } from "../../api";
+import { Card } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
 import { Link } from "../components/Link";
 
 RecipeIndex.route = {
   index: true,
   element: (
-    <Suspense fallback={<Skeleton />}>
+    <Suspense fallback={<div>Loading...</div>}>
       <RecipeIndex />
     </Suspense>
   ),
@@ -20,18 +20,14 @@ export function RecipeIndex(): ReactElement {
   const [search, setSearch] = useState(searchParams.get("s") ?? "");
 
   return (
-    <Box pt="4">
+    <div className="pt-4">
       <Form>
-        <TextField.Root placeholder="Search recipes" size="3" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)}>
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="24" width="24" />
-          </TextField.Slot>
-        </TextField.Root>
+        <Input placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
       </Form>
-      <Suspense fallback={<Skeleton />}>
+      <Suspense fallback={<div>Loading...</div>}>
         <RecipeCards />
       </Suspense>
-    </Box>
+    </div>
   );
 }
 
@@ -50,24 +46,26 @@ function RecipeCards(): ReactElement {
   });
 
   if (error) {
-    return <Text color="red">{error.message}</Text>;
+    return <p className="text-red-500">{error.message}</p>;
   }
 
   if (!recipes?.length) {
     return (
-      <Box mt="8">
-        <Heading align="center">No recipes found</Heading>
-      </Box>
+      <div className="mt-8">
+        <h1 className="text-center">No recipes found</h1>
+      </div>
     );
   }
 
   return (
-    <Grid columns={{ initial: "3", md: "6" }} gap="4">
+    <div className="mt-4 grid grid-cols-3 gap-4 md:grid-cols-6">
       {recipes.map((recipe) => (
         <Card key={recipe.id}>
-          <Link to={"/r/" + recipe.slug}>{recipe.name}</Link>
+          <Link to={`/r/${recipe.slug}`} className="text-pretty">
+            {recipe.name}
+          </Link>
         </Card>
       ))}
-    </Grid>
+    </div>
   );
 }
