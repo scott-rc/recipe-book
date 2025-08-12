@@ -33,7 +33,7 @@ export default tseslint.config(
       },
     },
     rules: {
-      "@typescript-eslint/no-confusing-void-expression": ["warn", { ignoreVoidReturningFunctions: true }],
+      "@typescript-eslint/no-confusing-void-expression": ["warn", { ignoreVoidReturningFunctions: true, ignoreArrowShorthand: true }],
       "@typescript-eslint/no-misused-promises": ["warn", { checksVoidReturn: false }],
       "@typescript-eslint/prefer-nullish-coalescing": ["warn", { ignorePrimitives: { string: true } }],
       "@typescript-eslint/restrict-template-expressions": ["warn", { allowNumber: true }],

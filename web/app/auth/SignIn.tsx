@@ -1,9 +1,12 @@
 import { SignedOutOrRedirect, useActionForm } from "@gadgetinc/react";
-import { Button, Card, Flex, Heading, Separator, Text, TextField } from "@radix-ui/themes";
 import type { ReactElement } from "react";
 import { useLocation, type RouteObject } from "react-router-dom";
 import { api } from "../../api";
 import GoogleIcon from "../../assets/google.svg";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
+import { Input } from "../../components/ui/input";
+import { Separator } from "../../components/ui/separator";
 import { Link } from "../components/Link";
 
 SignIn.route = {
@@ -20,34 +23,30 @@ export function SignIn(): ReactElement {
   const { search } = useLocation();
 
   return (
-    <Flex align="center" justify="center" height="100%">
-      <Card>
-        <Flex gap="4" direction="column">
-          <Heading>Sign in</Heading>
-          <Button asChild>
-            <a href={`/auth/google/start${search}`}>
-              <img src={GoogleIcon} width={18} height={18} /> Continue with Google
-            </a>
+    <div className="flex h-full items-center justify-center">
+      <Card className="flex flex-col gap-4 p-4">
+        <h1 className="text-2xl font-bold">Sign in</h1>
+        <Button asChild>
+          <a href={`/auth/google/start${search}`}>
+            <img src={GoogleIcon} width={18} height={18} /> Continue with Google
+          </a>
+        </Button>
+
+        <Separator />
+
+        <form className="flex flex-col gap-4" onSubmit={() => void submit()}>
+          <Input placeholder="Email" autoComplete="email" {...register("email")} />
+          <Input placeholder="Password" type="password" autoComplete="current-password" {...register("password")} />
+          {formState.errors.root?.message && <p>{formState.errors.root.message}</p>}
+          <Button disabled={formState.isSubmitting} type="submit">
+            Sign in
           </Button>
+        </form>
 
-          <Separator size="4" />
-
-          <Flex asChild gap="3" direction="column">
-            <form onSubmit={() => void submit()}>
-              <TextField.Root placeholder="Email" autoComplete="email" {...register("email")} />
-              <TextField.Root placeholder="Password" type="password" autoComplete="current-password" {...register("password")} />
-              {formState.errors.root?.message && <p>{formState.errors.root.message}</p>}
-              <Button loading={formState.isSubmitting} type="submit">
-                Sign in
-              </Button>
-            </form>
-          </Flex>
-
-          <Text>
-            Forgot your password? <Link to="/forgot-password">Reset password</Link>
-          </Text>
-        </Flex>
+        <p>
+          Forgot your password? <Link to="/forgot-password">Reset password</Link>
+        </p>
       </Card>
-    </Flex>
+    </div>
   );
 }
