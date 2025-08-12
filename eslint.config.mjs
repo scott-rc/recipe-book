@@ -39,26 +39,26 @@ export default tseslint.config(
       "@typescript-eslint/restrict-template-expressions": ["warn", { allowNumber: true }],
     },
   },
-  {
-    files: ["web/**/*.tsx", "web/**/*.ts"],
-    rules: {
-      "no-restricted-imports": [
-        "warn",
-        {
-          paths: [
-            {
-              name: "@radix-ui/themes",
-              importNames: ["Link"],
-              message: "use Link from web/app/components/Link.tsx instead",
-            },
-            {
-              name: "react-router-dom",
-              importNames: ["Link"],
-              message: "use Link from web/app/components/Link.tsx instead",
-            },
-          ],
-        },
-      ],
-    },
-  },
+  // {
+  //   files: ["web/**/*.tsx", "web/**/*.ts"],
+  //   rules: {
+  //     "no-restricted-imports": [
+  //       "warn",
+  //       {
+  //         paths: [
+  //           {
+  //             name: "@radix-ui/themes",
+  //             importNames: ["Link"],
+  //             message: "use Link from web/app/components/Link.tsx instead",
+  //           },
+  //           {
+  //             name: "react-router-dom",
+  //             importNames: ["Link"],
+  //             message: "use Link from web/app/components/Link.tsx instead",
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  // },
 );

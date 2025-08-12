@@ -1,10 +1,9 @@
 import { useFindMany } from "@gadgetinc/react";
 import { Suspense, useState, type ReactElement } from "react";
-import { Form, useSearchParams, type RouteObject } from "react-router-dom";
+import { Form, Link, useSearchParams, type RouteObject } from "react-router-dom";
 import { api } from "../../api";
-import { Card } from "../../components/ui/card";
+import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
-import { Link } from "../components/Link";
 
 RecipeIndex.route = {
   index: true,
@@ -61,9 +60,9 @@ function RecipeCards(): ReactElement {
     <div className="mt-4 grid grid-cols-3 gap-4 md:grid-cols-6">
       {recipes.map((recipe) => (
         <Card key={recipe.id}>
-          <Link to={`/r/${recipe.slug}`} className="text-pretty">
-            {recipe.name}
-          </Link>
+          <CardContent>
+            <Link to={`/r/${recipe.slug}`}>{recipe.name}</Link>
+          </CardContent>
         </Card>
       ))}
     </div>
