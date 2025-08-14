@@ -1,11 +1,15 @@
 import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
 import { useActionForm, useFindBy } from "@gadgetinc/react";
-import { CheckIcon, Cross2Icon, Pencil2Icon } from "@radix-ui/react-icons";
-import { Box, DataList, Flex, Heading, IconButton, Switch, Text, TextArea, TextField } from "@radix-ui/themes";
+import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { useNavigate, useParams, type RouteObject } from "react-router-dom";
 import { api } from "../../api";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { Switch } from "../../components/ui/switch";
+import { Textarea } from "../../components/ui/textarea";
 import { Link } from "../components/Link";
 
 const Markdown = lazy(() => import("react-markdown"));
@@ -20,57 +24,49 @@ export function Recipe(): ReactElement {
   const [{ error, data: recipe }] = useFindBy(api.recipe.findBySlug, slug, { suspense: true });
 
   if (error) {
-    return <Text color="red">{error.message}</Text>;
+    return <p className="text-red-500">{error.message}</p>;
   }
 
   if (!recipe) {
-    return <Text>Not found</Text>;
+    return <p>Not found</p>;
   }
 
   return (
-    <Flex mt="4" gapY="4" direction="column">
-      <Flex justify="between" align="center">
+    <div className="mt-4 flex flex-col gap-y-4">
+      <div className="flex items-center justify-between">
         <RecipeHeading recipe={recipe} />
         <RecipeWakeLock />
-      </Flex>
-      <DataList.Root>
-        <DataList.Item>
-          <DataList.Label>Source</DataList.Label>
-          <DataList.Value>
-            <RecipeSource recipe={recipe} />
-          </DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label>Serving Size</DataList.Label>
-          <DataList.Value>
-            <RecipeServingSize recipe={recipe} />
-          </DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label>Prep Time</DataList.Label>
-          <DataList.Value>
-            <RecipePrepTime recipe={recipe} />
-          </DataList.Value>
-        </DataList.Item>
-        <DataList.Item>
-          <DataList.Label>Cook Time</DataList.Label>
-          <DataList.Value>
-            <RecipeCookTime recipe={recipe} />
-          </DataList.Value>
-        </DataList.Item>
-      </DataList.Root>
-      <Flex>
-        <Box width="33.333333%">
+      </div>
+      <div>
+        <div className="flex items-center gap-2">
+          <Label>Source</Label>
+          <RecipeSource recipe={recipe} />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label>Serving Size</Label>
+          <RecipeServingSize recipe={recipe} />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label>Prep Time</Label>
+          <RecipePrepTime recipe={recipe} />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label>Cook Time</Label>
+          <RecipeCookTime recipe={recipe} />
+        </div>
+      </div>
+      <div className="flex">
+        <div className="w-1/3">
           <RecipeIngredients recipe={recipe} />
-        </Box>
-        <Box width="66.666667%">
+        </div>
+        <div className="w-2/3">
           <RecipeDirections recipe={recipe} />
-        </Box>
-      </Flex>
-      <Box>
+        </div>
+      </div>
+      <div>
         <RecipeNutrition recipe={recipe} />
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 }
 
@@ -94,10 +90,10 @@ function RecipeWakeLock(): ReactElement {
 
   return (
     <form>
-      <Flex align="center" gapX="2">
-        <label htmlFor="cook-mode">Cook Mode</label>
+      <div className="flex items-center gap-2">
+        <Label htmlFor="cook-mode">Cook Mode</Label>
         <Switch id="cook-mode" checked={wakeLock} onCheckedChange={setWakeLock} />
-      </Flex>
+      </div>
     </form>
   );
 }
@@ -115,21 +111,21 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
   if (isEditing) {
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <TextField.Root {...form.register("name")} size="3" style={{ minWidth: "400px" }} />
+        <div className="flex items-center gap-2">
+          <Input {...form.register("name")} className="min-w-[400px]" />
           <SaveButton />
           <CancelButton />
-        </Flex>
+        </div>
       </Editable>
     );
   }
 
   return (
     <Editable>
-      <Flex gap="2" align="center">
-        <Heading>{recipe.name}</Heading>
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-bold">{recipe.name}</h1>
         <EditButton />
-      </Flex>
+      </div>
     </Editable>
   );
 }
@@ -142,21 +138,21 @@ function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): Re
 
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <TextField.Root {...form.register("source")} style={{ minWidth: length * 8 }} />
+        <div className="flex items-center gap-2">
+          <Input {...form.register("source")} style={{ minWidth: length * 8 }} />
           <SaveButton />
           <CancelButton />
-        </Flex>
+        </div>
       </Editable>
     );
   }
 
   if (recipe.source) {
     return (
-      <Flex gap="2" align="center">
+      <div className="flex items-center gap-2">
         <Link to={recipe.source}>{recipe.source}</Link>
         <EditButton />
-      </Flex>
+      </div>
     );
   }
 
@@ -169,22 +165,22 @@ function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSiz
   if (isEditing) {
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <Box width="32px">
-            <TextField.Root {...form.register("servingSize", { valueAsNumber: true })} type="number" required maxLength={2} />
-          </Box>
+        <div className="flex items-center gap-2">
+          <div className="w-16">
+            <Input {...form.register("servingSize", { valueAsNumber: true })} type="number" required maxLength={2} />
+          </div>
           <SaveButton />
           <CancelButton />
-        </Flex>
+        </div>
       </Editable>
     );
   }
 
   return (
-    <Flex gap="2" align="center">
-      <Text>{recipe.servingSize}</Text>
+    <div className="flex items-center gap-2">
+      <p>{recipe.servingSize}</p>
       <EditButton />
-    </Flex>
+    </div>
   );
 }
 
@@ -209,20 +205,20 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
   if (isEditing) {
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <TextField.Root name="prepTime" value={prepTime} onChange={(event) => setPrepTime(event.currentTarget.value)} required />
+        <div className="flex items-center gap-2">
+          <Input name="prepTime" value={prepTime} onChange={(event) => setPrepTime(event.currentTarget.value)} required />
           <SaveButton />
           <CancelButton />
-        </Flex>
+        </div>
       </Editable>
     );
   }
 
   return (
-    <Flex gap="2" align="center">
-      <Text>{ms(recipe.prepTime, { long: true })}</Text>
+    <div className="flex items-center gap-2">
+      <p>{ms(recipe.prepTime, { long: true })}</p>
       <EditButton />
-    </Flex>
+    </div>
   );
 }
 
@@ -246,20 +242,20 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
   if (isEditing) {
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <TextField.Root value={cookTime} onChange={(event) => setCookTime(event.currentTarget.value)} required />
+        <div className="flex items-center gap-2">
+          <Input value={cookTime} onChange={(event) => setCookTime(event.currentTarget.value)} required />
           <SaveButton />
           <CancelButton />
-        </Flex>
+        </div>
       </Editable>
     );
   }
 
   return (
-    <Flex gap="2" align="center">
-      <Text>{ms(recipe.cookTime, { long: true })}</Text>
+    <div className="flex items-center gap-2">
+      <p>{ms(recipe.cookTime, { long: true })}</p>
       <EditButton />
-    </Flex>
+    </div>
   );
 }
 
@@ -272,42 +268,42 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
 
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <Heading size="5">Ingredients</Heading>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Ingredients</h2>
           <SaveButton />
           <CancelButton />
-        </Flex>
-        <TextArea {...form.register("ingredients")} rows={rows} mt="3" />
+        </div>
+        <Textarea {...form.register("ingredients")} rows={rows} className="mt-3" />
       </Editable>
     );
   }
 
   if (typeof ingredients === "string") {
     return (
-      <Box>
-        <Flex gap="2" align="center">
-          <Heading size="5">Ingredients</Heading>
+      <div>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Ingredients</h2>
           <EditButton />
-        </Flex>
+        </div>
         <Markdown>{ingredients}</Markdown>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
-      <Flex gap="2" align="center">
-        <Heading size="5">Ingredients</Heading>
+    <div>
+      <div className="flex items-center gap-2">
+        <h2 className="font-bold">Ingredients</h2>
         <EditButton />
-      </Flex>
+      </div>
       <ul>
         {ingredients.map((ingredient) => (
           <li key={ingredient}>
-            <Text>{ingredient}</Text>
+            <p>{ingredient}</p>
           </li>
         ))}
       </ul>
-    </Box>
+    </div>
   );
 }
 
@@ -320,42 +316,42 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
 
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <Heading size="5">Directions</Heading>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Directions</h2>
           <SaveButton />
           <CancelButton />
-        </Flex>
-        <TextArea {...form.register("directions")} rows={rows} resize="vertical" mt="3" />
+        </div>
+        <Textarea {...form.register("directions")} rows={rows} className="mt-3 resize-y" />
       </Editable>
     );
   }
 
   if (typeof directions === "string") {
     return (
-      <Box>
-        <Flex gap="2" align="center">
-          <Heading size="5">Directions</Heading>
+      <div>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Directions</h2>
           <EditButton />
-        </Flex>
+        </div>
         <Markdown>{directions}</Markdown>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
-      <Flex gap="2" align="center">
-        <Heading size="5">Directions</Heading>
+    <div>
+      <div className="flex items-center gap-2">
+        <h2 className="font-bold">Directions</h2>
         <EditButton />
-      </Flex>
+      </div>
       <ul>
         {directions.map((ingredient) => (
           <li key={ingredient}>
-            <Text>{ingredient}</Text>
+            <p>{ingredient}</p>
           </li>
         ))}
       </ul>
-    </Box>
+    </div>
   );
 }
 
@@ -372,43 +368,43 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
   if (isEditing) {
     return (
       <Editable>
-        <Flex gap="2" align="center">
-          <Heading size="5">Nutrition</Heading>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Nutrition</h2>
           <SaveButton />
           <CancelButton />
-        </Flex>
-        <TextArea {...form.register("nutrition")} rows={rows} mt="3" />
+        </div>
+        <Textarea {...form.register("nutrition")} rows={rows} className="mt-3" />
       </Editable>
     );
   }
 
   if (typeof nutrition === "string") {
     return (
-      <Box>
-        <Flex gap="2" align="center">
-          <Heading size="5">Nutrition</Heading>
+      <div>
+        <div className="flex items-center gap-2">
+          <h2 className="font-bold">Nutrition</h2>
           <EditButton />
-        </Flex>
+        </div>
         <Markdown>{nutrition}</Markdown>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box>
-      <Flex gap="2" align="center">
-        <Heading size="5">Nutrition</Heading>
+    <div>
+      <div className="flex items-center gap-2">
+        <h2 className="font-bold">Nutrition</h2>
         <EditButton />
-      </Flex>
+      </div>
 
       <ul>
         {nutrition.map((ingredient) => (
           <li key={ingredient}>
-            <Text>{ingredient}</Text>
+            <p>{ingredient}</p>
           </li>
         ))}
       </ul>
-    </Box>
+    </div>
   );
 }
 
@@ -440,38 +436,34 @@ function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe
     const error: { message?: string } | undefined | null = form.formState.errors[property] ?? form.error;
 
     return (
-      <form onSubmit={form.submit} style={{ width: "auto" }}>
+      <form onSubmit={form.submit} className="w-auto">
         {children}
-        {error && (
-          <Text color="red" size="1">
-            {error.message}
-          </Text>
-        )}
+        {error && <p className="text-red-500">{error.message}</p>}
       </form>
     );
   }
 
   function EditButton(): ReactElement {
     return (
-      <IconButton type="button" size="1">
-        <Pencil2Icon onClick={() => setEditing(true)} />
-      </IconButton>
+      <Button type="button" variant="ghost" size="icon" onClick={() => setEditing(true)}>
+        <PencilIcon />
+      </Button>
     );
   }
 
   function SaveButton(): ReactElement {
     return (
-      <IconButton type="submit" loading={form.formState.isLoading} size="1">
+      <Button type="submit" disabled={form.formState.isLoading} variant="ghost" size="icon">
         <CheckIcon />
-      </IconButton>
+      </Button>
     );
   }
 
   function CancelButton(): ReactElement {
     return (
-      <IconButton type="button" onClick={() => setEditing(false)} size="1">
-        <Cross2Icon />
-      </IconButton>
+      <Button type="button" onClick={() => setEditing(false)} variant="ghost" size="icon">
+        <XIcon />
+      </Button>
     );
   }
 

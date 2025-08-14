@@ -1,6 +1,4 @@
 import { Provider as GadgetProvider } from "@gadgetinc/react";
-import { Skeleton } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
 import { Suspense, type ReactElement } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { api } from "../api";
@@ -26,7 +24,7 @@ const router = createBrowserRouter([
 export function App(): ReactElement {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <Suspense fallback={<Skeleton />}>
+      <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
         <GadgetProvider api={api} navigate={(path) => void router.navigate(path)} auth={window.gadgetConfig.authentication}>
           <RouterProvider router={router} />
         </GadgetProvider>

@@ -1,9 +1,10 @@
 import { useActionForm } from "@gadgetinc/react";
-import { Button, Flex, Text, TextField } from "@radix-ui/themes";
 import type { ReactElement } from "react";
 import { Form, useNavigate, type RouteObject } from "react-router-dom";
 import { z } from "zod";
 import { api } from "../../api";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 
 RecipeImport.route = {
   path: "import",
@@ -23,14 +24,14 @@ export function RecipeImport(): ReactElement {
   }
 
   return (
-    <Flex direction="column" pt="6">
+    <div className="flex flex-col pt-6">
       <Form onSubmit={submit}>
-        <Flex flexGrow="1" justify="center" gap="2">
-          <TextField.Root style={{ width: "100%", maxWidth: "350px" }} placeholder="Recipe URL" {...register("source")}></TextField.Root>
-          <Button loading={formState.isSubmitting}>Import</Button>
-        </Flex>
+        <div className="flex flex-grow justify-center gap-2">
+          <Input style={{ width: "100%", maxWidth: "350px" }} placeholder="Recipe URL" {...register("source")}></Input>
+          <Button disabled={formState.isSubmitting}>Import</Button>
+        </div>
       </Form>
-      <Text color="red">{error?.message}</Text>
-    </Flex>
+      <p className="text-red-500">{error?.message}</p>
+    </div>
   );
 }

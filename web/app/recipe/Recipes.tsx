@@ -1,4 +1,3 @@
-import { Skeleton } from "@radix-ui/themes";
 import { Suspense, type ReactElement } from "react";
 import { Outlet, type RouteObject } from "react-router-dom";
 import { Recipe } from "./Recipe";
@@ -11,7 +10,7 @@ Recipes.route = {
 
 export function Recipes(): ReactElement {
   return (
-    <Suspense fallback={<Skeleton />}>
+    <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
       <Outlet />;
     </Suspense>
   );
