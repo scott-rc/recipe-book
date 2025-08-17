@@ -2,4 +2,4 @@
 // For your API reference, visit: https://docs.gadget.dev/api/recipe-book
 import { Client } from "@gadget-client/recipe-book";
 
-export const api = new Client({ environment: window.gadgetConfig.environment });
+export const api = new Client();

@@ -1,5 +1,7 @@
+*.tsbuildinfo
 .DS_Store
 .gadget/
+.react-router/
 .vscode/
+build/
 node_modules/
-*.tsbuildinfo
