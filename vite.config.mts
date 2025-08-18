@@ -5,7 +5,7 @@ import path from "node:path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [gadget(), reactRouter(), tailwindcss()],
+  plugins: [gadget(), tailwindcss(), reactRouter()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "web"),

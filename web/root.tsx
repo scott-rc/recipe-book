@@ -22,7 +22,7 @@ export default function App({ loaderData: { gadgetConfig } }: Route.ComponentPro
   const navigate = useNavigate();
 
   return (
-    <html lang="en" className="light">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
