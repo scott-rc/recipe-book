@@ -1,38 +1,41 @@
-import type { AvailableUserSelection, UserRecord } from "@gadget-client/recipe-book";
-import { useUser } from "@gadgetinc/react";
-import type { ReactElement } from "react";
 import { Link, Outlet, redirect, useOutletContext } from "react-router";
 import { api } from "../api";
-import { ThemeToggle } from "../components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import type { RootOutletContext } from "../root";
 import type { Route } from "./+types/_app";
 
-const userSelections = {
-  id: true,
-  email: true,
-  firstName: true,
-  lastName: true,
-  createdAt: true,
-  updatedAt: true,
-} satisfies AvailableUserSelection;
+export async function clientLoader() {
+  const session = await api.currentSession.get({
+    select: {
+      id: true,
+      userId: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        googleImageUrl: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    },
+  });
 
-type User = ReturnType<UserRecord<typeof userSelections>["toJSON"]>;
-
-export async function loader({ context }: Route.LoaderArgs): Promise<{ user: User } | Response> {
-  const userId = context.session?.get("user") as string | undefined;
-  const user = userId ? await context.api.user.findOne(userId, { select: userSelections }) : undefined;
-  if (!user) {
-    return redirect(context.gadgetConfig.authentication?.signInPath ?? "/sign-in");
+  if (!session.user) {
+    return redirect("/sign-in");
   }
-  return { user: user.toJSON() };
+
+  return { session, user: session.user };
 }
 
 export type AuthOutletContext = RootOutletContext & {
-  user: User;
+  session: Route.ComponentProps["loaderData"]["session"];
+  user: Route.ComponentProps["loaderData"]["user"];
 };
 
-export default function ({ loaderData: { user } }: Route.ComponentProps) {
+export default function ({ loaderData: { session, user } }: Route.ComponentProps) {
   const rootOutletContext = useOutletContext<RootOutletContext>();
 
   return (
@@ -43,26 +46,17 @@ export default function ({ loaderData: { user } }: Route.ComponentProps) {
         </h1>
         <div className="flex items-center gap-x-5">
           <Link to="/import">Import</Link>
-          <ThemeToggle />
           <Link to="/">
-            <UserAvatar />
+            <Avatar>
+              <AvatarImage src={user.googleImageUrl ?? "https://assets.gadget.dev/assets/default-app-assets/default-user-icon.svg"} />
+              <AvatarFallback>{(user.firstName ?? user.email).charAt(0)}</AvatarFallback>
+            </Avatar>
           </Link>
         </div>
       </header>
       <main className="h-9/10">
-        <Outlet context={{ ...rootOutletContext, user } as AuthOutletContext} />
+        <Outlet context={{ ...rootOutletContext, session, user } as AuthOutletContext} />
       </main>
     </div>
-  );
-}
-
-function UserAvatar(): ReactElement {
-  const user = useUser(api);
-
-  return (
-    <Avatar>
-      <AvatarImage src={user.googleImageUrl ?? "https://assets.gadget.dev/assets/default-app-assets/default-user-icon.svg"} />
-      <AvatarFallback>{(user.firstName ?? user.email).charAt(0)}</AvatarFallback>
-    </Avatar>
   );
 }

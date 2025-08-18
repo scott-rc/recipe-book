@@ -6,7 +6,6 @@ import { Links, Outlet, Scripts, ScrollRestoration, useNavigate } from "react-ro
 import type { Route } from "./+types/root";
 import { api } from "./api";
 import "./app.css";
-import { ThemeProvider } from "./components/theme-provider";
 
 export interface RootOutletContext {
   gadgetConfig: GadgetConfig;
@@ -30,15 +29,13 @@ export default function App({ loaderData: { gadgetConfig } }: Route.ComponentPro
         <Links />
       </head>
       <body>
-        <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-          <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
-            <GadgetProvider api={api} navigate={(path) => void navigate(path)} auth={gadgetConfig.authentication}>
-              <Outlet context={{ gadgetConfig } as RootOutletContext} />
-            </GadgetProvider>
-            <ScrollRestoration />
-            <Scripts />
-          </Suspense>
-        </ThemeProvider>
+        <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
+          <GadgetProvider api={api} navigate={(path) => void navigate(path)} auth={gadgetConfig.authentication}>
+            <Outlet context={{ gadgetConfig } as RootOutletContext} />
+          </GadgetProvider>
+          <ScrollRestoration />
+          <Scripts />
+        </Suspense>
       </body>
     </html>
   );

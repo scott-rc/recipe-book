@@ -1,11 +1,11 @@
 import { Outlet, redirect, useOutletContext } from "react-router";
+import { api } from "../api";
 import type { RootOutletContext } from "../root";
-import type { Route } from "./+types/_auth";
 
-export function loader({ context }: Route.LoaderArgs) {
-  const signedIn = !!context.session?.get("user");
-  if (signedIn) {
-    return redirect(context.gadgetConfig.authentication?.redirectOnSuccessfulSignInPath ?? "/");
+export async function clientLoader() {
+  const session = await api.currentSession.get({ select: { user: { id: true } } });
+  if (session.user) {
+    return redirect("/");
   }
   return {};
 }

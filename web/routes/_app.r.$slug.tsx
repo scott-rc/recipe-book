@@ -1,5 +1,5 @@
 import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
-import { useActionForm, useFindBy } from "@gadgetinc/react";
+import { useActionForm } from "@gadgetinc/react";
 import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
@@ -14,17 +14,11 @@ import type { Route } from "./+types/_app.r.$slug";
 
 const Markdown = lazy(() => import("react-markdown"));
 
-export default function ({ params }: Route.ComponentProps) {
-  const [{ error, data: recipe }] = useFindBy(api.recipe.findBySlug, params.slug, { suspense: true });
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  return await api.recipe.findBySlug(params.slug);
+}
 
-  if (error) {
-    return <p className="text-red-500">{error.message}</p>;
-  }
-
-  if (!recipe) {
-    return <p>Not found</p>;
-  }
-
+export default function ({ loaderData: recipe }: Route.ComponentProps) {
   return (
     <div className="mt-4 flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
@@ -93,14 +87,7 @@ function RecipeWakeLock(): ReactElement {
 }
 
 function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"> }): ReactElement {
-  const navigate = useNavigate();
-  const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({
-    recipe,
-    property: "name",
-    onSuccess: async (recipe) => {
-      await navigate(`/r/${recipe.slug}`, { replace: true });
-    },
-  });
+  const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "name" });
 
   if (isEditing) {
     return (
@@ -413,16 +400,18 @@ function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe
   recipe: TRecipe;
   property: TProperty;
   selectExtra?: AvailableRecipeSelection;
-  onSuccess?: (recipe: TRecipe) => void;
+  onSuccess?: (recipe: TRecipe) => Promise<void> | void;
 }) {
+  const navigate = useNavigate();
   const [isEditing, setEditing] = useState(false);
   const form = useActionForm(api.recipe.update, {
-    select: { id: true, [property]: true, ...selectExtra },
+    select: { id: true, [property]: true, slug: true, ...selectExtra },
     send: ["id", property],
     defaultValues: recipe as Recipe,
-    onSuccess: (recipe) => {
+    onSuccess: async (recipe) => {
       setEditing(false);
-      onSuccess?.(recipe as TRecipe);
+      await navigate(`/r/${recipe.slug}`, { replace: true });
+      await onSuccess?.(recipe as TRecipe);
     },
   });
 

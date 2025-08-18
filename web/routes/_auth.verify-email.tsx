@@ -1,12 +1,13 @@
 import { Link } from "react-router";
+import { api } from "../api";
 import type { Route } from "./+types/_auth.verify-email";
 
-export const loader = async ({ context, request }: Route.LoaderArgs) => {
+export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
 
   try {
-    await context.api.user.verifyEmail({ code });
+    await api.user.verifyEmail({ code });
     return { success: true, error: null };
   } catch (error) {
     return {
