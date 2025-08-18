@@ -3,19 +3,19 @@ import { useActionForm, useFindBy } from "@gadgetinc/react";
 import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { Textarea } from "../components/ui/textarea";
+import type { Route } from "./+types/_app.r.$slug";
 
 const Markdown = lazy(() => import("react-markdown"));
 
-export default function () {
-  const { slug } = useParams() as { slug: string };
-  const [{ error, data: recipe }] = useFindBy(api.recipe.findBySlug, slug, { suspense: true });
+export default function ({ params }: Route.ComponentProps) {
+  const [{ error, data: recipe }] = useFindBy(api.recipe.findBySlug, params.slug, { suspense: true });
 
   if (error) {
     return <p className="text-red-500">{error.message}</p>;
@@ -97,8 +97,8 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({
     recipe,
     property: "name",
-    onSuccess: (recipe) => {
-      void navigate(`/r/${recipe.slug}`, { replace: true });
+    onSuccess: async (recipe) => {
+      await navigate(`/r/${recipe.slug}`, { replace: true });
     },
   });
 

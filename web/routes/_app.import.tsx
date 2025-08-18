@@ -5,17 +5,14 @@ import { api } from "../api";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 
-const actionDataSchema = z.object({ slug: z.string() }).nullish();
-
 export default function () {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { register, submit, formState, error, actionData } = useActionForm(api.import);
   const navigate = useNavigate();
-
-  const data = actionDataSchema.parse(actionData);
-  if (data?.slug) {
-    void navigate(`/r/${data.slug}`);
-  }
+  const { register, submit, formState, error } = useActionForm(api.import, {
+    onSuccess: async (data) => {
+      const { slug } = z.object({ slug: z.string() }).parse(data);
+      await navigate(`/r/${slug}`);
+    },
+  });
 
   return (
     <div className="flex flex-col pt-6">
