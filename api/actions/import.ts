@@ -1,8 +1,12 @@
 import { load } from "cheerio";
-import { type ImportGlobalActionContext } from "gadget-server";
+import { type ActionOptions, type ImportGlobalActionContext } from "gadget-server";
 import { convert } from "html-to-text";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
+
+export const options: ActionOptions = {
+  timeoutMS: 900000,
+};
 
 export const params = {
   source: { type: "string" },
