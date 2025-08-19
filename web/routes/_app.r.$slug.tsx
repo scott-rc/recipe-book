@@ -383,7 +383,7 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
   if (typeof directions === "string") {
     return (
       <div>
-        <div className="flex items-center gap-2">
+        <div className="mb-4 flex items-center gap-2">
           <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
           <EditButton />
         </div>
@@ -394,14 +394,14 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
 
   return (
     <div>
-      <div className="flex items-center gap-2">
-        <h2 className="font-bold">Directions</h2>
+      <div className="mb-4 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
         <EditButton />
       </div>
       <ul>
-        {directions.map((ingredient) => (
-          <li key={ingredient}>
-            <p>{ingredient}</p>
+        {directions.map((direction) => (
+          <li key={direction}>
+            <p>{direction}</p>
           </li>
         ))}
       </ul>
@@ -452,9 +452,9 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
       </div>
 
       <ul>
-        {nutrition.map((ingredient) => (
-          <li key={ingredient}>
-            <p>{ingredient}</p>
+        {nutrition.map((n) => (
+          <li key={n}>
+            <p>{n}</p>
           </li>
         ))}
       </ul>

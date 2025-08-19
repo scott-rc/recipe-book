@@ -49,7 +49,10 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
           </Link>
         </h1>
         <div className="flex items-center gap-x-5">
-          <Link to="/import" className="font-medium text-rose-600 transition-colors hover:text-rose-500">
+          <Link
+            to="/import"
+            className="rounded-lg border border-rose-300 bg-rose-100 p-3 font-medium text-rose-700 transition-colors hover:bg-rose-200 hover:text-rose-700 hover:shadow-sm"
+          >
             Import
           </Link>
           <Link to="/" className="transition-opacity hover:opacity-80">
