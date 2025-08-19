@@ -28,7 +28,7 @@ export default function App({ loaderData: { gadgetConfig } }: Route.ComponentPro
         <title>Recipe Book</title>
         <Links />
       </head>
-      <body>
+      <body className="h-100dvh bg-pink-50">
         <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
           <GadgetProvider api={api} navigate={(path) => void navigate(path)} auth={gadgetConfig.authentication}>
             <Outlet context={{ gadgetConfig } as RootOutletContext} />

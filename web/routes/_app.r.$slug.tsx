@@ -1,6 +1,6 @@
 import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
 import { useActionForm } from "@gadgetinc/react";
-import { CheckIcon, PencilIcon, XIcon } from "lucide-react";
+import { CheckIcon, ClockIcon, LinkIcon, LockIcon, PencilIcon, TimerIcon, UsersIcon, XIcon } from "lucide-react";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,39 +20,70 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
   return (
-    <div className="mt-4 flex flex-col gap-y-4">
-      <div className="flex items-center justify-between">
-        <RecipeHeading recipe={recipe} />
-        <RecipeWakeLock />
-      </div>
-      <div>
-        <div className="flex items-center gap-2">
-          <Label>Source</Label>
-          <RecipeSource recipe={recipe} />
+    <div className="h-full">
+      <div className="">
+        {/* Recipe Header Section */}
+        <div className="mb-8 rounded-xl border border-rose-200 bg-gradient-to-br from-rose-50 to-pink-50 p-8 shadow-lg">
+          <div className="flex items-start justify-between">
+            <RecipeHeading recipe={recipe} />
+            <div className="ml-4">
+              <RecipeWakeLock />
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Label>Serving Size</Label>
-          <RecipeServingSize recipe={recipe} />
+
+        {/* Recipe Metadata Cards */}
+        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+          <div className="rounded-lg border border-rose-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium text-rose-800">
+              <ClockIcon className="h-4 w-4" />
+              Prep Time
+            </div>
+            <RecipePrepTime recipe={recipe} />
+          </div>
+
+          <div className="rounded-lg border border-rose-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium text-rose-800">
+              <TimerIcon className="h-4 w-4" />
+              Cook Time
+            </div>
+            <RecipeCookTime recipe={recipe} />
+          </div>
+
+          <div className="rounded-lg border border-rose-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium text-rose-800">
+              <UsersIcon className="h-4 w-4" />
+              Serves
+            </div>
+            <RecipeServingSize recipe={recipe} />
+          </div>
+
+          <div className="rounded-lg border border-rose-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-2 text-sm font-medium text-rose-800">
+              <LinkIcon className="h-4 w-4" />
+              Source
+            </div>
+            <RecipeSource recipe={recipe} />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Label>Prep Time</Label>
-          <RecipePrepTime recipe={recipe} />
+
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <div className="lg:w-1/3">
+            <div className="rounded-lg border border-rose-200 bg-white p-6 shadow-sm">
+              <RecipeIngredients recipe={recipe} />
+            </div>
+          </div>
+          <div className="lg:w-2/3">
+            <div className="rounded-lg border border-rose-200 bg-white p-6 shadow-sm">
+              <RecipeDirections recipe={recipe} />
+            </div>
+            {recipe.nutrition && (
+              <div className="mt-8 rounded-lg border border-rose-200 bg-white p-6 shadow-sm">
+                <RecipeNutrition recipe={recipe} />
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Label>Cook Time</Label>
-          <RecipeCookTime recipe={recipe} />
-        </div>
-      </div>
-      <div className="flex">
-        <div className="w-1/3">
-          <RecipeIngredients recipe={recipe} />
-        </div>
-        <div className="w-2/3">
-          <RecipeDirections recipe={recipe} />
-        </div>
-      </div>
-      <div>
-        <RecipeNutrition recipe={recipe} />
       </div>
     </div>
   );
@@ -77,12 +108,15 @@ function RecipeWakeLock(): ReactElement {
   }, [wakeLock]);
 
   return (
-    <form>
+    <div className="rounded-lg border border-rose-300 bg-rose-100 p-3">
       <div className="flex items-center gap-2">
-        <Label htmlFor="cook-mode">Cook Mode</Label>
+        <LockIcon className="h-4 w-4 text-rose-700" />
+        <Label htmlFor="cook-mode" className="text-sm font-medium text-rose-800">
+          Cook Mode
+        </Label>
         <Switch id="cook-mode" checked={wakeLock} onCheckedChange={setWakeLock} />
       </div>
-    </form>
+    </div>
   );
 }
 
@@ -93,7 +127,7 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <Input {...form.register("name")} className="min-w-[400px]" />
+          <Input {...form.register("name")} className="min-w-[400px] text-center text-3xl font-bold text-rose-800" />
           <SaveButton />
           <CancelButton />
         </div>
@@ -103,8 +137,8 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
 
   return (
     <Editable>
-      <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-bold">{recipe.name}</h1>
+      <div className="flex items-center justify-center gap-2">
+        <h1 className="text-center text-4xl font-bold text-rose-800">{recipe.name}</h1>
         <EditButton />
       </div>
     </Editable>
@@ -120,7 +154,7 @@ function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): Re
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <Input {...form.register("source")} style={{ minWidth: length * 8 }} />
+          <Input {...form.register("source")} style={{ minWidth: length * 8 }} className="border-rose-300 focus:border-rose-500" />
           <SaveButton />
           <CancelButton />
         </div>
@@ -130,14 +164,25 @@ function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): Re
 
   if (recipe.source) {
     return (
-      <div className="flex items-center gap-2">
-        <Link to={recipe.source}>{recipe.source}</Link>
-        <EditButton />
-      </div>
+      <Editable>
+        <div className="flex items-center gap-1">
+          <Link to={recipe.source} className="truncate text-sm text-rose-700 hover:text-rose-800 hover:underline">
+            {recipe.source}
+          </Link>
+          <EditButton />
+        </div>
+      </Editable>
     );
   }
 
-  return <></>;
+  return (
+    <Editable>
+      <div className="flex items-center gap-1">
+        <span className="text-sm text-gray-400">No source</span>
+        <EditButton />
+      </div>
+    </Editable>
+  );
 }
 
 function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSize"> }): ReactElement {
@@ -148,7 +193,13 @@ function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSiz
       <Editable>
         <div className="flex items-center gap-2">
           <div className="w-16">
-            <Input {...form.register("servingSize", { valueAsNumber: true })} type="number" required maxLength={2} />
+            <Input
+              {...form.register("servingSize", { valueAsNumber: true })}
+              type="number"
+              required
+              maxLength={2}
+              className="border-rose-300 text-center focus:border-rose-500"
+            />
           </div>
           <SaveButton />
           <CancelButton />
@@ -158,10 +209,12 @@ function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSiz
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <p>{recipe.servingSize}</p>
-      <EditButton />
-    </div>
+    <Editable>
+      <div className="flex items-center gap-1">
+        <p className="text-lg font-semibold text-rose-800">{recipe.servingSize}</p>
+        <EditButton />
+      </div>
+    </Editable>
   );
 }
 
@@ -187,7 +240,13 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <Input name="prepTime" value={prepTime} onChange={(event) => setPrepTime(event.currentTarget.value)} required />
+          <Input
+            name="prepTime"
+            value={prepTime}
+            onChange={(event) => setPrepTime(event.currentTarget.value)}
+            required
+            className="border-rose-300 focus:border-rose-500"
+          />
           <SaveButton />
           <CancelButton />
         </div>
@@ -196,10 +255,12 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <p>{ms(recipe.prepTime, { long: true })}</p>
-      <EditButton />
-    </div>
+    <Editable>
+      <div className="flex items-center gap-1">
+        <p className="text-lg font-semibold text-rose-800">{ms(recipe.prepTime, { long: true })}</p>
+        <EditButton />
+      </div>
+    </Editable>
   );
 }
 
@@ -224,7 +285,12 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <Input value={cookTime} onChange={(event) => setCookTime(event.currentTarget.value)} required />
+          <Input
+            value={cookTime}
+            onChange={(event) => setCookTime(event.currentTarget.value)}
+            required
+            className="border-rose-300 focus:border-rose-500"
+          />
           <SaveButton />
           <CancelButton />
         </div>
@@ -233,10 +299,12 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <p>{ms(recipe.cookTime, { long: true })}</p>
-      <EditButton />
-    </div>
+    <Editable>
+      <div className="flex items-center gap-1">
+        <p className="text-lg font-semibold text-rose-800">{ms(recipe.cookTime, { long: true })}</p>
+        <EditButton />
+      </div>
+    </Editable>
   );
 }
 
@@ -249,42 +317,47 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
 
     return (
       <Editable>
-        <div className="flex items-center gap-2">
-          <h2 className="font-bold">Ingredients</h2>
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="text-2xl font-bold" style={{ color: "#BE185D" }}>
+            Ingredients
+          </h2>
           <SaveButton />
           <CancelButton />
         </div>
-        <Textarea {...form.register("ingredients")} rows={rows} className="mt-3" />
+        <Textarea {...form.register("ingredients")} rows={rows} className="resize-none border-rose-300 focus:border-rose-500" />
       </Editable>
     );
   }
 
   if (typeof ingredients === "string") {
     return (
-      <div>
-        <div className="flex items-center gap-2">
-          <h2 className="font-bold">Ingredients</h2>
+      <Editable>
+        <div className="mb-4 flex items-center gap-2">
+          <h2 className="text-2xl font-bold text-rose-800">Ingredients</h2>
           <EditButton />
         </div>
-        <Markdown>{ingredients}</Markdown>
-      </div>
+        <div className="prose prose-rose max-w-none">
+          <Markdown>{ingredients}</Markdown>
+        </div>
+      </Editable>
     );
   }
 
   return (
-    <div>
-      <div className="flex items-center gap-2">
-        <h2 className="font-bold">Ingredients</h2>
+    <Editable>
+      <div className="mb-4 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-rose-800">Ingredients</h2>
         <EditButton />
       </div>
-      <ul>
+      <ul className="space-y-2">
         {ingredients.map((ingredient) => (
-          <li key={ingredient}>
-            <p>{ingredient}</p>
+          <li key={ingredient} className="flex items-start gap-3">
+            <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-rose-400"></span>
+            <p className="leading-relaxed text-gray-700">{ingredient}</p>
           </li>
         ))}
       </ul>
-    </div>
+    </Editable>
   );
 }
 
@@ -298,7 +371,7 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <h2 className="font-bold">Directions</h2>
+          <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
           <SaveButton />
           <CancelButton />
         </div>
@@ -311,7 +384,7 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
     return (
       <div>
         <div className="flex items-center gap-2">
-          <h2 className="font-bold">Directions</h2>
+          <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
           <EditButton />
         </div>
         <Markdown>{directions}</Markdown>
@@ -350,7 +423,7 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
     return (
       <Editable>
         <div className="flex items-center gap-2">
-          <h2 className="font-bold">Nutrition</h2>
+          <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
           <SaveButton />
           <CancelButton />
         </div>
@@ -363,7 +436,7 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
     return (
       <div>
         <div className="flex items-center gap-2">
-          <h2 className="font-bold">Nutrition</h2>
+          <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
           <EditButton />
         </div>
         <Markdown>{nutrition}</Markdown>
@@ -374,7 +447,7 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
   return (
     <div>
       <div className="flex items-center gap-2">
-        <h2 className="font-bold">Nutrition</h2>
+        <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
         <EditButton />
       </div>
 
@@ -419,7 +492,7 @@ function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe
     const error: { message?: string } | undefined | null = form.formState.errors[property] ?? form.error;
 
     return (
-      <form onSubmit={form.submit} className="w-auto">
+      <form onSubmit={form.submit} className="group w-auto">
         {children}
         {error && <p className="text-red-500">{error.message}</p>}
       </form>
@@ -428,7 +501,13 @@ function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe
 
   function EditButton(): ReactElement {
     return (
-      <Button type="button" variant="ghost" size="icon" onClick={() => setEditing(true)}>
+      <Button
+        className="invisible text-rose-800 transition-colors group-hover:visible hover:text-rose-900"
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={() => setEditing(true)}
+      >
         <PencilIcon />
       </Button>
     );
