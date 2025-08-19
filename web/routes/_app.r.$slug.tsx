@@ -1,6 +1,18 @@
 import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
 import { useActionForm } from "@gadgetinc/react";
-import { CheckIcon, ClockIcon, LinkIcon, LockIcon, PencilIcon, TimerIcon, UsersIcon, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ChefHatIcon,
+  ClockIcon,
+  LinkIcon,
+  ListIcon,
+  LockIcon,
+  PencilIcon,
+  ScaleIcon,
+  TimerIcon,
+  UsersIcon,
+  XIcon,
+} from "lucide-react";
 import ms from "ms";
 import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -317,10 +329,9 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
 
     return (
       <Editable>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-2xl font-bold" style={{ color: "#BE185D" }}>
-            Ingredients
-          </h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ListIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Ingredients</h2>
           <SaveButton />
           <CancelButton />
         </div>
@@ -332,8 +343,9 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
   if (typeof ingredients === "string") {
     return (
       <Editable>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-rose-800">Ingredients</h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ListIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Ingredients</h2>
           <EditButton />
         </div>
         <div className="prose prose-rose max-w-none">
@@ -345,8 +357,9 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
 
   return (
     <Editable>
-      <div className="mb-4 flex items-center gap-2">
-        <h2 className="text-2xl font-bold text-rose-800">Ingredients</h2>
+      <div className="mb-4 flex items-center gap-2 text-rose-800">
+        <ListIcon className="h-6 w-6" />
+        <h2 className="text-2xl font-bold">Ingredients</h2>
         <EditButton />
       </div>
       <ul className="space-y-2">
@@ -370,8 +383,9 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
 
     return (
       <Editable>
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ChefHatIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Directions</h2>
           <SaveButton />
           <CancelButton />
         </div>
@@ -383,8 +397,9 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
   if (typeof directions === "string") {
     return (
       <div>
-        <div className="mb-4 flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ChefHatIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Directions</h2>
           <EditButton />
         </div>
         <Markdown>{directions}</Markdown>
@@ -394,8 +409,9 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
 
   return (
     <div>
-      <div className="mb-4 flex items-center gap-2">
-        <h2 className="text-2xl font-bold text-rose-800">Directions</h2>
+      <div className="mb-4 flex items-center gap-2 text-rose-800">
+        <ChefHatIcon className="h-6 w-6" />
+        <h2 className="text-2xl font-bold">Directions</h2>
         <EditButton />
       </div>
       <ul>
@@ -422,8 +438,9 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
   if (isEditing) {
     return (
       <Editable>
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ScaleIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Nutrition</h2>
           <SaveButton />
           <CancelButton />
         </div>
@@ -435,8 +452,9 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
   if (typeof nutrition === "string") {
     return (
       <div>
-        <div className="flex items-center gap-2">
-          <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
+        <div className="mb-4 flex items-center gap-2 text-rose-800">
+          <ScaleIcon className="h-6 w-6" />
+          <h2 className="text-2xl font-bold">Nutrition</h2>
           <EditButton />
         </div>
         <Markdown>{nutrition}</Markdown>
@@ -446,8 +464,9 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
 
   return (
     <div>
-      <div className="flex items-center gap-2">
-        <h2 className="text-2xl font-bold text-rose-800">Nutrition</h2>
+      <div className="mb-4 flex items-center gap-2 text-rose-800">
+        <ScaleIcon className="h-6 w-6" />
+        <h2 className="text-2xl font-bold">Nutrition</h2>
         <EditButton />
       </div>
 
