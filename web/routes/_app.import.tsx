@@ -1,4 +1,5 @@
 import { useActionForm } from "@gadgetinc/react";
+import { ImportIcon } from "lucide-react";
 import { Form, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { api } from "../api";
@@ -15,14 +16,15 @@ export default function () {
   });
 
   return (
-    <div className="flex flex-col pt-6">
-      <Form onSubmit={submit}>
-        <div className="flex flex-grow justify-center gap-2">
-          <Input style={{ width: "100%", maxWidth: "350px" }} placeholder="Recipe URL" {...register("source")}></Input>
-          <Button disabled={formState.isSubmitting}>Import</Button>
-        </div>
+    <div className="grid h-full place-items-center">
+      <Form onSubmit={submit} className="flex w-full max-w-md flex-col items-center gap-y-4">
+        <Input placeholder="Recipe URL" {...register("source")} className="w-full p-6"></Input>
+        <Button disabled={formState.isSubmitting} size="lg" className="w-full p-6">
+          <ImportIcon className="h-8 w-8" />
+          {formState.isSubmitting ? "Importing..." : "Import"}
+        </Button>
+        <p className="text-red-500">{error?.message}</p>
       </Form>
-      <p className="text-red-500">{error?.message}</p>
     </div>
   );
 }

@@ -52,7 +52,7 @@ export async function run({ params, logger, connections, session, api }: ImportG
     .join("\n");
 
   const completion = await connections.openai.chat.completions.create({
-    model: "o3-mini",
+    model: "gpt-5",
     max_completion_tokens: 99_999,
     messages: [
       {
