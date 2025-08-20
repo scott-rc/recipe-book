@@ -6,6 +6,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "NODE_ENV=production react-router build",
+    "deploy": "ggt deploy --from=staging --force --allow-problems",
     "dev": "ggt dev",
     "lint": "concurrently 'npm:lint:*(!fix)' --group --names --prefix-colors=auto",
     "lint:eslint": "eslint . --max-warnings=0 --cache --cache-location=node_modules/.cache/eslint/.eslintcache",
@@ -59,6 +60,7 @@
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-refresh": "^0.4.8",
+    "ggt": "^1.7.2",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.2.0",
     "prettier-plugin-packagejson": "^2.5.19",
