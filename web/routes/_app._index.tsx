@@ -10,7 +10,7 @@ export default function () {
   const [search, setSearch] = useState(searchParams.get("s") ?? "");
 
   return (
-    <div className="pt-4">
+    <div>
       <Form>
         <Input placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
       </Form>

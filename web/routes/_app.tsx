@@ -1,4 +1,4 @@
-import { BookOpenIcon } from "lucide-react";
+import { BookOpenIcon, ImportIcon } from "lucide-react";
 import { Link, Outlet, redirect, useOutletContext } from "react-router";
 import { api } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
@@ -41,16 +41,17 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
 
   return (
     <div className="mx-auto flex h-dvh max-w-6xl flex-col gap-y-4 px-4 py-8">
-      <header className="mb-2 flex h-1/10 items-center justify-between rounded-lg px-4 pt-2">
-        <h1 className="text-3xl font-bold">
+      <header className="mb-2 flex items-center justify-between rounded-lg px-4 pt-2">
+        <h1 className="text-2xl font-bold">
           <Link to="/" className="flex items-center gap-x-2 transition-colors">
             <BookOpenIcon className="h-6 w-6" />
             <span className="hidden md:block">Recipe Book</span>
           </Link>
         </h1>
-        <div className="flex items-center gap-x-5">
-          <Link to="/import" className="hover:underline">
-            Import
+        <div className="flex items-center gap-x-5 text-xl">
+          <Link to="/import" className="flex items-center gap-x-2 hover:underline">
+            <ImportIcon className="h-6 w-6" />
+            <span className="hidden md:block">Import</span>
           </Link>
           <Link to="/" className="transition-opacity hover:opacity-80">
             <Avatar>
@@ -60,7 +61,7 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
           </Link>
         </div>
       </header>
-      <main className="h-9/10">
+      <main className="h-full">
         <Outlet context={{ ...rootOutletContext, session, user } as AuthOutletContext} />
       </main>
     </div>

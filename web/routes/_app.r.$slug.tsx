@@ -33,68 +33,66 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
   return (
     <div className="h-full">
-      <div className="">
-        {/* Recipe Header Section */}
-        <div className="mb-8 rounded-xl border p-8 shadow-sm">
-          <div className="flex items-start justify-between">
-            <RecipeHeading recipe={recipe} />
-            <div className="ml-4">
-              <RecipeWakeLock />
-            </div>
+      {/* Recipe Header Section */}
+      <div className="mb-8 rounded-xl border p-8 shadow-sm">
+        <div className="flex items-start justify-between">
+          <RecipeHeading recipe={recipe} />
+          <div className="ml-4">
+            <RecipeWakeLock />
           </div>
         </div>
+      </div>
 
-        {/* Recipe Metadata Cards */}
-        <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="rounded-lg border p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <ClockIcon className="h-4 w-4" />
-              Prep Time
-            </div>
-            <RecipePrepTime recipe={recipe} />
+      {/* Recipe Metadata Cards */}
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="rounded-lg border p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <ClockIcon className="h-4 w-4" />
+            Prep Time
           </div>
-
-          <div className="rounded-lg border p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <TimerIcon className="h-4 w-4" />
-              Cook Time
-            </div>
-            <RecipeCookTime recipe={recipe} />
-          </div>
-
-          <div className="rounded-lg border p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <UsersIcon className="h-4 w-4" />
-              Serves
-            </div>
-            <RecipeServingSize recipe={recipe} />
-          </div>
-
-          <div className="rounded-lg border p-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <LinkIcon className="h-4 w-4" />
-              Source
-            </div>
-            <RecipeSource recipe={recipe} />
-          </div>
+          <RecipePrepTime recipe={recipe} />
         </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row">
-          <div className="lg:w-1/3">
-            <div className="rounded-lg border p-6 shadow-sm">
-              <RecipeIngredients recipe={recipe} />
-            </div>
+        <div className="rounded-lg border p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <TimerIcon className="h-4 w-4" />
+            Cook Time
           </div>
-          <div className="lg:w-2/3">
-            <div className="rounded-lg border p-6 shadow-sm">
-              <RecipeDirections recipe={recipe} />
-            </div>
-            {recipe.nutrition && (
-              <div className="mt-8 rounded-lg border p-6 shadow-sm">
-                <RecipeNutrition recipe={recipe} />
-              </div>
-            )}
+          <RecipeCookTime recipe={recipe} />
+        </div>
+
+        <div className="rounded-lg border p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <UsersIcon className="h-4 w-4" />
+            Serves
           </div>
+          <RecipeServingSize recipe={recipe} />
+        </div>
+
+        <div className="rounded-lg border p-4 shadow-sm">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <LinkIcon className="h-4 w-4" />
+            Source
+          </div>
+          <RecipeSource recipe={recipe} />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-8 lg:flex-row">
+        <div className="lg:w-1/3">
+          <div className="rounded-lg border p-6 shadow-sm">
+            <RecipeIngredients recipe={recipe} />
+          </div>
+        </div>
+        <div className="lg:w-2/3">
+          <div className="rounded-lg border p-6 shadow-sm">
+            <RecipeDirections recipe={recipe} />
+          </div>
+          {recipe.nutrition && (
+            <div className="mt-8 rounded-lg border p-6 shadow-sm">
+              <RecipeNutrition recipe={recipe} />
+            </div>
+          )}
         </div>
       </div>
     </div>
