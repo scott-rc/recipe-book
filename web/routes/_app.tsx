@@ -1,9 +1,8 @@
 import { BookOpenIcon, CloudDownloadIcon } from "lucide-react";
-import { Link, Outlet, redirect, useOutletContext } from "react-router";
+import { Link, Outlet, redirect } from "react-router";
 import { api } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
-import type { RootOutletContext } from "../root";
 import type { Route } from "./+types/_app";
 
 export async function clientLoader() {
@@ -32,14 +31,12 @@ export async function clientLoader() {
   return { session, user: session.user };
 }
 
-export type AuthOutletContext = RootOutletContext & {
+export interface AuthOutletContext {
   session: Route.ComponentProps["loaderData"]["session"];
   user: Route.ComponentProps["loaderData"]["user"];
-};
+}
 
 export default function ({ loaderData: { session, user } }: Route.ComponentProps) {
-  const rootOutletContext = useOutletContext<RootOutletContext>();
-
   return (
     <div className="mx-auto flex h-dvh max-w-6xl flex-col px-4 pt-8 pb-32">
       <header className="mb-8 flex items-center justify-between rounded-lg px-4 pt-2">
@@ -65,7 +62,7 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
         </div>
       </header>
       <main className="flex-1">
-        <Outlet context={{ ...rootOutletContext, session, user } as AuthOutletContext} />
+        <Outlet context={{ session, user } as AuthOutletContext} />
       </main>
     </div>
   );
