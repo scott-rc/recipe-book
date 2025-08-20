@@ -10,6 +10,8 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   ci:
     uses: ./.github/workflows/ci.yaml
+    secrets: inherit
+
   cd:
     needs: ci
     runs-on: ubuntu-latest
