@@ -22,6 +22,8 @@ jobs:
 
       - name: ggt pull
         run: yarn ggt pull
+        env:
+          GGT_TOKEN: ${{ secrets.GGT_TOKEN }}
 
       - name: Run lint
         run: yarn run lint
