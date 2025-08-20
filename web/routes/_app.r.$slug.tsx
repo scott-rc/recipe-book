@@ -14,9 +14,10 @@ import {
   XIcon,
 } from "lucide-react";
 import ms from "ms";
-import { lazy, useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
+import { useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { Markdown } from "../components/markdown";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -24,15 +25,13 @@ import { Switch } from "../components/ui/switch";
 import { Textarea } from "../components/ui/textarea";
 import type { Route } from "./+types/_app.r.$slug";
 
-const Markdown = lazy(() => import("react-markdown"));
-
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   return await api.recipe.findBySlug(params.slug);
 }
 
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
   return (
-    <div className="h-full">
+    <div className="h-full pb-32">
       {/* Recipe Header Section */}
       <div className="mb-8 rounded-xl border p-8 shadow-sm">
         <div className="flex items-start justify-between">

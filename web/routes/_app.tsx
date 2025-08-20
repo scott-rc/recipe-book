@@ -1,7 +1,8 @@
-import { BookOpenIcon, ImportIcon } from "lucide-react";
+import { BookOpenIcon, CloudDownloadIcon } from "lucide-react";
 import { Link, Outlet, redirect, useOutletContext } from "react-router";
 import { api } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { Button } from "../components/ui/button";
 import type { RootOutletContext } from "../root";
 import type { Route } from "./+types/_app";
 
@@ -40,8 +41,8 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
   const rootOutletContext = useOutletContext<RootOutletContext>();
 
   return (
-    <div className="mx-auto flex h-dvh max-w-6xl flex-col gap-y-4 px-4 py-8">
-      <header className="mb-2 flex items-center justify-between rounded-lg px-4 pt-2">
+    <div className="mx-auto flex h-dvh max-w-6xl flex-col px-4 pt-8 pb-32">
+      <header className="mb-8 flex items-center justify-between rounded-lg px-4 pt-2">
         <h1 className="text-2xl font-bold">
           <Link to="/" className="flex items-center gap-x-2 transition-colors">
             <BookOpenIcon className="h-6 w-6" />
@@ -49,10 +50,12 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
           </Link>
         </h1>
         <div className="flex items-center gap-x-5 text-xl">
-          <Link to="/import" className="flex items-center gap-x-2 hover:underline">
-            <ImportIcon className="h-6 w-6" />
-            <span className="hidden md:block">Import</span>
-          </Link>
+          <Button asChild variant="outline">
+            <Link to="/import">
+              <CloudDownloadIcon className="h-4 w-4" />
+              <span className="hidden md:block">Import</span>
+            </Link>
+          </Button>
           <Link to="/" className="transition-opacity hover:opacity-80">
             <Avatar>
               <AvatarImage src={user.googleImageUrl ?? "https://assets.gadget.dev/assets/default-app-assets/default-user-icon.svg"} />
@@ -61,7 +64,7 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
           </Link>
         </div>
       </header>
-      <main className="h-full">
+      <main className="flex-1">
         <Outlet context={{ ...rootOutletContext, session, user } as AuthOutletContext} />
       </main>
     </div>

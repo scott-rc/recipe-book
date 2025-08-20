@@ -12,7 +12,7 @@ export default function () {
   return (
     <div>
       <Form>
-        <Input placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
+        <Input className="p-6" placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
       </Form>
       <Suspense fallback={<div>Loading...</div>}>
         <RecipeCards />
@@ -50,11 +50,11 @@ function RecipeCards(): ReactElement {
   return (
     <div className="mt-4 grid grid-cols-3 gap-4 md:grid-cols-6">
       {recipes.map((recipe) => (
-        <Card key={recipe.id}>
-          <CardContent>
-            <Link to={`/r/${recipe.slug}`}>{recipe.name}</Link>
-          </CardContent>
-        </Card>
+        <Link to={`/r/${recipe.slug}`} key={recipe.id}>
+          <Card>
+            <CardContent>{recipe.name}</CardContent>
+          </Card>
+        </Link>
       ))}
     </div>
   );
