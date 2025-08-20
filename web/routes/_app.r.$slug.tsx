@@ -26,7 +26,11 @@ import { Textarea } from "../components/ui/textarea";
 import type { Route } from "./+types/_app.r.$slug";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  return await api.recipe.findBySlug(params.slug);
+  if (!params["slug"]) {
+    throw new Error("Slug is required");
+  }
+
+  return await api.recipe.findBySlug(params["slug"]);
 }
 
 export default function ({ loaderData: recipe }: Route.ComponentProps) {

@@ -6,7 +6,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "NODE_ENV=production react-router build",
-    "deploy": "",
     "dev": "ggt dev",
     "lint": "concurrently 'npm:lint:*(!fix)' --group --names --prefix-colors=auto",
     "lint:eslint": "eslint . --max-warnings=0 --cache --cache-location=node_modules/.cache/eslint/.eslintcache",

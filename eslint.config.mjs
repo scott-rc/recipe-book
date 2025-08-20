@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [".gadget/**"],
+    ignores: [".gadget/**", ".react-router/**"],
   },
   eslint.configs.recommended,
   tseslint.configs.strictTypeChecked,
