@@ -21,7 +21,7 @@ jobs:
         run: yarn install
 
       - name: ggt pull
-        run: yarn ggt pull
+        run: yarn ggt pull --from=development
         env:
           GGT_TOKEN: ${{ secrets.GGT_TOKEN }}
 
