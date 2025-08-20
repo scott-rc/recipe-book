@@ -29,6 +29,6 @@ jobs:
         run: yarn install
 
       - name: Deploy
-        run: npm run deploy --allow-unknown-directory
+        run: npx ggt deploy --app=recipe-book --from=staging --force --allow-problems --allow-unknown-directory
         env:
           GGT_TOKEN: ${{ secrets.GGT_TOKEN }}
