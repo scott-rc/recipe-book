@@ -21,9 +21,9 @@ jobs:
         run: yarn install
 
       - name: ggt pull
-        run: yarn ggt pull --from=development
+        run: npx ggt pull --from=development --allow-unknown-directory
         env:
           GGT_TOKEN: ${{ secrets.GGT_TOKEN }}
 
       - name: Run lint
-        run: yarn run lint
+        run: npm run lint

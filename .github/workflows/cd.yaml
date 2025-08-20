@@ -29,6 +29,6 @@ jobs:
         run: yarn install
 
       - name: Deploy
-        run: yarn run deploy --allow-unknown-directory
+        run: npm run deploy --allow-unknown-directory
         env:
           GGT_TOKEN: ${{ secrets.GGT_TOKEN }}
