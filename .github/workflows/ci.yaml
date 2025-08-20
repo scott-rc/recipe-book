@@ -20,5 +20,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: ggt pull
+        run: yarn ggt pull
+
       - name: Run lint
         run: yarn run lint
