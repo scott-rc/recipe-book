@@ -38,7 +38,7 @@ export interface AuthOutletContext {
 
 export default function ({ loaderData: { session, user } }: Route.ComponentProps) {
   return (
-    <div className="mx-auto flex h-dvh max-w-6xl flex-col px-4 pt-8 pb-32">
+    <div className="relative isolate mx-auto flex h-svh min-h-svh w-full max-w-6xl flex-col bg-white px-4 pt-8 pb-32 max-lg:flex-col">
       <header className="mb-8 flex items-center justify-between rounded-lg px-4 pt-2">
         <h1 className="text-2xl font-bold">
           <Link to="/" className="flex items-center gap-x-2 transition-colors">

@@ -23,6 +23,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
 import { Textarea } from "../components/ui/textarea";
+import { cn } from "../lib/utils";
 import type { Route } from "./+types/_app.r.$slug";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
@@ -34,47 +35,18 @@ export default function ({ loaderData: recipe }: Route.ComponentProps) {
     <div className="h-full pb-32">
       {/* Recipe Header Section */}
       <div className="mb-8 rounded-xl border p-8 shadow-sm">
-        <div className="flex items-start justify-between">
+        <div className="flex justify-between">
           <RecipeHeading recipe={recipe} />
-          <div className="ml-4">
-            <RecipeWakeLock />
-          </div>
+          <RecipeWakeLock />
         </div>
       </div>
 
       {/* Recipe Metadata Cards */}
       <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-lg border p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <ClockIcon className="h-4 w-4" />
-            Prep Time
-          </div>
-          <RecipePrepTime recipe={recipe} />
-        </div>
-
-        <div className="rounded-lg border p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <TimerIcon className="h-4 w-4" />
-            Cook Time
-          </div>
-          <RecipeCookTime recipe={recipe} />
-        </div>
-
-        <div className="rounded-lg border p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <UsersIcon className="h-4 w-4" />
-            Serves
-          </div>
-          <RecipeServingSize recipe={recipe} />
-        </div>
-
-        <div className="rounded-lg border p-4 shadow-sm">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <LinkIcon className="h-4 w-4" />
-            Source
-          </div>
-          <RecipeSource recipe={recipe} />
-        </div>
+        <RecipePrepTime recipe={recipe} />
+        <RecipeCookTime recipe={recipe} />
+        <RecipeServingSize recipe={recipe} />
+        <RecipeSource recipe={recipe} />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -117,14 +89,12 @@ function RecipeWakeLock(): ReactElement {
   }, [wakeLock]);
 
   return (
-    <div className="rounded-lg border p-3">
-      <div className="flex items-center gap-2">
-        <Label htmlFor="cook-mode" className="text-sm font-medium">
-          <LockIcon className="h-4 w-4" />
-          Cook Mode
-        </Label>
+    <div className="flex items-center gap-2 self-start rounded-lg border p-3">
+      <Label htmlFor="cook-mode" className="flex items-center gap-2 text-sm">
+        <LockIcon className="h-4 w-4" />
+        <span className="hidden text-nowrap md:inline">Cook Mode</span>
         <Switch id="cook-mode" checked={wakeLock} onCheckedChange={setWakeLock} />
-      </div>
+      </Label>
     </div>
   );
 }
@@ -146,8 +116,8 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
 
   return (
     <Editable>
-      <div className="flex items-center justify-center gap-2">
-        <h1 className="text-center text-4xl font-bold">{recipe.name}</h1>
+      <div className="flex items-start">
+        <h1 className="inline-block max-w-lg text-4xl font-bold text-balance">{recipe.name}</h1>
         <EditButton />
       </div>
     </Editable>
@@ -156,40 +126,34 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
 
 function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "source" });
-
-  if (isEditing) {
-    const length = recipe.source?.length ?? 80;
-
-    return (
-      <Editable>
-        <div className="flex items-center gap-2">
-          <Input {...form.register("source")} style={{ minWidth: length * 8 }} />
-          <SaveButton />
-          <CancelButton />
-        </div>
-      </Editable>
-    );
-  }
-
-  if (recipe.source) {
-    return (
-      <Editable>
-        <div className="flex items-center gap-1">
-          <Link to={recipe.source} className="truncate text-sm hover:underline">
-            {recipe.source}
-          </Link>
-          <EditButton />
-        </div>
-      </Editable>
-    );
-  }
+  const length = recipe.source?.length ?? 80;
 
   return (
-    <Editable>
-      <div className="flex items-center gap-1">
-        <span className="text-sm text-gray-400">No source</span>
-        <EditButton />
+    <Editable className="overflow-hidden rounded-lg border p-4 shadow-sm">
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <LinkIcon className="h-4 w-4" />
+        <span>Source</span>
+        {isEditing ? (
+          <>
+            <SaveButton />
+            <CancelButton />
+          </>
+        ) : (
+          <EditButton />
+        )}
       </div>
+
+      {isEditing ? (
+        <Input {...form.register("source")} style={{ minWidth: length * 8 }} />
+      ) : recipe.source ? (
+        <div className="flex">
+          <Link to={recipe.source} className="truncate text-sm hover:underline" target="_blank">
+            {recipe.source}
+          </Link>
+        </div>
+      ) : (
+        <span className="text-sm text-gray-400">No source</span>
+      )}
     </Editable>
   );
 }
@@ -197,32 +161,25 @@ function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): Re
 function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSize"> }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "servingSize" });
 
-  if (isEditing) {
-    return (
-      <Editable>
-        <div className="flex items-center gap-2">
-          <div className="w-16">
-            <Input
-              {...form.register("servingSize", { valueAsNumber: true })}
-              type="number"
-              required
-              maxLength={2}
-              className="text-center"
-            />
-          </div>
-          <SaveButton />
-          <CancelButton />
-        </div>
-      </Editable>
-    );
-  }
-
   return (
-    <Editable>
-      <div className="flex items-center gap-1">
-        <p className="text-lg font-semibold">{recipe.servingSize}</p>
-        <EditButton />
+    <Editable className="rounded-lg border p-4 shadow-sm">
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <UsersIcon className="h-4 w-4" />
+        <span>Serves</span>
+        {isEditing ? (
+          <>
+            <SaveButton />
+            <CancelButton />
+          </>
+        ) : (
+          <EditButton />
+        )}
       </div>
+      {isEditing ? (
+        <Input {...form.register("servingSize", { valueAsNumber: true })} type="number" required maxLength={2} className="text-center" />
+      ) : (
+        <p className="text-lg font-semibold">{recipe.servingSize}</p>
+      )}
     </Editable>
   );
 }
@@ -245,24 +202,25 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
     }
   }, [form, prepTime]);
 
-  if (isEditing) {
-    return (
-      <Editable>
-        <div className="flex items-center gap-2">
-          <Input name="prepTime" value={prepTime} onChange={(event) => setPrepTime(event.currentTarget.value)} required />
-          <SaveButton />
-          <CancelButton />
-        </div>
-      </Editable>
-    );
-  }
-
   return (
-    <Editable>
-      <div className="flex items-center gap-1">
-        <p className="text-lg font-semibold">{ms(recipe.prepTime, { long: true })}</p>
-        <EditButton />
+    <Editable className="rounded-lg border p-4 shadow-sm">
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <ClockIcon className="h-4 w-4" />
+        <span>Prep Time</span>
+        {isEditing ? (
+          <>
+            <SaveButton />
+            <CancelButton />
+          </>
+        ) : (
+          <EditButton />
+        )}
       </div>
+      {isEditing ? (
+        <Input name="prepTime" value={prepTime} onChange={(event) => setPrepTime(event.currentTarget.value)} required />
+      ) : (
+        <p className="text-lg font-semibold">{ms(recipe.prepTime, { long: true })}</p>
+      )}
     </Editable>
   );
 }
@@ -284,24 +242,25 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
     }
   }, [form, cookTime]);
 
-  if (isEditing) {
-    return (
-      <Editable>
-        <div className="flex items-center gap-2">
-          <Input value={cookTime} onChange={(event) => setCookTime(event.currentTarget.value)} required />
-          <SaveButton />
-          <CancelButton />
-        </div>
-      </Editable>
-    );
-  }
-
   return (
-    <Editable>
-      <div className="flex items-center gap-1">
-        <p className="text-lg font-semibold">{ms(recipe.cookTime, { long: true })}</p>
-        <EditButton />
+    <Editable className="rounded-lg border p-4 shadow-sm">
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <TimerIcon className="h-4 w-4" />
+        <span> Cook Time</span>
+        {isEditing ? (
+          <>
+            <SaveButton />
+            <CancelButton />
+          </>
+        ) : (
+          <EditButton />
+        )}
       </div>
+      {isEditing ? (
+        <Input value={cookTime} onChange={(event) => setCookTime(event.currentTarget.value)} required />
+      ) : (
+        <p className="text-lg font-semibold">{ms(recipe.cookTime, { long: true })}</p>
+      )}
     </Editable>
   );
 }
@@ -493,11 +452,11 @@ function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe
     },
   });
 
-  function Editable({ children }: PropsWithChildren): ReactElement {
+  function Editable({ className, children }: PropsWithChildren<{ className?: string }>): ReactElement {
     const error: { message?: string } | undefined | null = form.formState.errors[property] ?? form.error;
 
     return (
-      <form onSubmit={form.submit} className="group w-auto">
+      <form onSubmit={form.submit} className={cn("group", className)}>
         {children}
         {error && <p className="text-red-500">{error.message}</p>}
       </form>
