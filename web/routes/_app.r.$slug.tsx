@@ -396,19 +396,19 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
 
   if (typeof directions === "string") {
     return (
-      <div>
+      <Editable>
         <div className="mb-4 flex items-center gap-2 text-rose-800">
           <ChefHatIcon className="h-6 w-6" />
           <h2 className="text-2xl font-bold">Directions</h2>
           <EditButton />
         </div>
         <Markdown>{directions}</Markdown>
-      </div>
+      </Editable>
     );
   }
 
   return (
-    <div>
+    <Editable>
       <div className="mb-4 flex items-center gap-2 text-rose-800">
         <ChefHatIcon className="h-6 w-6" />
         <h2 className="text-2xl font-bold">Directions</h2>
@@ -421,7 +421,7 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
           </li>
         ))}
       </ul>
-    </div>
+    </Editable>
   );
 }
 
