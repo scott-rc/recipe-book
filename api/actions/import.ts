@@ -82,23 +82,40 @@ export async function run({ params, logger, connections, session, api }: ImportG
 
   const json: unknown = JSON.parse(fn.arguments);
   const saveRecipeParameters = saveRecipeParametersSchema.parse(json);
+  const { primaryImage, images, ...recipeParameters } = saveRecipeParameters;
   const recipe = await api.recipe.create({
-    ...saveRecipeParameters,
+    ...recipeParameters,
     user: { _link: userId },
     source,
+    images: [primaryImage, ...images].map((image) => ({
+      create: {
+        alt: image.alt,
+        file: { copyURL: image.src },
+        height: image.height,
+        user: { _link: userId },
+        width: image.width,
+        src: image.src,
+      },
+    })),
   });
 
   return { slug: recipe.slug };
 }
 
+const imageSchema = z.object({
+  alt: z.string().nullish().describe("The alt text of the image."),
+  src: z.string().describe("The source of the image."),
+  width: z.number().nullish().describe("The width of the image in pixels."),
+  height: z.number().nullish().describe("The height of the image in pixels."),
+});
+
 const saveRecipeParametersSchema = z.object({
   name: z.string().describe("The name of the recipe."),
-  // directions: z.array(z.string()).describe("The steps to prepare the recipe."),
-  // ingredients: z.array(z.string()).describe("The ingredients required for the recipe."),
-  // nutrition: z.array(z.string()).nullish().describe("The nutritional information for the recipe per serving."),
-  directions: z.string().describe("The steps to prepare the recipe in markdown."),
-  ingredients: z.string().describe("The ingredients required for the recipe in markdown."),
-  nutrition: z.string().nullish().describe("The nutritional information for the recipe per serving in markdown."),
+  primaryImage: imageSchema.describe("The primary image of the recipe."),
+  images: z.array(imageSchema).describe("Additional images of the recipe."),
+  directions: z.string().describe("A list of steps to prepare the recipe in Markdown."),
+  ingredients: z.string().describe("A list of ingredients required for the recipe in Markdown."),
+  nutrition: z.string().nullish().describe("The nutritional information for the recipe per serving in Markdown."),
   servingSize: z.number().describe("The number of servings the recipe makes."),
   prepTime: z.number().describe("The time required to prepare the recipe in milliseconds."),
   cookTime: z.number().describe("The time required to cook the recipe in milliseconds."),

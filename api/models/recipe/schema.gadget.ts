@@ -17,6 +17,16 @@ export const schema: GadgetModel = {
       validations: { required: true },
       storageKey: "H558xm9Pkwjc",
     },
+    images: {
+      type: "hasManyThrough",
+      sibling: { model: "image", relatedField: "recipes" },
+      join: {
+        model: "recipeImage",
+        belongsToSelfField: "recipe",
+        belongsToSiblingField: "image",
+      },
+      storageKey: "Eo-AnVXdBJwT",
+    },
     ingredients: {
       type: "json",
       validations: { required: true },

@@ -1,8 +1,9 @@
 import { useFindMany } from "@gadgetinc/react";
 import { Suspense, useState, type ReactElement } from "react";
 import { Form, Link, useSearchParams } from "react-router-dom";
+import placeholder from "../../public/placeholder.svg";
 import { api } from "../api";
-import { Card, CardContent } from "../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 
 export default function () {
@@ -10,7 +11,7 @@ export default function () {
   const [search, setSearch] = useState(searchParams.get("s") ?? "");
 
   return (
-    <div>
+    <div className="pb-32">
       <Form>
         <Input className="p-6" placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
       </Form>
@@ -32,6 +33,17 @@ function RecipeCards(): ReactElement {
       slug: true,
       createdAt: true,
       updatedAt: true,
+      images: {
+        edges: {
+          node: {
+            id: true,
+            height: true,
+            width: true,
+            file: { url: true, mimeType: true },
+            alt: true,
+          },
+        },
+      },
     },
   });
 
@@ -48,14 +60,35 @@ function RecipeCards(): ReactElement {
   }
 
   return (
-    <div className="mt-4 grid grid-cols-3 gap-4 md:grid-cols-6">
-      {recipes.map((recipe) => (
-        <Link to={`/r/${recipe.slug}`} key={recipe.id}>
-          <Card>
-            <CardContent>{recipe.name}</CardContent>
-          </Card>
-        </Link>
-      ))}
+    <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+      {recipes.map((recipe) => {
+        const image = recipe.images.edges.map((image) => image.node)[0] ?? {
+          id: "placeholder",
+          height: 400,
+          width: 600,
+          file: { url: placeholder, mimeType: "image/svg+xml" },
+          alt: "Placeholder",
+        };
+
+        return (
+          <Link to={`/r/${recipe.slug}`} key={recipe.id}>
+            <Card className="h-full justify-between">
+              <CardHeader>
+                <CardTitle>{recipe.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <img
+                  src={image.file.url}
+                  alt={image.alt}
+                  className="aspect-3/2 rounded-lg object-cover"
+                  width={image.width ?? undefined}
+                  height={image.height ?? undefined}
+                />
+              </CardContent>
+            </Card>
+          </Link>
+        );
+      })}
     </div>
   );
 }

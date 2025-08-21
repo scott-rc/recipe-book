@@ -16,6 +16,16 @@ export const permissions: GadgetPermissions = {
         action: true,
       },
       models: {
+        image: {
+          read: {
+            filter: "accessControl/filters/image/tenant.gelly",
+          },
+          actions: {
+            create: true,
+            delete: true,
+            update: true,
+          },
+        },
         recipe: {
           read: {
             filter: "accessControl/filters/recipe/tenant.gelly",
@@ -30,6 +40,14 @@ export const permissions: GadgetPermissions = {
             update: {
               filter: "accessControl/filters/recipe/tenant.gelly",
             },
+          },
+        },
+        recipeImage: {
+          read: true,
+          actions: {
+            create: true,
+            delete: true,
+            update: true,
           },
         },
         user: {

@@ -1,4 +1,4 @@
-import type { AvailableRecipeSelection, Recipe } from "@gadget-client/recipe-book";
+import type { AvailableRecipeSelection } from "@gadget-client/recipe-book";
 import { useActionForm } from "@gadgetinc/react";
 import {
   CheckIcon,
@@ -16,9 +16,11 @@ import {
 import ms from "ms";
 import { useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import placeholder from "../../public/placeholder.svg";
 import { api } from "../api";
 import { Markdown } from "../components/markdown";
 import { Button } from "../components/ui/button";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Switch } from "../components/ui/switch";
@@ -27,26 +29,52 @@ import { cn } from "../lib/utils";
 import type { Route } from "./+types/_app.r.$slug";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  return await api.recipe.findBySlug(params.slug);
+  return await api.recipe.findBySlug(params.slug, {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      prepTime: true,
+      cookTime: true,
+      servingSize: true,
+      source: true,
+      ingredients: true,
+      directions: true,
+      nutrition: true,
+      images: {
+        edges: {
+          cursor: true,
+          node: {
+            id: true,
+            file: { url: true, mimeType: true },
+            alt: true,
+            width: true,
+            height: true,
+          },
+        },
+      },
+    },
+  });
 }
+
+type Recipe = Awaited<ReturnType<typeof clientLoader>>;
 
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
   return (
     <div className="h-full pb-32">
-      {/* Recipe Header Section */}
       <div className="mb-8 rounded-xl border p-8 shadow-sm">
-        <div className="flex justify-between">
-          <RecipeHeading recipe={recipe} />
-          <RecipeWakeLock />
+        <div className="grid grid-cols-2 gap-16">
+          <div className="flex flex-col justify-between gap-4">
+            <RecipeHeading recipe={recipe} />
+            <div className="grid grid-cols-2 gap-4">
+              <RecipePrepTime recipe={recipe} />
+              <RecipeCookTime recipe={recipe} />
+              <RecipeServingSize recipe={recipe} />
+              <RecipeSource recipe={recipe} />
+            </div>
+          </div>
+          <RecipeImages recipe={recipe} />
         </div>
-      </div>
-
-      {/* Recipe Metadata Cards */}
-      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <RecipePrepTime recipe={recipe} />
-        <RecipeCookTime recipe={recipe} />
-        <RecipeServingSize recipe={recipe} />
-        <RecipeSource recipe={recipe} />
       </div>
 
       <div className="flex flex-col gap-8 lg:flex-row">
@@ -89,7 +117,7 @@ function RecipeWakeLock(): ReactElement {
   }, [wakeLock]);
 
   return (
-    <div className="flex items-center gap-2 self-start rounded-lg border p-3">
+    <div className="mt-2 flex items-center gap-2 self-start">
       <Label htmlFor="cook-mode" className="flex items-center gap-2 text-sm">
         <LockIcon className="h-4 w-4" />
         <span className="hidden text-nowrap md:inline">Cook Mode</span>
@@ -99,7 +127,48 @@ function RecipeWakeLock(): ReactElement {
   );
 }
 
-function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"> }): ReactElement {
+function RecipeImages({ recipe }: { recipe: Recipe }): ReactElement {
+  let images = recipe.images.edges.map((image) => image.node);
+  if (!images.length) {
+    images = [
+      {
+        id: "placeholder",
+        height: 400,
+        width: 600,
+        file: { url: placeholder, mimeType: "image/svg+xml" },
+        alt: "Placeholder",
+      },
+    ];
+  }
+
+  return (
+    <Carousel className="w-full">
+      <CarouselContent>
+        {images.map((image) => (
+          <CarouselItem key={image.id}>
+            <img
+              src={image.file.url}
+              alt={image.alt}
+              className="aspect-3/2 rounded-lg object-cover"
+              width={image.width ?? undefined}
+              height={image.height ?? undefined}
+              loading="lazy"
+              decoding="async"
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      {images.length > 1 && (
+        <>
+          <CarouselPrevious />
+          <CarouselNext />
+        </>
+      )}
+    </Carousel>
+  );
+}
+
+function RecipeHeading({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "name" });
 
   if (isEditing) {
@@ -124,7 +193,7 @@ function RecipeHeading({ recipe }: { recipe: Pick<Recipe, "id" | "name" | "slug"
   );
 }
 
-function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): ReactElement {
+function RecipeSource({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "source" });
   const length = recipe.source?.length ?? 80;
 
@@ -158,7 +227,7 @@ function RecipeSource({ recipe }: { recipe: Pick<Recipe, "id" | "source"> }): Re
   );
 }
 
-function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSize"> }): ReactElement {
+function RecipeServingSize({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "servingSize" });
 
   return (
@@ -184,7 +253,7 @@ function RecipeServingSize({ recipe }: { recipe: Pick<Recipe, "id" | "servingSiz
   );
 }
 
-function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> }): ReactElement {
+function RecipePrepTime({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "prepTime" });
   const [prepTime, setPrepTime] = useState(ms(recipe.prepTime, { long: true }));
 
@@ -225,7 +294,7 @@ function RecipePrepTime({ recipe }: { recipe: Pick<Recipe, "id" | "prepTime"> })
   );
 }
 
-function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> }): ReactElement {
+function RecipeCookTime({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "cookTime" });
   const [cookTime, setCookTime] = useState(ms(recipe.cookTime, { long: true }));
 
@@ -265,7 +334,7 @@ function RecipeCookTime({ recipe }: { recipe: Pick<Recipe, "id" | "cookTime"> })
   );
 }
 
-function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredients"> }): ReactElement {
+function RecipeIngredients({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "ingredients" });
   const ingredients = recipe.ingredients as string | string[];
 
@@ -319,7 +388,7 @@ function RecipeIngredients({ recipe }: { recipe: Pick<Recipe, "id" | "ingredient
   );
 }
 
-function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"> }): ReactElement {
+function RecipeDirections({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "directions" });
   const directions = recipe.directions as string | string[];
 
@@ -339,38 +408,32 @@ function RecipeDirections({ recipe }: { recipe: Pick<Recipe, "id" | "directions"
     );
   }
 
-  if (typeof directions === "string") {
-    return (
-      <Editable>
+  return (
+    <Editable>
+      <div className="flex items-center justify-between">
         <div className="mb-4 flex items-center gap-2">
           <ChefHatIcon className="h-6 w-6" />
           <h2 className="text-2xl font-bold">Directions</h2>
           <EditButton />
         </div>
-        <Markdown>{directions}</Markdown>
-      </Editable>
-    );
-  }
-
-  return (
-    <Editable>
-      <div className="mb-4 flex items-center gap-2">
-        <ChefHatIcon className="h-6 w-6" />
-        <h2 className="text-2xl font-bold">Directions</h2>
-        <EditButton />
+        <RecipeWakeLock />
       </div>
       <ul>
-        {directions.map((direction) => (
-          <li key={direction}>
-            <p>{direction}</p>
-          </li>
-        ))}
+        {typeof directions === "string" ? (
+          <Markdown>{directions}</Markdown>
+        ) : (
+          directions.map((direction) => (
+            <li key={direction}>
+              <p>{direction}</p>
+            </li>
+          ))
+        )}
       </ul>
     </Editable>
   );
 }
 
-function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> }): ReactElement {
+function RecipeNutrition({ recipe }: { recipe: Recipe }): ReactElement {
   const { form, isEditing, Editable, EditButton, SaveButton, CancelButton } = useRecipeForm({ recipe, property: "nutrition" });
 
   if (!recipe.nutrition) {
@@ -426,29 +489,27 @@ function RecipeNutrition({ recipe }: { recipe: Pick<Recipe, "id" | "nutrition"> 
   );
 }
 
-type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
-
-function useRecipeForm<TProperty extends keyof AvailableRecipeSelection, TRecipe extends PartialExcept<Recipe, "id" | TProperty>>({
+function useRecipeForm({
   recipe,
   property,
   selectExtra,
   onSuccess,
 }: {
-  recipe: TRecipe;
-  property: TProperty;
+  recipe: Recipe;
+  property: keyof Recipe;
   selectExtra?: AvailableRecipeSelection;
-  onSuccess?: (recipe: TRecipe) => Promise<void> | void;
+  onSuccess?: (recipe: Recipe) => Promise<void> | void;
 }) {
   const navigate = useNavigate();
   const [isEditing, setEditing] = useState(false);
   const form = useActionForm(api.recipe.update, {
     select: { id: true, [property]: true, slug: true, ...selectExtra },
-    send: ["id", property],
-    defaultValues: recipe as Recipe,
+    send: ["id", property as string],
+    defaultValues: recipe,
     onSuccess: async (recipe) => {
       setEditing(false);
       await navigate(`/r/${recipe.slug}`, { replace: true });
-      await onSuccess?.(recipe as TRecipe);
+      await onSuccess?.(recipe as unknown as Recipe);
     },
   });
 

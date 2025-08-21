@@ -1,0 +1,3 @@
+filter ($user: User, $session: Session) on Image [
+  where userId == $user.id
+]
