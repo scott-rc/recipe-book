@@ -4,6 +4,7 @@ import { Form, Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { Skeleton } from "../components/ui/skeleton";
 
 export default function () {
   const [searchParams] = useSearchParams();
@@ -12,11 +13,28 @@ export default function () {
   return (
     <div className="pb-32">
       <Form>
-        <Input className="p-6" placeholder="Search recipes" name="s" value={search} onChange={(e) => setSearch(e.currentTarget.value)} />
+        <Input
+          autoFocus
+          className="p-6"
+          placeholder="Search recipes"
+          name="s"
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
       </Form>
-      <Suspense fallback={<div>Loading...</div>}>
-        <RecipeCards />
-      </Suspense>
+      <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+        <Suspense
+          fallback={
+            <>
+              <Skeleton className="h-80 w-full" />
+              <Skeleton className="h-80 w-full" />
+              <Skeleton className="h-80 w-full" />
+            </>
+          }
+        >
+          <RecipeCards />
+        </Suspense>
+      </div>
     </div>
   );
 }
@@ -59,7 +77,7 @@ function RecipeCards(): ReactElement {
   }
 
   return (
-    <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
+    <>
       {recipes.map((recipe) => {
         const image = recipe.images.edges.map((image) => image.node)[0] ?? {
           id: "placeholder",
@@ -90,6 +108,6 @@ function RecipeCards(): ReactElement {
           </Link>
         );
       })}
-    </div>
+    </>
   );
 }
