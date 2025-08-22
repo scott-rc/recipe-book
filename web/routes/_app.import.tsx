@@ -1,5 +1,5 @@
 import { useActionForm } from "@gadgetinc/react";
-import { CloudDownloadIcon } from "lucide-react";
+import { CloudDownloadIcon, LoaderCircleIcon } from "lucide-react";
 import { Form, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { api } from "../api";
@@ -20,8 +20,8 @@ export default function () {
       <Form onSubmit={submit} className="flex w-full max-w-md flex-col items-center gap-y-4">
         <Input placeholder="Recipe URL" {...register("source")} className="w-full p-6"></Input>
         <Button disabled={formState.isSubmitting} size="lg" className="w-full p-6">
-          <CloudDownloadIcon className="h-8 w-8" />
-          {formState.isSubmitting ? "Importing..." : "Import"}
+          {formState.isSubmitting ? <LoaderCircleIcon className="h-8 w-8 animate-spin" /> : <CloudDownloadIcon className="h-8 w-8" />}
+          Import
         </Button>
         <p className="text-red-500">{error?.message}</p>
       </Form>
