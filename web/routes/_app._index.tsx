@@ -77,11 +77,13 @@ function RecipeCards(): ReactElement {
               </CardHeader>
               <CardContent>
                 <img
-                  src={image.file.url}
-                  alt={image.alt}
                   className="aspect-3/2 rounded-lg object-cover"
+                  src={image.file.url}
+                  alt={image.alt ?? "Recipe image"}
                   width={image.width ?? undefined}
                   height={image.height ?? undefined}
+                  loading="lazy"
+                  decoding="async"
                 />
               </CardContent>
             </Card>

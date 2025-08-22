@@ -7,11 +7,7 @@ export const schema: GadgetModel = {
   type: "gadget/model-schema/v1",
   storageKey: "cmN9C_tSSgVE",
   fields: {
-    alt: {
-      type: "string",
-      validations: { required: true },
-      storageKey: "cuiNgRcdIoNO",
-    },
+    alt: { type: "string", storageKey: "cuiNgRcdIoNO" },
     file: {
       type: "file",
       allowPublicAccess: true,
@@ -24,7 +20,11 @@ export const schema: GadgetModel = {
       parent: { model: "recipe" },
       storageKey: "suyazyTKhfus",
     },
-    src: { type: "string", storageKey: "kWiJcowQPUu3" },
+    src: {
+      type: "string",
+      validations: { required: true },
+      storageKey: "kWiJcowQPUu3",
+    },
     user: {
       type: "belongsTo",
       parent: { model: "user" },

@@ -213,9 +213,9 @@ function RecipeImages({ recipe }: { recipe: Recipe }): ReactElement {
         {images.map((image) => (
           <CarouselItem key={image.id}>
             <img
-              src={image.file.url}
-              alt={image.alt}
               className="aspect-3/2 rounded-lg object-cover"
+              src={image.file.url}
+              alt={image.alt ?? "Recipe image"}
               width={image.width ?? undefined}
               height={image.height ?? undefined}
               loading="lazy"
