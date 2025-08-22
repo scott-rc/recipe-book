@@ -14,7 +14,7 @@ export const schema: GadgetModel = {
     },
     file: {
       type: "file",
-      allowPublicAccess: false,
+      allowPublicAccess: true,
       validations: { required: true },
       storageKey: "gPgO9zqmCLgA",
     },
