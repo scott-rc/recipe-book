@@ -19,15 +19,10 @@ export const schema: GadgetModel = {
       storageKey: "gPgO9zqmCLgA",
     },
     height: { type: "number", storageKey: "yXseAwE2JRKm" },
-    recipes: {
-      type: "hasManyThrough",
-      sibling: { model: "recipe", relatedField: "images" },
-      join: {
-        model: "recipeImage",
-        belongsToSelfField: "image",
-        belongsToSiblingField: "recipe",
-      },
-      storageKey: "tTdnujkKb5Vj",
+    recipe: {
+      type: "belongsTo",
+      parent: { model: "recipe" },
+      storageKey: "suyazyTKhfus",
     },
     src: { type: "string", storageKey: "kWiJcowQPUu3" },
     user: {

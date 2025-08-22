@@ -1,8 +1,6 @@
-import { load } from "cheerio";
 import { type ActionOptions, type ImportGlobalActionContext } from "gadget-server";
-import { convert } from "html-to-text";
 import { z } from "zod";
-import { zodToJsonSchema } from "zod-to-json-schema";
+import { importRecipe } from "../lib/import";
 
 export const options: ActionOptions = {
   timeoutMS: 900000,
@@ -16,107 +14,29 @@ const paramsSchema = z.object({
   source: z.string().url(),
 });
 
-export async function run({ params, logger, connections, session, api }: ImportGlobalActionContext): Promise<{ slug: string }> {
+export async function run({ params, session, api }: ImportGlobalActionContext): Promise<{ slug: string }> {
   const userId = session?.get("user") as string;
   if (!userId) {
     throw new Error("Unauthorized");
   }
 
   const { source } = paramsSchema.parse(params);
-  logger.info({ source, userId }, "importing recipe");
-
-  const response = await fetch(source);
-  let html = await response.text();
-
-  const $ = load(html);
-  const primaryContentId =
-    $("a")
-      .filter((_, el) => $(el).text().toLowerCase().includes("jump to recipe"))
-      .attr("href") ??
-    $("a")
-      .filter((_, el) => $(el).text().toLowerCase().includes("skip to recipe"))
-      .attr("href") ??
-    $("a")
-      .filter((_, el) => $(el).text().toLowerCase().includes("skip to content"))
-      .attr("href");
-
-  if (primaryContentId && primaryContentId.startsWith("#") && primaryContentId.length > 1) {
-    logger.info({ primaryContentId }, "extracting primary content");
-    html = $(primaryContentId).html()?.trim() || $(primaryContentId).nextAll().wrapAll("<div></div>").parent().html()?.trim() || html;
-  }
-
-  const normalizedText = convert(html, { selectors: [{ selector: "*", options: { ignoreHref: true } }] })
-    .split(/(\r\n|\n|\r)/gm)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0)
-    .join("\n");
-
-  const completion = await connections.openai.chat.completions.create({
-    model: "gpt-5",
-    max_completion_tokens: 99_999,
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a helpful assistant that extracts recipes as JSON for a database. Ensure to extract the recipe as accurately as possible.",
-      },
-      { role: "user", content: normalizedText },
-    ],
-    tools: [
-      {
-        type: "function",
-        function: {
-          name: "save_recipe",
-          description: "Save the extracted recipe to the database",
-          parameters: zodToJsonSchema(saveRecipeParametersSchema),
-        },
-      },
-    ],
-  });
-
-  const fn = completion.choices[0]?.message.tool_calls?.[0]?.function;
-  if (fn?.name !== "save_recipe") {
-    logger.error({ completion }, "gpt didn't use save_recipe function");
-    throw new Error("Failed to extract recipe");
-  }
-
-  const json: unknown = JSON.parse(fn.arguments);
-  const saveRecipeParameters = saveRecipeParametersSchema.parse(json);
-  const { primaryImage, images, ...recipeParameters } = saveRecipeParameters;
+  const recipeParameters = await importRecipe(source);
   const recipe = await api.recipe.create({
     ...recipeParameters,
     user: { _link: userId },
     source,
-    images: [primaryImage, ...images].map((image) => ({
+    images: recipeParameters.images.map((image) => ({
       create: {
         alt: image.alt,
         file: { copyURL: image.src },
         height: image.height,
+        src: image.src,
         user: { _link: userId },
         width: image.width,
-        src: image.src,
       },
     })),
   });
 
   return { slug: recipe.slug };
 }
-
-const imageSchema = z.object({
-  alt: z.string().nullish().describe("The alt text of the image."),
-  src: z.string().describe("The source of the image."),
-  width: z.number().nullish().describe("The width of the image in pixels."),
-  height: z.number().nullish().describe("The height of the image in pixels."),
-});
-
-const saveRecipeParametersSchema = z.object({
-  name: z.string().describe("The name of the recipe."),
-  primaryImage: imageSchema.describe("The primary image of the recipe."),
-  images: z.array(imageSchema).describe("Additional images of the recipe."),
-  directions: z.string().describe("A list of steps to prepare the recipe in Markdown."),
-  ingredients: z.string().describe("A list of ingredients required for the recipe in Markdown."),
-  nutrition: z.string().nullish().describe("The nutritional information for the recipe per serving in Markdown."),
-  servingSize: z.number().describe("The number of servings the recipe makes."),
-  prepTime: z.number().describe("The time required to prepare the recipe in milliseconds."),
-  cookTime: z.number().describe("The time required to cook the recipe in milliseconds."),
-});

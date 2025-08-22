@@ -18,13 +18,8 @@ export const schema: GadgetModel = {
       storageKey: "H558xm9Pkwjc",
     },
     images: {
-      type: "hasManyThrough",
-      sibling: { model: "image", relatedField: "recipes" },
-      join: {
-        model: "recipeImage",
-        belongsToSelfField: "recipe",
-        belongsToSiblingField: "image",
-      },
+      type: "hasMany",
+      children: { model: "image", belongsToField: "recipe" },
       storageKey: "Eo-AnVXdBJwT",
     },
     ingredients: {
@@ -34,7 +29,10 @@ export const schema: GadgetModel = {
     },
     name: {
       type: "string",
-      validations: { required: true, unique: true },
+      validations: {
+        required: true,
+        unique: { scopeByField: "user" },
+      },
       storageKey: "qMPhapPNVzPa",
     },
     nutrition: { type: "json", storageKey: "ljnnAE0FZu_o" },
@@ -50,7 +48,10 @@ export const schema: GadgetModel = {
     },
     slug: {
       type: "string",
-      validations: { required: true, unique: true },
+      validations: {
+        required: true,
+        unique: { scopeByField: "user" },
+      },
       storageKey: "ulez72BnRAyM",
     },
     source: { type: "url", storageKey: "WrFF26SYVySN" },

@@ -21,9 +21,15 @@ export const permissions: GadgetPermissions = {
             filter: "accessControl/filters/image/tenant.gelly",
           },
           actions: {
-            create: true,
-            delete: true,
-            update: true,
+            create: {
+              filter: "accessControl/filters/image/tenant.gelly",
+            },
+            delete: {
+              filter: "accessControl/filters/image/tenant.gelly",
+            },
+            update: {
+              filter: "accessControl/filters/image/tenant.gelly",
+            },
           },
         },
         recipe: {
@@ -37,17 +43,12 @@ export const permissions: GadgetPermissions = {
             delete: {
               filter: "accessControl/filters/recipe/tenant.gelly",
             },
+            reimport: {
+              filter: "accessControl/filters/recipe/tenant.gelly",
+            },
             update: {
               filter: "accessControl/filters/recipe/tenant.gelly",
             },
-          },
-        },
-        recipeImage: {
-          read: true,
-          actions: {
-            create: true,
-            delete: true,
-            update: true,
           },
         },
         user: {

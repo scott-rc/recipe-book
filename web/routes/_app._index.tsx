@@ -1,7 +1,6 @@
 import { useFindMany } from "@gadgetinc/react";
 import { Suspense, useState, type ReactElement } from "react";
 import { Form, Link, useSearchParams } from "react-router-dom";
-import placeholder from "../../public/placeholder.svg";
 import { api } from "../api";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -66,7 +65,7 @@ function RecipeCards(): ReactElement {
           id: "placeholder",
           height: 400,
           width: 600,
-          file: { url: placeholder, mimeType: "image/svg+xml" },
+          file: { url: "/placeholder.svg", mimeType: "image/svg+xml" },
           alt: "Placeholder",
         };
 

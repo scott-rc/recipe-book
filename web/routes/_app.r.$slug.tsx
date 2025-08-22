@@ -4,25 +4,30 @@ import {
   CheckIcon,
   ChefHatIcon,
   ClockIcon,
+  EllipsisIcon,
   LinkIcon,
   ListIcon,
+  LoaderCircleIcon,
   LockIcon,
   PencilIcon,
+  RefreshCcwIcon,
   ScaleIcon,
   TimerIcon,
+  TrashIcon,
   UsersIcon,
   XIcon,
 } from "lucide-react";
 import ms from "ms";
 import { useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import placeholder from "../../public/placeholder.svg";
+import { Link, redirect, useFetcher, useNavigate } from "react-router-dom";
+import { z } from "zod";
 import { api } from "../api";
 import { Markdown } from "../components/markdown";
 import { Button } from "../components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from "../components/ui/menubar";
 import { Switch } from "../components/ui/switch";
 import { Textarea } from "../components/ui/textarea";
 import { cn } from "../lib/utils";
@@ -59,10 +64,71 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 type Recipe = Awaited<ReturnType<typeof clientLoader>>;
 
+export async function clientAction({ request }: Route.ClientActionArgs) {
+  const formData = await request.formData();
+  const recipeId = z.string().parse(formData.get("recipeId"));
+  switch (request.method) {
+    case "POST": {
+      await api.recipe.reimport(recipeId);
+      return;
+    }
+    case "DELETE": {
+      await api.recipe.delete(recipeId);
+      return redirect("/");
+    }
+    default: {
+      throw new Error(`Unsupported method: ${request.method}`);
+    }
+  }
+}
+
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
+  const fetcher = useFetcher();
+
   return (
     <div className="h-full pb-32">
-      <div className="mb-8 rounded-xl border p-8 shadow-sm">
+      <div className="mb-8 flex flex-col rounded-xl border p-8 shadow-sm">
+        <Menubar className="self-end border-none shadow-none">
+          <fetcher.Form>
+            <MenubarMenu>
+              <MenubarTrigger>
+                <EllipsisIcon className="h-4 w-4" />
+              </MenubarTrigger>
+              <MenubarContent align="end">
+                <MenubarItem
+                  disabled={fetcher.state === "submitting"}
+                  onSelect={async (event) => {
+                    event.preventDefault();
+                    await fetcher.submit({ recipeId: recipe.id }, { method: "POST" });
+                  }}
+                >
+                  {fetcher.state === "submitting" && fetcher.formMethod === "POST" ? (
+                    <LoaderCircleIcon className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <RefreshCcwIcon className="h-4 w-4" />
+                  )}
+                  Reimport
+                </MenubarItem>
+                <MenubarSeparator />
+                <MenubarItem
+                  variant="destructive"
+                  disabled={fetcher.state === "submitting"}
+                  onSelect={async (event) => {
+                    event.preventDefault();
+                    await fetcher.submit({ recipeId: recipe.id }, { method: "DELETE" });
+                  }}
+                >
+                  {fetcher.state === "submitting" && fetcher.formMethod === "DELETE" ? (
+                    <LoaderCircleIcon className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <TrashIcon className="h-4 w-4" />
+                  )}
+                  Delete
+                </MenubarItem>
+              </MenubarContent>
+            </MenubarMenu>
+          </fetcher.Form>
+        </Menubar>
         <div className="grid grid-cols-2 gap-16">
           <div className="flex flex-col justify-between gap-4">
             <RecipeHeading recipe={recipe} />
@@ -73,10 +139,10 @@ export default function ({ loaderData: recipe }: Route.ComponentProps) {
               <RecipeSource recipe={recipe} />
             </div>
           </div>
+
           <RecipeImages recipe={recipe} />
         </div>
       </div>
-
       <div className="flex flex-col gap-8 lg:flex-row">
         <div className="lg:w-1/3">
           <div className="rounded-lg border p-6 shadow-sm">
@@ -135,7 +201,7 @@ function RecipeImages({ recipe }: { recipe: Recipe }): ReactElement {
         id: "placeholder",
         height: 400,
         width: 600,
-        file: { url: placeholder, mimeType: "image/svg+xml" },
+        file: { url: "/placeholder.svg", mimeType: "image/svg+xml" },
         alt: "Placeholder",
       },
     ];
@@ -185,9 +251,11 @@ function RecipeHeading({ recipe }: { recipe: Recipe }): ReactElement {
 
   return (
     <Editable>
-      <div className="flex items-start">
-        <h1 className="inline-block max-w-lg text-4xl font-bold text-balance">{recipe.name}</h1>
-        <EditButton />
+      <div className="flex items-start justify-between">
+        <div className="flex items-start">
+          <h1 className="inline-block max-w-lg text-4xl font-bold text-balance">{recipe.name}</h1>
+          <EditButton />
+        </div>
       </div>
     </Editable>
   );
