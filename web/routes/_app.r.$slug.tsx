@@ -120,7 +120,7 @@ function RecipeMenu({ recipe }: { recipe: Recipe }): ReactElement {
     values: { id: recipe.id },
     onSuccess: async () => {
       blocker.reset?.();
-      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
+      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true, viewTransition: true });
     },
   });
 
@@ -128,7 +128,7 @@ function RecipeMenu({ recipe }: { recipe: Recipe }): ReactElement {
     values: { id: recipe.id },
     onSuccess: async () => {
       blocker.reset?.();
-      await navigate(href("/"), { replace: true });
+      await navigate(href("/"), { replace: true, viewTransition: true });
     },
   });
 
@@ -598,7 +598,7 @@ function useRecipeForm({
     defaultValues: recipe,
     onSuccess: async (recipe) => {
       setEditing(false);
-      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
+      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true, viewTransition: true });
       await onSuccess?.(recipe as unknown as Recipe);
     },
   });

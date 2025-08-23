@@ -88,7 +88,7 @@ function RecipeCards(): ReactElement {
         };
 
         return (
-          <Link to={`/r/${recipe.slug}`} key={recipe.id}>
+          <Link to={`/r/${recipe.slug}`} key={recipe.id} viewTransition>
             <Card className="h-full justify-between">
               <CardHeader>
                 <CardTitle>{recipe.name}</CardTitle>
