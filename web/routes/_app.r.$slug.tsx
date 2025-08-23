@@ -9,6 +9,7 @@ import {
   ListIcon,
   LoaderCircleIcon,
   LockIcon,
+  LockOpenIcon,
   PencilIcon,
   RefreshCcwIcon,
   ScaleIcon,
@@ -61,66 +62,13 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   });
 }
 
-type Recipe = Awaited<ReturnType<typeof clientLoader>>;
+type Recipe = Route.ComponentProps["loaderData"];
 
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
-  const navigate = useNavigate();
-
-  const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
-    values: { id: recipe.id },
-    onSuccess: async () => {
-      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
-    },
-    onError(error) {
-      console.error("failed to reimport recipe", error);
-    },
-  });
-
-  const { submit: deleteRecipe, formState: deleteRecipeState } = useActionForm(api.recipe.delete, {
-    values: { id: recipe.id },
-    onSuccess: async () => {
-      await navigate(href("/"), { replace: true });
-    },
-  });
-
   return (
     <div className="h-full pb-32">
-      <div className="mb-8 flex flex-col rounded-xl border p-8 shadow-sm">
-        <Menubar className="self-end border-none shadow-none">
-          <MenubarMenu>
-            <MenubarTrigger>
-              <EllipsisIcon className="h-4 w-4" />
-            </MenubarTrigger>
-            <MenubarContent align="end">
-              <MenubarItem
-                disabled={reimportState.isSubmitting}
-                onSelect={async (event) => {
-                  event.preventDefault();
-                  await reimport();
-                }}
-              >
-                {reimportState.isSubmitting ? (
-                  <LoaderCircleIcon className="h-4 w-4 animate-spin" />
-                ) : (
-                  <RefreshCcwIcon className="h-4 w-4" />
-                )}
-                Reimport
-              </MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem
-                variant="destructive"
-                disabled={deleteRecipeState.isSubmitting}
-                onSelect={async (event) => {
-                  event.preventDefault();
-                  await deleteRecipe();
-                }}
-              >
-                {deleteRecipeState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <TrashIcon className="h-4 w-4" />}
-                Delete
-              </MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+      <div className="mb-8 flex flex-col gap-1 rounded-xl border p-8 shadow-sm">
+        <RecipeMenu recipe={recipe} />
         <div className="grid grid-cols-2 gap-16">
           <div className="flex flex-col justify-between gap-4">
             <RecipeHeading recipe={recipe} />
@@ -131,7 +79,6 @@ export default function ({ loaderData: recipe }: Route.ComponentProps) {
               <RecipeSource recipe={recipe} />
             </div>
           </div>
-
           <RecipeImages recipe={recipe} />
         </div>
       </div>
@@ -156,6 +103,63 @@ export default function ({ loaderData: recipe }: Route.ComponentProps) {
   );
 }
 
+function RecipeMenu({ recipe }: { recipe: Recipe }): ReactElement {
+  const navigate = useNavigate();
+
+  const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
+    values: { id: recipe.id },
+    onSuccess: async () => {
+      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
+    },
+    onError(error) {
+      console.error("failed to reimport recipe", error);
+    },
+  });
+
+  const { submit: deleteRecipe, formState: deleteRecipeState } = useActionForm(api.recipe.delete, {
+    values: { id: recipe.id },
+    onSuccess: async () => {
+      await navigate(href("/"), { replace: true });
+    },
+  });
+
+  const isSubmitting = reimportState.isSubmitting || deleteRecipeState.isSubmitting;
+
+  return (
+    <Menubar className="self-end border-none shadow-none">
+      <MenubarMenu>
+        <MenubarTrigger>
+          <EllipsisIcon className="h-4 w-4" />
+        </MenubarTrigger>
+        <MenubarContent align="end">
+          <MenubarItem
+            disabled={isSubmitting}
+            onSelect={async (event) => {
+              event.preventDefault();
+              await reimport();
+            }}
+          >
+            {reimportState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <RefreshCcwIcon className="h-4 w-4" />}
+            Reimport
+          </MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem
+            variant="destructive"
+            disabled={isSubmitting}
+            onSelect={async (event) => {
+              event.preventDefault();
+              await deleteRecipe();
+            }}
+          >
+            {deleteRecipeState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <TrashIcon className="h-4 w-4" />}
+            Delete
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
+  );
+}
+
 function RecipeWakeLock(): ReactElement {
   const [wakeLock, setWakeLock] = useState(false);
 
@@ -177,7 +181,7 @@ function RecipeWakeLock(): ReactElement {
   return (
     <div className="mt-2 flex items-center gap-2 self-start">
       <Label htmlFor="cook-mode" className="flex items-center gap-2 text-sm">
-        <LockIcon className="h-4 w-4" />
+        {wakeLock ? <LockIcon className="h-4 w-4" /> : <LockOpenIcon className="h-4 w-4" />}
         <span className="hidden text-nowrap md:inline">Cook Mode</span>
         <Switch id="cook-mode" checked={wakeLock} onCheckedChange={setWakeLock} />
       </Label>
