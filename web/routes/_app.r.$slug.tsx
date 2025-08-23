@@ -19,8 +19,7 @@ import {
 } from "lucide-react";
 import ms from "ms";
 import { useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
-import { Link, redirect, useFetcher, useNavigate } from "react-router-dom";
-import { z } from "zod";
+import { href, Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { Markdown } from "../components/markdown";
 import { Button } from "../components/ui/button";
@@ -64,70 +63,63 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 type Recipe = Awaited<ReturnType<typeof clientLoader>>;
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
-  const formData = await request.formData();
-  const recipeId = z.string().parse(formData.get("recipeId"));
-  switch (request.method) {
-    case "POST": {
-      await api.recipe.reimport(recipeId);
-      return;
-    }
-    case "DELETE": {
-      await api.recipe.delete(recipeId);
-      return redirect("/");
-    }
-    default: {
-      throw new Error(`Unsupported method: ${request.method}`);
-    }
-  }
-}
-
 export default function ({ loaderData: recipe }: Route.ComponentProps) {
-  const fetcher = useFetcher();
+  const navigate = useNavigate();
+
+  const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
+    values: { id: recipe.id },
+    onSuccess: async () => {
+      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
+    },
+    onError(error) {
+      console.error("failed to reimport recipe", error);
+    },
+  });
+
+  const { submit: deleteRecipe, formState: deleteRecipeState } = useActionForm(api.recipe.delete, {
+    values: { id: recipe.id },
+    onSuccess: async () => {
+      await navigate(href("/"), { replace: true });
+    },
+  });
 
   return (
     <div className="h-full pb-32">
       <div className="mb-8 flex flex-col rounded-xl border p-8 shadow-sm">
         <Menubar className="self-end border-none shadow-none">
-          <fetcher.Form>
-            <MenubarMenu>
-              <MenubarTrigger>
-                <EllipsisIcon className="h-4 w-4" />
-              </MenubarTrigger>
-              <MenubarContent align="end">
-                <MenubarItem
-                  disabled={fetcher.state === "submitting"}
-                  onSelect={async (event) => {
-                    event.preventDefault();
-                    await fetcher.submit({ recipeId: recipe.id }, { method: "POST" });
-                  }}
-                >
-                  {fetcher.state === "submitting" && fetcher.formMethod === "POST" ? (
-                    <LoaderCircleIcon className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <RefreshCcwIcon className="h-4 w-4" />
-                  )}
-                  Reimport
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem
-                  variant="destructive"
-                  disabled={fetcher.state === "submitting"}
-                  onSelect={async (event) => {
-                    event.preventDefault();
-                    await fetcher.submit({ recipeId: recipe.id }, { method: "DELETE" });
-                  }}
-                >
-                  {fetcher.state === "submitting" && fetcher.formMethod === "DELETE" ? (
-                    <LoaderCircleIcon className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <TrashIcon className="h-4 w-4" />
-                  )}
-                  Delete
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </fetcher.Form>
+          <MenubarMenu>
+            <MenubarTrigger>
+              <EllipsisIcon className="h-4 w-4" />
+            </MenubarTrigger>
+            <MenubarContent align="end">
+              <MenubarItem
+                disabled={reimportState.isSubmitting}
+                onSelect={async (event) => {
+                  event.preventDefault();
+                  await reimport();
+                }}
+              >
+                {reimportState.isSubmitting ? (
+                  <LoaderCircleIcon className="h-4 w-4 animate-spin" />
+                ) : (
+                  <RefreshCcwIcon className="h-4 w-4" />
+                )}
+                Reimport
+              </MenubarItem>
+              <MenubarSeparator />
+              <MenubarItem
+                variant="destructive"
+                disabled={deleteRecipeState.isSubmitting}
+                onSelect={async (event) => {
+                  event.preventDefault();
+                  await deleteRecipe();
+                }}
+              >
+                {deleteRecipeState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <TrashIcon className="h-4 w-4" />}
+                Delete
+              </MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
         </Menubar>
         <div className="grid grid-cols-2 gap-16">
           <div className="flex flex-col justify-between gap-4">
@@ -576,7 +568,7 @@ function useRecipeForm({
     defaultValues: recipe,
     onSuccess: async (recipe) => {
       setEditing(false);
-      await navigate(`/r/${recipe.slug}`, { replace: true });
+      await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
       await onSuccess?.(recipe as unknown as Recipe);
     },
   });

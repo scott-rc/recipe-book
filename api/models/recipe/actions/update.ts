@@ -1,4 +1,5 @@
 import { type ActionOptions, applyParams, save, type UpdateRecipeActionContext } from "gadget-server";
+import { preventCrossUserDataAccess } from "gadget-server/auth";
 
 export const options: ActionOptions = {
   actionType: "update",
@@ -8,5 +9,6 @@ export async function run({ params, record, logger }: UpdateRecipeActionContext)
   logger.debug({ params, record }, "updating recipe");
   applyParams(params, record);
   record.slug = record.name.toLowerCase().replace(/\s+/g, "-");
+  await preventCrossUserDataAccess(params, record);
   await save(record);
 }

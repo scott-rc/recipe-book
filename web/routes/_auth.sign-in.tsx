@@ -1,5 +1,5 @@
 import { useActionForm } from "@gadgetinc/react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { href, Link, useLocation, useNavigate } from "react-router";
 import { api } from "../api";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -15,7 +15,7 @@ export default function () {
     submit,
     formState: { errors, isSubmitting },
   } = useActionForm(api.user.signIn, {
-    onSuccess: () => navigate("/"),
+    onSuccess: () => navigate(href("/")),
   });
 
   return (

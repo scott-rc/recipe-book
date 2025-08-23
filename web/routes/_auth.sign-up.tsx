@@ -1,5 +1,5 @@
 import { useActionForm } from "@gadgetinc/react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { href, Link, useLocation, useNavigate } from "react-router";
 import { api } from "../api";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
@@ -15,7 +15,7 @@ export default function () {
     register,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useActionForm(api.user.signUp, {
-    onSuccess: () => navigate("/"),
+    onSuccess: () => navigate(href("/")),
   });
 
   return (
