@@ -20,9 +20,19 @@ import {
 } from "lucide-react";
 import ms from "ms";
 import { useEffect, useState, type PropsWithChildren, type ReactElement } from "react";
-import { href, Link, useNavigate } from "react-router-dom";
+import { href, Link, useBlocker, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { Markdown } from "../components/markdown";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 import { Button } from "../components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
 import { Input } from "../components/ui/input";
@@ -109,54 +119,70 @@ function RecipeMenu({ recipe }: { recipe: Recipe }): ReactElement {
   const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
     values: { id: recipe.id },
     onSuccess: async () => {
+      blocker.reset?.();
       await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true });
-    },
-    onError(error) {
-      console.error("failed to reimport recipe", error);
     },
   });
 
   const { submit: deleteRecipe, formState: deleteRecipeState } = useActionForm(api.recipe.delete, {
     values: { id: recipe.id },
     onSuccess: async () => {
+      blocker.reset?.();
       await navigate(href("/"), { replace: true });
     },
   });
 
   const isSubmitting = reimportState.isSubmitting || deleteRecipeState.isSubmitting;
+  const blocker = useBlocker(isSubmitting);
 
   return (
-    <Menubar className="self-end border-none shadow-none">
-      <MenubarMenu>
-        <MenubarTrigger>
-          <EllipsisIcon className="h-4 w-4" />
-        </MenubarTrigger>
-        <MenubarContent align="end">
-          <MenubarItem
-            disabled={isSubmitting}
-            onSelect={async (event) => {
-              event.preventDefault();
-              await reimport();
-            }}
-          >
-            {reimportState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <RefreshCcwIcon className="h-4 w-4" />}
-            Reimport
-          </MenubarItem>
-          <MenubarSeparator />
-          <MenubarItem
-            variant="destructive"
-            disabled={isSubmitting}
-            onSelect={async (event) => {
-              event.preventDefault();
-              await deleteRecipe();
-            }}
-          >
-            {deleteRecipeState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <TrashIcon className="h-4 w-4" />}
-            Delete
-          </MenubarItem>
-        </MenubarContent>
-      </MenubarMenu>
-    </Menubar>
+    <>
+      <Menubar className="self-end border-none shadow-none">
+        <MenubarMenu>
+          <MenubarTrigger>
+            <EllipsisIcon className="h-4 w-4" />
+          </MenubarTrigger>
+          <MenubarContent align="end">
+            <MenubarItem
+              disabled={isSubmitting}
+              onSelect={async (event) => {
+                event.preventDefault();
+                await reimport();
+              }}
+            >
+              {reimportState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <RefreshCcwIcon className="h-4 w-4" />}
+              Reimport
+            </MenubarItem>
+            <MenubarSeparator />
+            <MenubarItem
+              variant="destructive"
+              disabled={isSubmitting}
+              onSelect={async (event) => {
+                event.preventDefault();
+                await deleteRecipe();
+              }}
+            >
+              {deleteRecipeState.isSubmitting ? <LoaderCircleIcon className="h-4 w-4 animate-spin" /> : <TrashIcon className="h-4 w-4" />}
+              Delete
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+      <AlertDialog open={blocker.state === "blocked" && isSubmitting}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to leave?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You are currently {reimportState.isSubmitting ? "reimporting" : "deleting"} this recipe. Are you sure you want to leave?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={blocker.reset}>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={blocker.proceed}>Leave</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }
 
