@@ -1,19 +1,33 @@
 import { useActionForm } from "@gadgetinc/react";
 import { CloudDownloadIcon, LoaderCircleIcon } from "lucide-react";
-import { Form, href, useNavigate } from "react-router-dom";
+import { Form, href, useBlocker, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { api } from "../api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../components/ui/alert-dialog";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 
 export default function () {
   const navigate = useNavigate();
+
   const { register, submit, formState, error } = useActionForm(api.import, {
     onSuccess: async (data) => {
+      blocker.reset?.();
       const { slug } = z.object({ slug: z.string() }).parse(data);
       await navigate(href("/r/:slug", { slug }), { replace: true });
     },
   });
+
+  const blocker = useBlocker(formState.isSubmitting);
 
   return (
     <div className="grid h-full place-items-center">
@@ -25,6 +39,18 @@ export default function () {
         </Button>
         <p className="text-red-500">{error?.message}</p>
       </Form>
+      <AlertDialog open={blocker.state === "blocked" && formState.isSubmitting}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to leave?</AlertDialogTitle>
+            <AlertDialogDescription>You are currently importing a recipe.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={blocker.reset}>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={blocker.proceed}>Leave</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
