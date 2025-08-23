@@ -1,14 +1,15 @@
 import { useFindMany } from "@gadgetinc/react";
-import { Suspense, useState, type ReactElement } from "react";
+import { Suspense, type ReactElement } from "react";
 import { Form, Link, useSearchParams } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 import { api } from "../api";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Skeleton } from "../components/ui/skeleton";
 
 export default function () {
-  const [searchParams] = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get("s") ?? "");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setDebouncedSearchParams = useDebouncedCallback((s: string) => setSearchParams({ s }), 250);
 
   return (
     <div className="pb-32">
@@ -18,8 +19,8 @@ export default function () {
           className="p-6"
           placeholder="Search recipes"
           name="s"
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
+          defaultValue={searchParams.get("s") ?? ""}
+          onChange={(e) => setDebouncedSearchParams(e.currentTarget.value)}
         />
       </Form>
       <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
