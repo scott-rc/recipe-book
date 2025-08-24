@@ -39,18 +39,18 @@ export interface AuthOutletContext {
 export default function ({ loaderData: { session, user } }: Route.ComponentProps) {
   return (
     <div className="relative isolate mx-auto flex h-svh min-h-svh w-full max-w-6xl flex-col bg-white px-4 pt-8 pb-32 max-lg:flex-col">
-      <header className="mb-8 flex items-center justify-between rounded-lg px-4 pt-2">
-        <h1 className="text-2xl font-bold">
+      <header className="mb-8 flex items-center justify-between rounded-lg">
+        <h1>
           <Link to="/" className="flex items-center gap-x-2 transition-colors" viewTransition>
             <BookOpenIcon className="h-6 w-6" />
-            <span className="hidden md:block">Recipe Book</span>
+            <span className="xs:text-2xl text-xl font-bold">Recipe Book</span>
           </Link>
         </h1>
         <div className="flex items-center gap-x-5 text-xl">
           <Button asChild variant="outline">
             <Link to="/import" viewTransition>
               <CloudDownloadIcon className="h-4 w-4" />
-              <span className="hidden md:block">Import</span>
+              <span className="xs:block hidden">Import</span>
             </Link>
           </Button>
           <Link to="/" className="transition-opacity hover:opacity-80" viewTransition>

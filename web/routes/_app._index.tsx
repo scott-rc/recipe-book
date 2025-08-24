@@ -1,13 +1,18 @@
-import { useFindMany } from "@gadgetinc/react";
-import { Suspense, type ReactElement } from "react";
 import { Form, Link, useSearchParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import { api } from "../api";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { RecipeCard, recipeSelections } from "../components/recipe";
 import { Input } from "../components/ui/input";
-import { Skeleton } from "../components/ui/skeleton";
+import type { Route } from "./+types/_app._index";
 
-export default function () {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  return await api.recipe.findMany({
+    search: new URL(request.url).searchParams.get("s"),
+    select: recipeSelections,
+  });
+}
+
+export default function ({ loaderData: recipes }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const setDebouncedSearchParams = useDebouncedCallback((s: string) => setSearchParams({ s }), 250);
 
@@ -23,92 +28,20 @@ export default function () {
           onChange={(e) => setDebouncedSearchParams(e.currentTarget.value)}
         />
       </Form>
-      <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3">
-        <Suspense
-          fallback={
-            <>
-              <Skeleton className="h-80 w-full" />
-              <Skeleton className="h-80 w-full" />
-              <Skeleton className="h-80 w-full" />
-            </>
-          }
-        >
-          <RecipeCards />
-        </Suspense>
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {recipes.length === 0 && (
+          <div className="mt-8">
+            <h1 className="text-center">No recipes found</h1>
+          </div>
+        )}
+        {recipes.map((recipe) => {
+          return (
+            <Link to={`/r/${recipe.slug}`} viewTransition key={recipe.id}>
+              <RecipeCard recipe={recipe} />
+            </Link>
+          );
+        })}
       </div>
     </div>
-  );
-}
-
-function RecipeCards(): ReactElement {
-  const [searchParams] = useSearchParams();
-  const [{ error, data: recipes }] = useFindMany(api.recipe, {
-    search: searchParams.get("s"),
-    suspense: true,
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      createdAt: true,
-      updatedAt: true,
-      images: {
-        edges: {
-          node: {
-            id: true,
-            height: true,
-            width: true,
-            file: { url: true, mimeType: true },
-            alt: true,
-          },
-        },
-      },
-    },
-  });
-
-  if (error) {
-    return <p className="text-red-500">{error.message}</p>;
-  }
-
-  if (!recipes?.length) {
-    return (
-      <div className="mt-8">
-        <h1 className="text-center">No recipes found</h1>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      {recipes.map((recipe) => {
-        const image = recipe.images.edges.map((image) => image.node)[0] ?? {
-          id: "placeholder",
-          height: 400,
-          width: 600,
-          file: { url: "/placeholder.svg", mimeType: "image/svg+xml" },
-          alt: "Placeholder",
-        };
-
-        return (
-          <Link to={`/r/${recipe.slug}`} key={recipe.id} viewTransition>
-            <Card className="h-full justify-between">
-              <CardHeader>
-                <CardTitle>{recipe.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <img
-                  className="aspect-3/2 rounded-lg object-cover"
-                  src={image.file.url}
-                  alt={image.alt ?? "Recipe image"}
-                  width={image.width ?? undefined}
-                  height={image.height ?? undefined}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </CardContent>
-            </Card>
-          </Link>
-        );
-      })}
-    </>
   );
 }
