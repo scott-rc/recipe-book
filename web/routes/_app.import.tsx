@@ -16,12 +16,12 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 
-export default function () {
+export default function ImportRoute() {
   const navigate = useNavigate();
 
   const { register, submit, formState, error } = useActionForm(api.import, {
     onSuccess: async (data) => {
-      blocker.reset?.();
+      blocker.proceed?.();
       const { slug } = z.object({ slug: z.string() }).parse(data);
       await navigate(href("/r/:slug", { slug }), { replace: true });
     },

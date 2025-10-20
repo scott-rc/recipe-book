@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Separator } from "../components/ui/separator";
 
-export default function () {
+export default function SignUpRoute() {
   const { search } = useLocation();
   const navigate = useNavigate();
   const {

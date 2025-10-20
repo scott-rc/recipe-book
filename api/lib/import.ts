@@ -77,7 +77,14 @@ export async function importRecipe(url: string) {
     .sort((a, b) => (b.width ?? 0) + (b.height ?? 0) - ((a.width ?? 0) + (a.height ?? 0)));
 
   // remove images that fail to be fetched
-  await Promise.allSettled(images.map((image) => fetch(image.src).catch(() => images.splice(images.indexOf(image), 1))));
+  await Promise.allSettled(
+    images.map((image) =>
+      fetch(image.src).catch(() => {
+        logger.warn({ image }, "failed to fetch image");
+        images.splice(images.indexOf(image), 1);
+      }),
+    ),
+  );
 
   return { ...saveRecipeParameters, images };
 }

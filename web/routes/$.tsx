@@ -1,6 +1,6 @@
 import { Button } from "../components/ui/button";
 
-export default function () {
+export default function NotFoundRoute() {
   return (
     <div className="bg-background min-h-screen">
       <div className="container mx-auto flex min-h-[60vh] flex-col items-center justify-center px-4 py-16 text-center">

@@ -1,21 +1,20 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import * as React from "react";
-
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
-interface CarouselProps {
+type CarouselProps = {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
-}
+};
 
 type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0];
@@ -115,7 +114,7 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        className={cn("flex items-center gap-4", className)}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -152,18 +151,14 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CarouselPrevious({ className, variant = "outline", size = "icon", ...props }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const { scrollPrev, canScrollPrev } = useCarousel();
 
   return (
     <Button
       data-slot="carousel-previous"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute size-8 rounded-full",
-        orientation === "horizontal" ? "bottom-8 left-2/5" : "bottom-8 left-2/5 rotate-90",
-        className,
-      )}
+      className={cn("size-8 rounded-full", className)}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
@@ -175,18 +170,14 @@ function CarouselPrevious({ className, variant = "outline", size = "icon", ...pr
 }
 
 function CarouselNext({ className, variant = "outline", size = "icon", ...props }: React.ComponentProps<typeof Button>) {
-  const { orientation, scrollNext, canScrollNext } = useCarousel();
+  const { scrollNext, canScrollNext } = useCarousel();
 
   return (
     <Button
       data-slot="carousel-next"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute size-8 rounded-full",
-        orientation === "horizontal" ? "right-2/5 bottom-8" : "right-2/5 bottom-8 rotate-90",
-        className,
-      )}
+      className={cn("size-8 rounded-full", className)}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}

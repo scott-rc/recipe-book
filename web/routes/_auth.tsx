@@ -9,7 +9,7 @@ export async function clientLoader() {
   return {};
 }
 
-export default function () {
+export default function AuthRoute() {
   return (
     <div className="grid h-dvh w-dvw place-items-center">
       <Outlet />

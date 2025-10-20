@@ -1,22 +1,27 @@
 import eslint from "@eslint/js";
 import prettier from "eslint-config-prettier";
 import importPlugin from "eslint-plugin-import";
-// @ts-expect-error eslint-plugin-only-warn is not typed
-import onlyWarn from "eslint-plugin-only-warn";
-import tseslint from "typescript-eslint";
+import "eslint-plugin-only-warn";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+import typescriptEslint from "typescript-eslint";
 
-export default tseslint.config(
+export default typescriptEslint.config(
   {
     ignores: [".gadget/**", ".react-router/**", "./web/components/ui/**"],
   },
   eslint.configs.recommended,
-  tseslint.configs.strictTypeChecked,
-  tseslint.configs.stylisticTypeChecked,
+  typescriptEslint.configs.strictTypeChecked,
+  typescriptEslint.configs.stylisticTypeChecked,
+  // @ts-expect-error eslint-plugin-react-refresh is not typed
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat["jsx-runtime"],
+  // @ts-expect-error eslint-plugin-react-hooks is not typed correctly
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  reactHooksPlugin.configs.flat["recommended-latest"],
   prettier,
   {
     plugins: {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      "only-warn": onlyWarn,
       import: importPlugin,
     },
     languageOptions: {
@@ -26,6 +31,9 @@ export default tseslint.config(
       },
     },
     settings: {
+      react: {
+        version: "detect",
+      },
       "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
       "import/resolver": {
         node: true,
@@ -39,26 +47,4 @@ export default tseslint.config(
       "@typescript-eslint/restrict-template-expressions": ["warn", { allowNumber: true }],
     },
   },
-  // {
-  //   files: ["web/**/*.tsx", "web/**/*.ts"],
-  //   rules: {
-  //     "no-restricted-imports": [
-  //       "warn",
-  //       {
-  //         paths: [
-  //           {
-  //             name: "@radix-ui/themes",
-  //             importNames: ["Link"],
-  //             message: "use Link from web/app/components/Link.tsx instead",
-  //           },
-  //           {
-  //             name: "react-router-dom",
-  //             importNames: ["Link"],
-  //             message: "use Link from web/app/components/Link.tsx instead",
-  //           },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  // },
 );

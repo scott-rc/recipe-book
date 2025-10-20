@@ -36,9 +36,9 @@ export interface AuthOutletContext {
   user: Route.ComponentProps["loaderData"]["user"];
 }
 
-export default function ({ loaderData: { session, user } }: Route.ComponentProps) {
+export default function AppRoute({ loaderData: { session, user } }: Route.ComponentProps) {
   return (
-    <div className="relative isolate mx-auto flex h-svh min-h-svh w-full max-w-6xl flex-col bg-white px-4 pt-8 pb-32 max-lg:flex-col">
+    <div className="relative mx-auto flex h-svh min-h-svh w-full max-w-md flex-col bg-white px-4 pt-8 sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
       <header className="mb-8 flex items-center justify-between rounded-lg">
         <h1>
           <Link to="/" className="flex items-center gap-x-2 transition-colors" viewTransition>
@@ -61,7 +61,7 @@ export default function ({ loaderData: { session, user } }: Route.ComponentProps
           </Link>
         </div>
       </header>
-      <main className="flex-1">
+      <main className="flex-1 pb-32">
         <Outlet context={{ session, user } as AuthOutletContext} />
       </main>
     </div>

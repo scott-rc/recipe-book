@@ -17,7 +17,7 @@ export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
   }
 };
 
-export default function ({ loaderData }: Route.ComponentProps) {
+export default function VerifyEmailRoute({ loaderData }: Route.ComponentProps) {
   const { success, error } = loaderData;
   if (error) {
     return <p className="format-message error">{error.message}</p>;
