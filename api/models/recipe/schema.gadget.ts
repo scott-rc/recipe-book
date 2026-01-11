@@ -19,6 +19,11 @@ export const schema: GadgetModel = {
       storageKey: "H558xm9Pkwjc",
       filterIndex: false,
     },
+    directionsV2: {
+      type: "string",
+      storageKey: "c68ekFKb1SNv",
+      filterIndex: false,
+    },
     images: {
       type: "hasMany",
       children: { model: "image", belongsToField: "recipe" },
@@ -28,6 +33,11 @@ export const schema: GadgetModel = {
       type: "json",
       validations: { required: true },
       storageKey: "jUhWCYuOd3gr",
+      filterIndex: false,
+    },
+    ingredientsV2: {
+      type: "string",
+      storageKey: "Jqjikg99GvkK",
       filterIndex: false,
     },
     name: {
@@ -42,6 +52,11 @@ export const schema: GadgetModel = {
     nutrition: {
       type: "json",
       storageKey: "ljnnAE0FZu_o",
+      filterIndex: false,
+    },
+    nutritionV2: {
+      type: "string",
+      storageKey: "tiIXa2VzCtHo",
       filterIndex: false,
     },
     prepTime: {
