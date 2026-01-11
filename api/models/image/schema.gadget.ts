@@ -4,29 +4,49 @@ import type { GadgetModel } from "gadget-server";
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
-  type: "gadget/model-schema/v1",
+  type: "gadget/model-schema/v2",
   storageKey: "cmN9C_tSSgVE",
   fields: {
-    alt: { type: "string", storageKey: "cuiNgRcdIoNO" },
+    alt: {
+      type: "string",
+      storageKey: "cuiNgRcdIoNO",
+      filterIndex: false,
+    },
     file: {
       type: "file",
       allowPublicAccess: true,
       validations: { required: true },
       storageKey: "gPgO9zqmCLgA",
     },
-    height: { type: "number", storageKey: "yXseAwE2JRKm" },
-    index: { type: "number", storageKey: "ebQmo2cDrhu2" },
+    height: {
+      type: "number",
+      storageKey: "yXseAwE2JRKm",
+      filterIndex: false,
+    },
+    index: {
+      type: "number",
+      storageKey: "ebQmo2cDrhu2",
+      filterIndex: false,
+    },
     recipe: {
       type: "belongsTo",
       parent: { model: "recipe" },
       storageKey: "suyazyTKhfus",
     },
-    src: { type: "string", storageKey: "kWiJcowQPUu3" },
+    src: {
+      type: "string",
+      storageKey: "kWiJcowQPUu3",
+      filterIndex: false,
+    },
     user: {
       type: "belongsTo",
       parent: { model: "user" },
       storageKey: "cmN9C_tSSgVE-BelongsTo-User",
     },
-    width: { type: "number", storageKey: "5MPaIbMDoOf3" },
+    width: {
+      type: "number",
+      storageKey: "5MPaIbMDoOf3",
+      filterIndex: false,
+    },
   },
 };
