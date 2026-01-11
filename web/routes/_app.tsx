@@ -1,9 +1,18 @@
 import { BookOpenIcon, CloudDownloadIcon } from "lucide-react";
-import { Link, Outlet, redirect } from "react-router";
+import { href, Link, Outlet, redirect, useLocation, useMatches } from "react-router";
 import { api } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../components/ui/breadcrumb";
 import { Button } from "../components/ui/button";
 import type { Route } from "./+types/_app";
+import type { Recipe } from "./_app.r.$slug";
 
 export async function clientLoader() {
   const session = await api.currentSession.get({
@@ -37,15 +46,55 @@ export interface AuthOutletContext {
 }
 
 export default function AppRoute({ loaderData: { session, user } }: Route.ComponentProps) {
+  const matches = useMatches();
+  const location = useLocation();
+
+  // Find the recipe route match to get recipe data
+  const recipeMatch = matches.find((match) => match.id === "routes/_app.r.$slug");
+  const recipe = recipeMatch?.loaderData as Recipe | undefined;
+
+  // Check if we're on the edit page
+  const isEditPage = location.pathname.endsWith("/edit");
+
   return (
     <div className="relative mx-auto flex h-svh min-h-svh w-full max-w-md flex-col bg-white px-4 pt-8 sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
       <header className="mb-8 flex items-center justify-between rounded-lg">
-        <h1>
-          <Link to="/" className="flex items-center gap-x-2 transition-colors" viewTransition>
-            <BookOpenIcon className="h-6 w-6" />
-            <span className="xs:text-2xl text-xl font-bold">Recipe Book</span>
-          </Link>
-        </h1>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem className="flex items-center gap-x-2">
+              <BookOpenIcon className="h-5 w-5" />
+              {recipe ? (
+                <BreadcrumbLink to={href("/")} className="text-base font-semibold">
+                  Recipe Book
+                </BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage className="text-base font-semibold">Recipe Book</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+            {recipe && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  {isEditPage ? (
+                    <BreadcrumbLink to={href("/r/:slug", { slug: recipe.slug })} className="text-base font-medium">
+                      {recipe.name}
+                    </BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbPage className="text-base font-medium">{recipe.name}</BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+              </>
+            )}
+            {recipe && isEditPage && (
+              <>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-base font-normal">Edit</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            )}
+          </BreadcrumbList>
+        </Breadcrumb>
         <div className="flex items-center gap-x-5 text-xl">
           <Button asChild variant="outline">
             <Link to="/import" viewTransition>

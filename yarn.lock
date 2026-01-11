@@ -275,6 +275,11 @@
     "@babel/plugin-transform-modules-commonjs" "^7.27.1"
     "@babel/plugin-transform-typescript" "^7.27.1"
 
+"@babel/runtime@^7.20.13":
+  version "7.28.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.4.tgz#a70226016fabe25c5783b2f22d3e1c9bc5ca3326"
+  integrity sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==
+
 "@babel/runtime@^7.21.0":
   version "7.24.8"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.8.tgz#5d958c3827b13cc6d05e038c07fb2e5e3420d82e"
@@ -332,6 +337,37 @@
   dependencies:
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
+
+"@dnd-kit/accessibility@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-3.1.1.tgz#3b4202bd6bb370a0730f6734867785919beac6af"
+  integrity sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==
+  dependencies:
+    tslib "^2.0.0"
+
+"@dnd-kit/core@^6.3.1":
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/core/-/core-6.3.1.tgz#4c36406a62c7baac499726f899935f93f0e6d003"
+  integrity sha512-xkGBRQQab4RLwgXxoqETICr6S5JlogafbhNsidmrkVv2YRs5MLwpjoF2qpiGjQt8S9AoxtIV603s0GIUpY5eYQ==
+  dependencies:
+    "@dnd-kit/accessibility" "^3.1.1"
+    "@dnd-kit/utilities" "^3.2.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/sortable@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/sortable/-/sortable-10.0.0.tgz#1f9382b90d835cd5c65d92824fa9dafb78c4c3e8"
+  integrity sha512-+xqhmIIzvAYMGfBYYnbKuNicfSsk4RksY2XdmJhT+HAC01nix6fHCztU68jooFiMUB01Ky3F0FyOvhG/BZrWkg==
+  dependencies:
+    "@dnd-kit/utilities" "^3.2.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/utilities@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/utilities/-/utilities-3.2.2.tgz#5a32b6af356dc5f74d61b37d6f7129a4040ced7b"
+  integrity sha512-+MKAJEOfaBe5SmV6t34p80MMKhjvUz0vRrvVJbPT0WElzaOJ/1xs+D+KDv+tD/NE5ujfrChEcshd4fLn0wpiqg==
+  dependencies:
+    tslib "^2.0.0"
 
 "@emnapi/core@^1.4.3":
   version "1.4.5"
@@ -629,10 +665,10 @@
   version "0.0.0"
   uid ""
 
-"@gadgetinc/api-client-core@0.15.45", "@gadgetinc/api-client-core@^0.15.45":
-  version "0.15.45"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/api-client-core/-/api-client-core-0.15.45.tgz#368c13b079422352175c578b3164d02a5de72279"
-  integrity sha512-4eTsoAIYavMCyY9q33DBW2lCn+sG68hKw7Uct5dp6gLMuWasxUQQ5M2LWMmN5RZQFma/wCQHNK5dcU44xrZSQw==
+"@gadgetinc/api-client-core@0.15.46", "@gadgetinc/api-client-core@^0.15.46":
+  version "0.15.46"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/api-client-core/-/api-client-core-0.15.46.tgz#08123dd62faaa95a60f9aa42bbc3e518ecc178be"
+  integrity sha512-NKc/1PKo6KzVnPaTnuQCVxbg6Q7Vvkr0Q4au4i/vr/aZQ8RQagcxqlDq6XElO8xM/UfIN0qXMK63ImeBdmo9Gw==
   dependencies:
     "@0no-co/graphql.web" "^1.0.4"
     "@n1ru4l/graphql-live-query" "^0.10.0"
@@ -650,26 +686,33 @@
     wonka "^6.3.2"
     ws "^8.18.2"
 
-"@gadgetinc/react@^0.21.4":
-  version "0.21.4"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.21.4.tgz#8cdb8f1b8ed5ee9191f514e3bf218e532737df6a"
-  integrity sha512-LWAyWJ67GWpISiqTann18717cIIEskZWMJn9A4pPRmSHM2wOs9LZa0N0EtSMPJhVOm+xEKLP5GJ+El+45JoEeg==
+"@gadgetinc/core@0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/core/-/core-0.13.0.tgz#9d5e4566ca00c26cf22e0e84789e03ad078a55db"
+  integrity sha512-kVhbCoxXsn/o8NzQtFUdzaz3NH+LKQMYwQ+dGfxXWzGiHah7lRkPqh39CFCX8c1wM/PG/mpSOXRap5islmEXyg==
+
+"@gadgetinc/react@^0.22.2":
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.22.2.tgz#9cb71881a94bb63621c509f629401638deedb6bb"
+  integrity sha512-1DDafMnu93ZC6m3xGdZvJycz4s64Gmgoym8ZgxjhWAS1dqj9Of7o5xYPQBILIfGBQDTJNyqxGEIM+Hc2lqrxjg==
   dependencies:
     "@0no-co/graphql.web" "^1.0.4"
-    "@gadgetinc/api-client-core" "^0.15.45"
-    "@hookform/resolvers" "^3.3.1"
+    "@gadgetinc/api-client-core" "^0.15.46"
+    "@hookform/resolvers" "^5.2.1"
     filesize "^10.1.2"
     pluralize "^8.0.0"
     react-fast-compare "^3.2.2"
-    react-hook-form "~7.48.2"
+    react-hook-form "~7.62.0"
     tslib "^2.6.2"
     urql "^4.0.4"
     yup "^1.2.0"
 
-"@hookform/resolvers@^3.3.1":
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-3.10.0.tgz#7bfd18113daca4e57e27e1205b7d5a2d371aa59a"
-  integrity sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==
+"@hookform/resolvers@^5.2.1":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-5.2.2.tgz#5ac16cd89501ca31671e6e9f0f5c5d762a99aa12"
+  integrity sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==
+  dependencies:
+    "@standard-schema/utils" "^0.3.0"
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"
@@ -1718,6 +1761,11 @@
   dependencies:
     domhandler "^5.0.3"
     selderee "^0.11.0"
+
+"@standard-schema/utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@standard-schema/utils/-/utils-0.3.0.tgz#3d5e608f16c2390c10528e98e59aef6bf73cae7b"
+  integrity sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==
 
 "@tailwindcss/node@4.1.11":
   version "4.1.11"
@@ -4030,10 +4078,10 @@ get-symbol-description@^1.1.0:
     es-errors "^1.3.0"
     get-intrinsic "^1.2.6"
 
-ggt@^1.7.3:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/ggt/-/ggt-1.7.3.tgz#22a3ec7de5429190ad85d67832ce3c648861643a"
-  integrity sha512-BdAsm2RS+drRNy+w1YS0USIJR+0Q2kZJ1aq2TOtxBrraQSScID+N2qoEk19893B+cylznNJ4+9G0RbjxokdNYw==
+ggt@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/ggt/-/ggt-2.0.1.tgz#c671d252dc6d1af200d6c255c417deb2776cbd27"
+  integrity sha512-tz2hS8md7bagIBPJtgAuADponc8DGgdGdqnF6CoMEs2Rku6oe5N9BNEArNSVg4x/TzVNtKEpjVuTE7PtkWSvnA==
 
 git-hooks-list@^4.0.0:
   version "4.1.1"
@@ -5377,6 +5425,11 @@ negotiator@~0.6.4:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.4.tgz#777948e2452651c570b712dd01c23e262713fff7"
   integrity sha512-myRT3DiWPHqho5PrJaIRyaMv2kgYf0mUVgBNOYMuCH5Ki1yEiQaf/ZJuQ62nvpc44wL5WDbTX7yGJi1Neevw8w==
 
+next-themes@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/next-themes/-/next-themes-0.4.6.tgz#8d7e92d03b8fea6582892a50a928c9b23502e8b6"
+  integrity sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==
+
 node-domexception@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-domexception/-/node-domexception-1.0.0.tgz#6888db46a1f71c0b76b3f7555016b63fe64766e5"
@@ -5990,10 +6043,10 @@ react-fast-compare@^3.2.2:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
-react-hook-form@~7.48.2:
-  version "7.48.2"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.48.2.tgz#01150354d2be61412ff56a030b62a119283b9935"
-  integrity sha512-H0T2InFQb1hX7qKtDIZmvpU1Xfn/bdahWBN1fH19gSe4bBEqTfmlr7H3XWTaVtiK4/tpPaI1F3355GPMZYge+A==
+react-hook-form@~7.62.0:
+  version "7.62.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.62.0.tgz#2d81e13c2c6b6d636548e440818341ca753218d0"
+  integrity sha512-7KWFejc98xqG/F4bAxpL41NB3o1nnvQO1RWZT3TqRZYL8RryQETGfEdVnJN2fy1crCiBLLjkRBVK05j24FxJGA==
 
 react-is@^16.13.1:
   version "16.13.1"
@@ -6067,6 +6120,15 @@ react-style-singleton@^2.2.2, react-style-singleton@^2.2.3:
   dependencies:
     get-nonce "^1.0.0"
     tslib "^2.0.0"
+
+react-textarea-autosize@^8.5.9:
+  version "8.5.9"
+  resolved "https://registry.yarnpkg.com/react-textarea-autosize/-/react-textarea-autosize-8.5.9.tgz#ab8627b09aa04d8a2f45d5b5cd94c84d1d4a8893"
+  integrity sha512-U1DGlIQN5AwgjTyOEnI1oCcMuEr1pv1qOtklB2l4nyMGbHzWrI0eFsYK0zos2YWqAolJyG0IWJaqWmWj5ETh0A==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    use-composed-ref "^1.3.0"
+    use-latest "^1.2.1"
 
 react@^19.1.1:
   version "19.1.1"
@@ -6511,6 +6573,11 @@ sonic-boom@^4.0.1:
   integrity sha512-hTSD/6JMLyT4r9zeof6UtuBDpjJ9sO08/nmS5djaA9eozT9oOlNdpXSnzcgj4FTqpk3nkLrs61l4gip9r1HCrQ==
   dependencies:
     atomic-sleep "^1.0.0"
+
+sonner@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/sonner/-/sonner-2.0.7.tgz#810c1487a67ec3370126e0f400dfb9edddc3e4f6"
+  integrity sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==
 
 sort-object-keys@^1.1.3:
   version "1.1.3"
@@ -7178,10 +7245,27 @@ use-callback-ref@^1.3.3:
   dependencies:
     tslib "^2.0.0"
 
+use-composed-ref@^1.3.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/use-composed-ref/-/use-composed-ref-1.4.0.tgz#09e023bf798d005286ad85cd20674bdf5770653b"
+  integrity sha512-djviaxuOOh7wkj0paeO1Q/4wMZ8Zrnag5H6yBvzN7AKKe8beOaED9SF5/ByLqsku8NP4zQqsvM2u3ew/tJK8/w==
+
 use-debounce@^10.0.5:
   version "10.0.5"
   resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-10.0.5.tgz#dfad6efbab981a9cff6c7cd8678509d1bc21e34f"
   integrity sha512-Q76E3lnIV+4YT9AHcrHEHYmAd9LKwUAbPXDm7FlqVGDHiSOhX3RDjT8dm0AxbJup6WgOb1YEcKyCr11kBJR5KQ==
+
+use-isomorphic-layout-effect@^1.1.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.2.1.tgz#2f11a525628f56424521c748feabc2ffcc962fce"
+  integrity sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==
+
+use-latest@^1.2.1:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/use-latest/-/use-latest-1.3.0.tgz#549b9b0d4c1761862072f0899c6f096eb379137a"
+  integrity sha512-mhg3xdm9NaM8q+gLT8KryJPnRFOz1/5XPBhmDEVZK1webPzDjrPk7f/mbpeLqTgB9msytYWANxgALOCJKnLvcQ==
+  dependencies:
+    use-isomorphic-layout-effect "^1.1.1"
 
 use-sidecar@^1.1.3:
   version "1.1.3"

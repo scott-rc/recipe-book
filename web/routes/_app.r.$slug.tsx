@@ -3,7 +3,7 @@ import { api } from "../api";
 import type { Route } from "./+types/_app.r.$slug";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
-  return await api.recipe.findBySlug(params.slug, {
+  const recipe = await api.recipe.findBySlug(params.slug, {
     select: {
       id: true,
       name: true,
@@ -21,14 +21,21 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
           node: {
             id: true,
             file: { url: true, mimeType: true },
+            src: true,
             alt: true,
             width: true,
             height: true,
+            index: true,
+            userId: true,
           },
         },
       },
     },
   });
+
+  recipe.images.edges.sort((a, b) => (a.node.index ?? 0) - (b.node.index ?? 0));
+
+  return recipe;
 }
 
 export type Recipe = Route.ComponentProps["loaderData"];

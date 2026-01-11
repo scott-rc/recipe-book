@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Links, Outlet, Scripts, ScrollRestoration, useNavigate } from "react-router";
 import { api } from "./api";
 import "./app.css";
+import { Toaster } from "./components/ui/sonner";
 
 export default function App() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function App() {
         <Suspense fallback={<div className="h-screen w-screen animate-pulse bg-gray-100" />}>
           <GadgetProvider api={api} navigate={(path) => void navigate(path)}>
             <Outlet />
+            <Toaster />
           </GadgetProvider>
           <ScrollRestoration />
           <Scripts />

@@ -15,16 +15,13 @@ export const schema: GadgetModel = {
       storageKey: "gPgO9zqmCLgA",
     },
     height: { type: "number", storageKey: "yXseAwE2JRKm" },
+    index: { type: "number", storageKey: "ebQmo2cDrhu2" },
     recipe: {
       type: "belongsTo",
       parent: { model: "recipe" },
       storageKey: "suyazyTKhfus",
     },
-    src: {
-      type: "string",
-      validations: { required: true },
-      storageKey: "kWiJcowQPUu3",
-    },
+    src: { type: "string", storageKey: "kWiJcowQPUu3" },
     user: {
       type: "belongsTo",
       parent: { model: "user" },

@@ -11,7 +11,7 @@ import { cn } from "../lib/utils";
 import type { Route } from "./+types/_app._index";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
-  return await api.recipe.findMany({
+  const recipes = await api.recipe.findMany({
     search: new URL(request.url).searchParams.get("s"),
     select: {
       id: true,
@@ -30,11 +30,18 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
             alt: true,
             width: true,
             height: true,
+            index: true,
           },
         },
       },
     },
   });
+
+  for (const recipe of recipes) {
+    recipe.images.edges.sort((a, b) => (a.node.index ?? 0) - (b.node.index ?? 0));
+  }
+
+  return recipes;
 }
 
 export type Recipe = Route.ComponentProps["loaderData"][number];
@@ -66,7 +73,7 @@ export default function IndexRoute({ loaderData: recipes }: Route.ComponentProps
         )}
 
         {recipes.map((recipe) => {
-          const image = recipe.images.edges.map((image) => image.node)[0] ?? {
+          const image = recipe.images.edges[0]?.node ?? {
             id: "placeholder",
             height: 500,
             width: 500,
