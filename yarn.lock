@@ -4338,9 +4338,9 @@ get-symbol-description@^1.1.0:
     get-intrinsic "^1.2.6"
 
 ggt@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ggt/-/ggt-2.0.1.tgz#c671d252dc6d1af200d6c255c417deb2776cbd27"
-  integrity sha512-tz2hS8md7bagIBPJtgAuADponc8DGgdGdqnF6CoMEs2Rku6oe5N9BNEArNSVg4x/TzVNtKEpjVuTE7PtkWSvnA==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/ggt/-/ggt-2.1.0.tgz#5ec4be61b59afbf2c4f4e88f879706b0e3f8a4de"
+  integrity sha512-+vjBlq76mVlqUx0CEjLBN5gvb6WwMq0Bqlt7jWr3VtKyTgEdRH2OOEwOsbH+6DWo7L5YJzOeJeiQCcHa63V9Yg==
 
 git-hooks-list@^4.0.0:
   version "4.1.1"
@@ -7647,7 +7647,7 @@ vite-node@^3.2.2:
     pathe "^2.0.3"
     vite "^5.0.0 || ^6.0.0 || ^7.0.0-0"
 
-"vite@^5.0.0 || ^6.0.0 || ^7.0.0-0", vite@^6.3.5:
+"vite@^5.0.0 || ^6.0.0 || ^7.0.0-0":
   version "6.3.5"
   resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.5.tgz#fec73879013c9c0128c8d284504c6d19410d12a3"
   integrity sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==
