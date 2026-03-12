@@ -1,5 +1,5 @@
 import { useActionForm } from "@gadgetinc/react";
-import { CloudDownloadIcon, LoaderCircleIcon } from "lucide-react";
+import { CloudDownloadIcon, LinkIcon, LoaderCircleIcon } from "lucide-react";
 import { Form, href, useBlocker, useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { api } from "../api";
@@ -14,6 +14,8 @@ import {
   AlertDialogTitle,
 } from "../components/ui/alert-dialog";
 import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+import { Field, FieldError } from "../components/ui/field";
 import { Input } from "../components/ui/input";
 
 export default function ImportRoute() {
@@ -31,23 +33,31 @@ export default function ImportRoute() {
 
   return (
     <div className="grid h-full place-items-center">
-      <Form onSubmit={submit} className="flex w-full max-w-md flex-col items-center gap-y-4">
-        <Input
-          className="w-full px-4 py-8 text-lg"
-          required
-          placeholder="Recipe URL"
-          {...register("source")}
-        />
-        <Button disabled={formState.isSubmitting} size="lg" className="h-full w-full py-6 text-lg">
-          {formState.isSubmitting ? (
-            <LoaderCircleIcon className="size-6 animate-spin" />
-          ) : (
-            <CloudDownloadIcon className="size-6" />
-          )}
-          Import
-        </Button>
-        <p className="text-red-500">{error?.message}</p>
-      </Form>
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-xl">Import Recipe</CardTitle>
+          <CardDescription>Paste a URL from any recipe site to import it.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form onSubmit={submit} className="flex flex-col gap-4">
+            <Field>
+              <div className="relative">
+                <LinkIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
+                <Input className="py-6 pl-9 text-base" required placeholder="https://..." {...register("source")} />
+              </div>
+              <FieldError>{error?.message}</FieldError>
+            </Field>
+            <Button disabled={formState.isSubmitting} size="lg" className="w-full">
+              {formState.isSubmitting ? (
+                <LoaderCircleIcon className="size-5 animate-spin" />
+              ) : (
+                <CloudDownloadIcon className="size-5" />
+              )}
+              Import
+            </Button>
+          </Form>
+        </CardContent>
+      </Card>
       <AlertDialog open={blocker.state === "blocked" && formState.isSubmitting}>
         <AlertDialogContent>
           <AlertDialogHeader>
