@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "react-perf", "import"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn",
+    "style": "warn"
+  },
+  "ignorePatterns": [".gadget/**", ".react-router/**", "web/components/ui/**"],
+  "rules": {
+    "typescript/no-confusing-void-expression": ["warn", { "ignoreVoidReturningFunctions": true, "ignoreArrowShorthand": true }],
+    "typescript/no-misused-promises": ["warn", { "checksVoidReturn": false }],
+    "typescript/prefer-nullish-coalescing": ["warn", { "ignorePrimitives": { "string": true } }],
+    "typescript/restrict-template-expressions": ["warn", { "allowNumber": true }]
+  }
+}

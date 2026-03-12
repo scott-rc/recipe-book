@@ -32,9 +32,18 @@ export default function ImportRoute() {
   return (
     <div className="grid h-full place-items-center">
       <Form onSubmit={submit} className="flex w-full max-w-md flex-col items-center gap-y-4">
-        <Input className="w-full px-4 py-8 text-lg" required placeholder="Recipe URL" {...register("source")} />
+        <Input
+          className="w-full px-4 py-8 text-lg"
+          required
+          placeholder="Recipe URL"
+          {...register("source")}
+        />
         <Button disabled={formState.isSubmitting} size="lg" className="h-full w-full py-6 text-lg">
-          {formState.isSubmitting ? <LoaderCircleIcon className="size-6 animate-spin" /> : <CloudDownloadIcon className="size-6" />}
+          {formState.isSubmitting ? (
+            <LoaderCircleIcon className="size-6 animate-spin" />
+          ) : (
+            <CloudDownloadIcon className="size-6" />
+          )}
           Import
         </Button>
         <p className="text-red-500">{error?.message}</p>

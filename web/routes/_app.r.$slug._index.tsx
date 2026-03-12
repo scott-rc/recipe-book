@@ -287,7 +287,7 @@ function RecipeWakeLock({ cookMode, setCookMode }: { cookMode: boolean; setCookM
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    // oxlint-disable-next-line typescript/no-invalid-void-type
     let wakeLockPromise: Promise<WakeLockSentinel | void> | undefined;
     if ("wakeLock" in navigator) {
       wakeLockPromise = navigator.wakeLock.request("screen").catch((error: unknown) => console.error(error));

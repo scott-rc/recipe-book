@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 140,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "sortImports": {
+    "enabled": true
+  },
+  "sortTailwindcss": {
+    "enabled": true
+  },
+  "sortPackageJson": {
+    "enabled": true
+  },
+  "ignorePatterns": [".gadget/**", ".react-router/**"]
+}

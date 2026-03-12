@@ -16,7 +16,7 @@ export async function run({ api }: MigrateGlobalActionContext): Promise<void> {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  // oxlint-disable-next-line typescript/no-unnecessary-condition
   while (true) {
     for (const recipe of recipes) {
       logger.info({ id: recipe.id, name: recipe.name }, "migrating recipe");
