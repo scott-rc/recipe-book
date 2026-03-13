@@ -1,12 +1,14 @@
 # Environment Variables
 
 **📖 Full docs:**
+
 - [Environment variables](https://docs.gadget.dev/guides/development-tools/environment-variables.md)
 - [Environments](https://docs.gadget.dev/guides/environments.md)
 
 ## Setting Environment Variables
 
 **In Gadget IDE:**
+
 1. Go to **Settings → Environment Variables**
 2. Add variables for development and production
 3. Save changes
@@ -67,12 +69,14 @@ export const run = async ({ logger }) => {
 ## Secrets Management
 
 **DO:**
+
 - ✅ Store API keys in environment variables
 - ✅ Use different keys for dev and production
 - ✅ Rotate keys regularly
 - ✅ Use backend variables for secrets
 
 **DON'T:**
+
 - ❌ Commit secrets to code
 - ❌ Use `GADGET_PUBLIC_*` for secrets
 - ❌ Share production keys in Slack

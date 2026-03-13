@@ -7,6 +7,7 @@ Routes are custom HTTP handlers built on Fastify. They provide full control over
 ## When to Use
 
 ✅ **Use routes for:**
+
 - HTTP streaming
 - Custom content types (images, PDFs, binary)
 - Non-standard HTTP patterns (WebSockets, long-polling)
@@ -14,6 +15,7 @@ Routes are custom HTTP handlers built on Fastify. They provide full control over
 - Custom OAuth flows
 
 ❌ **Don't use routes for:**
+
 - Standard CRUD - use actions
 - Business logic - use actions (transactional)
 - Operations needing permissions - actions enforce RBAC
@@ -158,6 +160,7 @@ export default async function (request, reply) {
 ## Best Practices
 
 **DO:**
+
 - ✅ Use routes only when actions don't fit
 - ✅ Validate inputs explicitly
 - ✅ Handle errors gracefully
@@ -166,6 +169,7 @@ export default async function (request, reply) {
 - ✅ Return appropriate status codes
 
 **DON'T:**
+
 - ❌ Use routes for standard CRUD
 - ❌ Forget to check authentication
 - ❌ Run long operations synchronously
@@ -188,6 +192,7 @@ export default async function (request, reply) {
 - [webhooks.md](webhooks.md) - Webhook handling
 
 **📖 More info:**
+
 - [HTTP routes overview](https://docs.gadget.dev/guides/http-routes.md)
 - [Route structure](https://docs.gadget.dev/guides/http-routes/route-structure.md)
 - [Common use cases](https://docs.gadget.dev/guides/http-routes/common-use-cases.md)

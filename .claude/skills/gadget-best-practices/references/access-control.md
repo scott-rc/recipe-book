@@ -27,7 +27,7 @@ Create in **Settings → Roles** (e.g., `editor`, `admin`, `viewer`)
 
 ```javascript
 await api.user.update("user-id", {
-  roleList: ["signed-in", "editor"]
+  roleList: ["signed-in", "editor"],
 });
 ```
 
@@ -51,16 +51,16 @@ export const permissions: GadgetPermissions = {
       },
       models: {
         post: {
-          read: true,  // Grant read permission
+          read: true, // Grant read permission
           actions: {
             create: true,
             update: true,
-            delete: false
-          }
-        }
-      }
-    }
-  }
+            delete: false,
+          },
+        },
+      },
+    },
+  },
 };
 ```
 
@@ -71,16 +71,18 @@ Use Gelly filter snippets to limit access to record subsets. Filters are stored 
 ### Common Patterns
 
 **World Readable (no filter):**
+
 ```typescript
 models: {
   post: {
-    read: true  // All records visible
+    read: true; // All records visible
   }
 }
 ```
 
 **User-Scoped (own records only):**
 Create `accessControl/filters/post/tenant.gelly`:
+
 ```gelly
 filter ($session: Session) on Post [
   where userId == $session.userId
@@ -88,16 +90,20 @@ filter ($session: Session) on Post [
 ```
 
 Then reference in permissions:
+
 ```typescript
 models: {
   post: {
-    read: { filter: "accessControl/filters/post/tenant.gelly" }
+    read: {
+      filter: "accessControl/filters/post/tenant.gelly";
+    }
   }
 }
 ```
 
 **Shop-Scoped (multi-tenant):**
 Create `accessControl/filters/product/shop-tenant.gelly`:
+
 ```gelly
 filter ($session: Session) on Product [
   where shopId == $session.shopId
@@ -105,16 +111,20 @@ filter ($session: Session) on Product [
 ```
 
 Reference in permissions:
+
 ```typescript
 models: {
   product: {
-    read: { filter: "accessControl/filters/product/shop-tenant.gelly" }
+    read: {
+      filter: "accessControl/filters/product/shop-tenant.gelly";
+    }
   }
 }
 ```
 
 **Status-based:**
 Create `accessControl/filters/post/published.gelly`:
+
 ```gelly
 filter ($session: Session) on Post [
   where status == 'published' OR userId == $session.userId
@@ -170,6 +180,7 @@ roles: {
 Prefer direct relationships over traversing:
 
 ✅ **Good:**
+
 ```typescript
 // api/models/comment/schema.gadget.ts
 import type { GadgetModel } from "gadget-server";
@@ -181,7 +192,7 @@ export const schema: GadgetModel = {
     shop: {
       type: "belongsTo",
       parent: { model: "shopifyShop" },
-      storageKey: "Def678GhiJkl",  // Direct relationship
+      storageKey: "Def678GhiJkl", // Direct relationship
     },
   },
 };
@@ -194,6 +205,7 @@ filter ($session: Session) on Comment [
 ```
 
 ❌ **Avoid:**
+
 ```typescript
 // api/models/comment/schema.gadget.ts
 import type { GadgetModel } from "gadget-server";
@@ -205,7 +217,7 @@ export const schema: GadgetModel = {
     post: {
       type: "belongsTo",
       parent: { model: "post" },
-      storageKey: "Vwx234YzaBcd",  // Indirect - no direct shop
+      storageKey: "Vwx234YzaBcd", // Indirect - no direct shop
     },
   },
 };
@@ -223,6 +235,7 @@ filter ($session: Session) on Comment [
 Bypasses permissions, validations, and action lifecycle. Actions are not run when using the internal API.
 
 ✅ **Use only when direct database updates are needed** (in backend code - actions, routes):
+
 ```javascript
 const allPosts = await api.internal.post.findMany();
 ```
@@ -248,14 +261,14 @@ export const permissions: GadgetPermissions = {
       models: {
         user: {
           actions: {
-            signUp: true,  // Allow sign up
-            signIn: true
-          }
+            signUp: true, // Allow sign up
+            signIn: true,
+          },
         },
         post: {
-          read: { filter: "accessControl/filters/post/published.gelly" }
-        }
-      }
+          read: { filter: "accessControl/filters/post/published.gelly" },
+        },
+      },
     },
     "signed-in": {
       storageKey: "signed-in",
@@ -268,17 +281,17 @@ export const permissions: GadgetPermissions = {
           read: { filter: "accessControl/filters/user/tenant.gelly" },
           actions: {
             update: { filter: "accessControl/filters/user/tenant.gelly" },
-            signOut: { filter: "accessControl/filters/user/tenant.gelly" }
-          }
+            signOut: { filter: "accessControl/filters/user/tenant.gelly" },
+          },
         },
         post: {
           read: { filter: "accessControl/filters/post/user-or-published.gelly" },
           actions: {
             create: true,
-            update: { filter: "accessControl/filters/post/author.gelly" }
-          }
-        }
-      }
+            update: { filter: "accessControl/filters/post/author.gelly" },
+          },
+        },
+      },
     },
     admin: {
       storageKey: "admin",
@@ -290,18 +303,19 @@ export const permissions: GadgetPermissions = {
         post: {
           read: true,
           actions: {
-            delete: true
-          }
-        }
-      }
-    }
-  }
+            delete: true,
+          },
+        },
+      },
+    },
+  },
 };
 ```
 
 ## Best Practices
 
 **DO:**
+
 - ✅ Grant permissions explicitly to each role
 - ✅ Add filters for multi-tenant models
 - ✅ Use denormalized tenancy (direct relationships)
@@ -309,6 +323,7 @@ export const permissions: GadgetPermissions = {
 - ✅ Check routes manually (not auto-enforced)
 
 **DON'T:**
+
 - ❌ Grant explicit permissions to `system-admin`
 - ❌ Assume transitive permissions
 - ❌ Try to use internal API from frontend (it doesn't exist there)
@@ -327,7 +342,7 @@ export const permissions: GadgetPermissions = {
 - [actions.md](actions.md) - How actions enforce permissions
 
 **📖 More info:**
+
 - [Access control overview](https://docs.gadget.dev/guides/access-control.md)
 - [Gelly filter syntax](https://docs.gadget.dev/reference/gelly.md)
 - [Gelly data access](https://docs.gadget.dev/guides/data-access/gelly.md)
-  

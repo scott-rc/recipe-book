@@ -1,9 +1,10 @@
 import { useActionForm } from "@gadgetinc/react";
 import { EllipsisVerticalIcon, ExternalLinkIcon, LoaderCircleIcon, PencilIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { href, useNavigate } from "react-router";
 import { Form, Link, useSearchParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
+
 import { api } from "../api";
 import { Input } from "../components/ui/input";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from "../components/ui/menubar";
@@ -14,26 +15,26 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const recipes = await api.recipe.findMany({
     search: new URL(request.url).searchParams.get("s"),
     select: {
-      id: true,
-      name: true,
-      slug: true,
-      prepTime: true,
       cookTime: true,
-      servingSize: true,
-      source: true,
+      id: true,
       images: {
         edges: {
           cursor: true,
           node: {
-            id: true,
-            file: { url: true, mimeType: true },
             alt: true,
-            width: true,
+            file: { url: true, mimeType: true },
             height: true,
+            id: true,
             index: true,
+            width: true,
           },
         },
       },
+      name: true,
+      prepTime: true,
+      servingSize: true,
+      slug: true,
+      source: true,
     },
   });
 
@@ -74,11 +75,11 @@ export default function IndexRoute({ loaderData: recipes }: Route.ComponentProps
 
         {recipes.map((recipe) => {
           const image = recipe.images.edges[0]?.node ?? {
-            id: "placeholder",
-            height: 500,
-            width: 500,
-            file: { url: "/placeholder.svg", mimeType: "image/svg+xml" },
             alt: "Placeholder",
+            file: { mimeType: "image/svg+xml", url: "/placeholder.svg" },
+            height: 500,
+            id: "placeholder",
+            width: 500,
           };
 
           return (
@@ -110,17 +111,17 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
   const navigate = useNavigate();
 
   const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
-    values: { id: recipe.id },
     onSuccess: async () => {
       await navigate(href("/r/:slug", { slug: recipe.slug }), { replace: true, viewTransition: true });
     },
+    values: { id: recipe.id },
   });
 
   const { submit: deleteRecipe, formState: deleteRecipeState } = useActionForm(api.recipe.delete, {
-    values: { id: recipe.id },
     onSuccess: async () => {
       await navigate(href("/"), { viewTransition: true });
     },
+    values: { id: recipe.id },
   });
 
   const isReimporting = reimportState.isSubmitting;
@@ -131,7 +132,7 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
     <Menubar
       className={cn("border-none p-0 shadow-none", className)}
       onClick={(event) => {
-        event.preventDefault(); // prevent parent anchor tags from triggering navigation
+        event.preventDefault(); // Prevent parent anchor tags from triggering navigation
       }}
     >
       <MenubarMenu>
@@ -141,7 +142,7 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
         <MenubarContent
           align="end"
           onClick={(event) => {
-            event.stopPropagation(); // prevent menubar from preventing child anchor tags from triggering navigation
+            event.stopPropagation(); // Prevent menubar from preventing child anchor tags from triggering navigation
           }}
         >
           {recipe.source && (
@@ -162,7 +163,7 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
           <MenubarItem
             disabled={isSubmitting}
             onSelect={async (event) => {
-              event.preventDefault(); // prevent the menu from closing
+              event.preventDefault(); // Prevent the menu from closing
               await reimport();
             }}
           >
@@ -174,7 +175,7 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
             variant="destructive"
             disabled={isSubmitting}
             onSelect={async (event) => {
-              event.preventDefault(); // prevent the menu from closing
+              event.preventDefault(); // Prevent the menu from closing
               await deleteRecipe();
             }}
           >

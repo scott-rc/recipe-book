@@ -1,6 +1,7 @@
 # Frontend Hooks
 
 **📖 Full docs:**
+
 - [Building frontends](https://docs.gadget.dev/guides/frontend/building-frontends.md)
 - [@gadgetinc/react reference](https://docs.gadget.dev/reference/react.md)
 
@@ -20,7 +21,7 @@ function PostList() {
   const [{ data, fetching, error }] = useFindMany(api.post, {
     filter: { published: { equals: true } },
     sort: { createdAt: "Descending" },
-    first: 20
+    first: 20,
   });
 
   if (fetching) return <div>Loading...</div>;
@@ -28,7 +29,7 @@ function PostList() {
 
   return (
     <ul>
-      {data?.map(post => (
+      {data?.map((post) => (
         <li key={post.id}>{post.title}</li>
       ))}
     </ul>
@@ -41,7 +42,7 @@ function PostList() {
 ```tsx
 function PostDetail({ id }) {
   const [{ data: post, fetching }] = useFindOne(api.post, id, {
-    select: { id: true, title: true, body: true, author: { name: true } }
+    select: { id: true, title: true, body: true, author: { name: true } },
   });
 
   if (fetching) return <div>Loading...</div>;
@@ -83,7 +84,7 @@ function EditPost({ id }) {
   const {
     submit,
     register,
-    formState: { isSubmitting, errors }
+    formState: { isSubmitting, errors },
   } = useActionForm(api.post.update, { findBy: id });
 
   return (
@@ -103,7 +104,7 @@ Real-time updates:
 
 ```tsx
 const [{ data }] = useFindMany(api.post, {
-  live: true  // Re-fetches when data changes
+  live: true, // Re-fetches when data changes
 });
 ```
 
@@ -112,7 +113,7 @@ const [{ data }] = useFindMany(api.post, {
 ```tsx
 function PaginatedPosts() {
   const [{ data, fetching }, refresh] = useFindMany(api.post, {
-    first: 10
+    first: 10,
   });
 
   const loadMore = () => {
@@ -121,7 +122,9 @@ function PaginatedPosts() {
 
   return (
     <>
-      {data?.map(post => <div key={post.id}>{post.title}</div>)}
+      {data?.map((post) => (
+        <div key={post.id}>{post.title}</div>
+      ))}
       <button onClick={loadMore}>Load More</button>
     </>
   );
@@ -138,6 +141,7 @@ function PaginatedPosts() {
 - ❌ Don't over-select fields
 
 **📖 More info:**
+
 - [Frontend forms](https://docs.gadget.dev/guides/frontend/forms.md)
 - [Real-time queries](https://docs.gadget.dev/guides/frontend/realtime-queries.md)
 - [@gadgetinc/react hooks reference](https://docs.gadget.dev/reference/react.md)

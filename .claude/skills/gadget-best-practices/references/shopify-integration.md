@@ -79,8 +79,7 @@ For action logic that depends on deferred fields, gate behavior by trigger type 
 
 ```typescript
 export const onSuccess: ActionOnSuccess = async ({ trigger, record, logger }) => {
-  const fromDeferredSync =
-    trigger.type === "shopify_sync" || trigger.type === "shopify_webhook_reconciliation";
+  const fromDeferredSync = trigger.type === "shopify_sync" || trigger.type === "shopify_webhook_reconciliation";
 
   if (fromDeferredSync && record.changed("someField")) {
     logger.info("someField updated by sync/reconciliation");
@@ -89,6 +88,7 @@ export const onSuccess: ActionOnSuccess = async ({ trigger, record, logger }) =>
 ```
 
 Notes:
+
 - Non-webhook fields are also populated during full sync and nightly reconciliation.
 - Conditionally webhook-synced child models can update when parent `hasMany` fields are set to fetch on webhook.
 - Fully non-webhook models update only during sync (including `scheduledShopifySync`).
@@ -123,7 +123,7 @@ export const onSuccess = async ({ api, connections, record }) => {
         product { id }
       }
     }`,
-    variables: { input: { title: record.title } }
+    variables: { input: { title: record.title } },
   });
 };
 ```
@@ -134,7 +134,7 @@ export const onSuccess = async ({ api, connections, record }) => {
 // Pass shopId to background action
 export const onSuccess = async ({ api, connections }) => {
   await api.enqueue(api.processShopifyData, {
-    shopId: connections.shopify.currentShopId
+    shopId: connections.shopify.currentShopId,
   });
 };
 
@@ -192,6 +192,7 @@ See [shopify-multi-tenancy.md](shopify-multi-tenancy.md) for complete patterns.
 - [background-jobs.md](background-jobs.md) - Enqueueing patterns
 
 **📖 More info:**
+
 - [Shopify plugin overview](https://docs.gadget.dev/guides/plugins/shopify.md)
 - [Building Shopify apps](https://docs.gadget.dev/guides/plugins/shopify/building-shopify-apps.md)
 - [Shopify webhooks](https://docs.gadget.dev/guides/plugins/shopify/shopify-webhooks.md)

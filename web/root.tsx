@@ -2,7 +2,9 @@ import { Provider as GadgetProvider } from "@gadgetinc/react";
 import { DevelopmentErrorBoundary, ProductionErrorBoundary } from "gadget-server/react-router";
 import { Suspense } from "react";
 import { Links, Outlet, Scripts, ScrollRestoration, useNavigate } from "react-router";
+
 import { api } from "./api";
+
 import "./app.css";
 import { Toaster } from "./components/ui/sonner";
 

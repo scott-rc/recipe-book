@@ -1,6 +1,7 @@
 # Deployment
 
 **📖 Full docs:**
+
 - [Deployment](https://docs.gadget.dev/guides/environments/deployment.md)
 - [CI/CD](https://docs.gadget.dev/guides/environments/ci-cd.md)
 
@@ -14,11 +15,13 @@ Gadget apps have multiple environments:
 ## Deploying to Production
 
 **Via IDE:**
+
 1. Click "Deploy" button in Gadget IDE
 2. Review changes
 3. Confirm deployment
 
 **Via CLI:**
+
 ```bash
 ggt deploy --env=production
 ```
@@ -63,6 +66,7 @@ Set in **Settings → Environment Variables**:
 ## Monitoring
 
 After deployment:
+
 - Check **Logs** tab for errors
 - Monitor **Queues** for background jobs
 - Check **Ops** for performance

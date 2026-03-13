@@ -4,13 +4,13 @@ import type { GadgetModel } from "gadget-server";
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
-  type: "gadget/model-schema/v2",
-  storageKey: "6A-VQFDUVLY4",
   fields: {
     user: {
-      type: "belongsTo",
       parent: { model: "user" },
       storageKey: "amYs51fR0o-c",
+      type: "belongsTo",
     },
   },
+  storageKey: "6A-VQFDUVLY4",
+  type: "gadget/model-schema/v2",
 };

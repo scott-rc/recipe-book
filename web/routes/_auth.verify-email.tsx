@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+
 import { api } from "../api";
 import type { Route } from "./+types/_auth.verify-email";
 
@@ -8,7 +9,7 @@ export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
 
   try {
     await api.user.verifyEmail({ code });
-    return { success: true, error: null };
+    return { error: null, success: true };
   } catch (error) {
     return {
       error: { message: (error as Error).message },

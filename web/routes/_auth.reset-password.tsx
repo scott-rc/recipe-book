@@ -1,6 +1,7 @@
 import { useActionForm } from "@gadgetinc/react";
 import { CheckCircle } from "lucide-react";
 import { Link, useLocation } from "react-router";
+
 import { api } from "../api";
 import { Alert, AlertDescription } from "../components/ui/alert";
 import { Button } from "../components/ui/button";
@@ -18,8 +19,8 @@ export default function ResetPasswordRoute() {
   } = useActionForm(api.user.resetPassword, {
     defaultValues: {
       code: new URLSearchParams(search).get("code"),
-      password: "",
       confirmPassword: "",
+      password: "",
     },
   });
 

@@ -1,35 +1,36 @@
 import { Outlet, useOutletContext } from "react-router";
+
 import { api } from "../api";
 import type { Route } from "./+types/_app.r.$slug";
 
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const recipe = await api.recipe.findBySlug(params.slug, {
     select: {
-      id: true,
-      name: true,
-      slug: true,
-      prepTime: true,
       cookTime: true,
-      servingSize: true,
-      source: true,
-      ingredients: true,
       directions: true,
-      nutrition: true,
+      id: true,
       images: {
         edges: {
           cursor: true,
           node: {
-            id: true,
-            file: { url: true, mimeType: true },
-            src: true,
             alt: true,
-            width: true,
+            file: { url: true, mimeType: true },
             height: true,
+            id: true,
             index: true,
+            src: true,
             userId: true,
+            width: true,
           },
         },
       },
+      ingredients: true,
+      name: true,
+      nutrition: true,
+      prepTime: true,
+      servingSize: true,
+      slug: true,
+      source: true,
     },
   });
 

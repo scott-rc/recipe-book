@@ -29,6 +29,7 @@ model product {
 ### Multi-Tenancy Enforcement
 
 **Permission filters:**
+
 ```gelly
 filter($session: Session) on Product [
   where storeId == $session.bigcommerceStoreId
@@ -36,6 +37,7 @@ filter($session: Session) on Product [
 ```
 
 **Action code:**
+
 ```typescript
 import { save, applyParams, preventCrossStoreDataAccess } from "gadget-server/bigcommerce";
 
@@ -54,13 +56,13 @@ export const run = async ({ params, api, connections }) => {
 
   // Webhook only includes ID - fetch full data
   const product = await bigcommerce?.v3.get("/catalog/products/{product_id}", {
-    path: { product_id: params.id }
+    path: { product_id: params.id },
   });
 
   await api.bigcommerce.product.create({
     bigcommerceId: product.id,
     name: product.name,
-    store: { _link: connections.bigcommerce.currentStoreId }
+    store: { _link: connections.bigcommerce.currentStoreId },
   });
 };
 
@@ -78,21 +80,24 @@ export const options: ActionOptions = {
 ### API Access
 
 **Reading:**
+
 ```typescript
 const bigcommerce = connections.bigcommerce.current;
 const products = await bigcommerce?.v3.get("/catalog/products", {
-  query: { limit: 5 }
+  query: { limit: 5 },
 });
 ```
 
 **Writing:**
+
 ```typescript
 await bigcommerce?.v3.post("/catalog/products", {
-  body: { name: "New Product", type: "physical", price: 10 }
+  body: { name: "New Product", type: "physical", price: 10 },
 });
 ```
 
 **Store context:**
+
 ```typescript
 // With session
 const bigcommerce = connections.bigcommerce.current;
@@ -114,7 +119,7 @@ export const run = async ({ params, api, connections }) => {
   await api.bigcommerce.order.upsert({
     bigcommerceId: order.id,
     status: order.status,
-    on: ["bigcommerceId", "store"]
+    on: ["bigcommerceId", "store"],
   });
 };
 
@@ -124,7 +129,7 @@ export const onSuccess = async ({ record, connections }) => {
     const bigcommerce = await connections.bigcommerce.forStoreHash(record.storeHash);
     await bigcommerce.v2.put("/orders/{order_id}", {
       path: { order_id: record.bigcommerceId },
-      body: { status_id: 2 }
+      body: { status_id: 2 },
     });
   }
 };
@@ -162,7 +167,7 @@ For every model storing merchant data:
 BigDesign pre-installed:
 
 ```tsx
-import { Panel, Button } from '@bigcommerce/big-design';
+import { Panel, Button } from "@bigcommerce/big-design";
 
 function App() {
   return (
@@ -180,6 +185,7 @@ function App() {
 - [access-control.md](access-control.md) - Multi-tenancy permissions
 
 **📖 More info:**
+
 - [BigCommerce plugin overview](https://docs.gadget.dev/guides/plugins/bigcommerce.md)
 - [BigCommerce webhooks](https://docs.gadget.dev/guides/plugins/bigcommerce/webhooks.md)
 - [BigCommerce data](https://docs.gadget.dev/guides/plugins/bigcommerce/data.md)

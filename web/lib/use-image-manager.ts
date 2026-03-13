@@ -24,19 +24,22 @@ export function useImageManager(initialImages: ImageItem[]) {
   }, [images]);
 
   // Cleanup blob URLs on unmount
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       imagesRef.current.forEach((image) => {
         if (image.uploadFile && image.file.url.startsWith("blob:")) {
           URL.revokeObjectURL(image.file.url);
         }
       });
-    };
-  }, []);
+    },
+    [],
+  );
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
+    const { files } = event.target;
+    if (!files || files.length === 0) {
+      return;
+    }
 
     const newImages: ImageItem[] = [];
 
@@ -59,7 +62,7 @@ export function useImageManager(initialImages: ImageItem[]) {
         const dimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
           const img = new Image();
           img.onload = () => {
-            resolve({ width: img.width, height: img.height });
+            resolve({ height: img.height, width: img.width });
           };
           img.onerror = () => {
             reject(new Error("Failed to load image"));
@@ -70,16 +73,16 @@ export function useImageManager(initialImages: ImageItem[]) {
         const tempId = `upload-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
 
         newImages.push({
-          id: tempId,
-          file: {
-            url: objectUrl,
-            mimeType: file.type,
-          },
           alt: file.name,
-          width: dimensions.width,
+          file: {
+            mimeType: file.type,
+            url: objectUrl,
+          },
           height: dimensions.height,
+          id: tempId,
           index: null,
           uploadFile: file,
+          width: dimensions.width,
         });
       } catch (error) {
         console.error(error);
@@ -139,11 +142,11 @@ export function useImageManager(initialImages: ImageItem[]) {
   };
 
   return {
-    images,
-    setImages,
     fileInputRef,
-    handleFileSelect,
     handleDelete,
+    handleFileSelect,
+    images,
     reorderImages,
+    setImages,
   };
 }

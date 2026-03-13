@@ -57,7 +57,6 @@ export const schema: GadgetModel = {
 
 **Naming:** Use singular (`profile`, `author`).
 
-
 ## hasMany - One to Many
 
 Example: `schema.gadget.ts` on a `post` model, where `post` hasMany `comments`:
@@ -117,13 +116,13 @@ export const schema: GadgetModel = {
 // Link to existing
 await api.post.create({
   title: "My Post",
-  author: { _link: "user-123" }
+  author: { _link: "user-123" },
 });
 
 // Many-to-many
 await api.post.create({
   title: "My Post",
-  tags: [{ _link: "tag-1" }, { _link: "tag-2" }]
+  tags: [{ _link: "tag-1" }, { _link: "tag-2" }],
 });
 ```
 
@@ -131,7 +130,7 @@ await api.post.create({
 
 ```javascript
 await api.post.update("post-id", {
-  author: { _link: "user-456" }
+  author: { _link: "user-456" },
 });
 ```
 
@@ -143,10 +142,10 @@ const comments = await api.comment.findMany({
   filter: {
     post: {
       author: {
-        email: { equals: "user@example.com" }
-      }
-    }
-  }
+        email: { equals: "user@example.com" },
+      },
+    },
+  },
 });
 
 // Select nested fields
@@ -155,8 +154,8 @@ const posts = await api.post.findMany({
     id: true,
     title: true,
     author: { name: true, email: true },
-    tags: { name: true }
-  }
+    tags: { name: true },
+  },
 });
 ```
 
@@ -165,6 +164,7 @@ const posts = await api.post.findMany({
 For Shopify or BigCommerce apps, add direct `shop` or `bigcommerce/store` relationship:
 
 ✅ **Correct:**
+
 ```javascript
 import type { GadgetModel } from "gadget-server";
 
@@ -182,6 +182,7 @@ export const schema: GadgetModel = {
 ```
 
 ✅ **Correct:**
+
 ```javascript
 import type { GadgetModel } from "gadget-server";
 
@@ -203,6 +204,7 @@ See [shopify-multi-tenancy.md](shopify-multi-tenancy.md).
 ## Best Practices
 
 **DO:**
+
 - ✅ Always create bidirectional relationships
 - ✅ Use singular for belongsTo/hasOne
 - ✅ Use plural for hasMany/hasManyThrough
@@ -210,6 +212,7 @@ See [shopify-multi-tenancy.md](shopify-multi-tenancy.md).
 - ✅ Use `{ _link: "id" }` to connect records
 
 **DON'T:**
+
 - ❌ Create one-sided relationships
 - ❌ Add "Id" suffix to belongsTo names
 - ❌ Create hasMany to join model when using hasManyThrough

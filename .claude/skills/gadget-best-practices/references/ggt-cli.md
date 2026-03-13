@@ -1,6 +1,7 @@
 # ggt CLI Commands
 
 **📖 Full docs:**
+
 - [ggt reference](https://docs.gadget.dev/reference/ggt.md)
 - [CLI](https://docs.gadget.dev/guides/development-tools/cli.md)
 
@@ -15,6 +16,7 @@ npm install -g ggt
 ## Development Workflow
 
 **Start syncing:** Run `ggt dev` in your app directory to continuously sync local files with Gadget
+
 - Changes made locally → synced to Gadget environment
 - Changes made in Gadget editor → synced to local files
 - Required for changes to take effect automatically
@@ -34,7 +36,7 @@ ggt add model bigcommerce/product
 
 ## Adding Fields
 
-```bash
+````bash
 # Add field to existing model
 ggt add field post/published:boolean
 ggt add field post/viewCount:number
@@ -59,7 +61,7 @@ ggt add action processWebhook
 # Namespaced action
 ggt add action notifications/sendEmail
 ggt add action admin/cleanupData
-```
+````
 
 ### Disambiguating namespaces
 
@@ -85,12 +87,14 @@ ggt add route GET-api/users
 ## Best Practices
 
 **DO:**
+
 - ✅ Run `ggt dev` before making changes (ensures automatic syncing)
 - ✅ Use singular model names (`post`, not `posts`)
 - ✅ Use plural for hasMany/hasManyThrough fields (`comments`, `tags`)
 - ✅ Use singular for belongsTo/hasOne fields (`author`, `post`)
 
 **DON'T:**
+
 - ❌ Create `id`, `createdAt`, `updatedAt` fields (auto-generated)
 - ❌ Add "Model" or "Table" suffixes to model names
 - ❌ Add "Id" suffix to belongsTo field names
@@ -100,12 +104,14 @@ ggt add route GET-api/users
 `ggt add` automatically syncs before making changes. If conflicts exist, you'll be prompted to resolve them.
 
 **When `ggt dev` is running:**
+
 - Changes are automatically synced in both directions
 - ✅ **DO NOT** use `ggt push` or `ggt pull` - changes sync automatically
 - File edits are immediately reflected in your Gadget environment
 - Changes in the Gadget editor are immediately pulled to local files
 
 **When `ggt dev` is NOT running:**
+
 ```bash
 ggt push   # Push local changes to Gadget
 ggt pull   # Pull Gadget changes to local

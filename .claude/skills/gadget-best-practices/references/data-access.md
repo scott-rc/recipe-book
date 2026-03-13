@@ -1,6 +1,7 @@
 # Data Access: Computed Views and Aggregates
 
 **📖 Full docs:**
+
 - [Computed fields](https://docs.gadget.dev/guides/data-access/computed-fields.md)
 - [Computed views](https://docs.gadget.dev/guides/data-access/computed-views.md)
 - [Gelly](https://docs.gadget.dev/guides/data-access/gelly.md)
@@ -9,13 +10,13 @@ Gadget provides two mechanisms for read-only computations beyond standard CRUD: 
 
 ## When to use what
 
-| Feature | Computed Fields | Computed Views |
-|---|---|---|
-| **Scope** | Single record + its relationships | Across multiple models |
-| **Result** | A single value per record | A result set (rows) |
-| **Definition** | `.gelly` file in `api/models/<model>/` | `.gelly` file in `api/views/` or inline `api.view()` |
-| **Access** | Like any other field on the model | Separate API call (`api.viewName()`) |
-| **Use case** | Counts, sums, averages on related records | Dashboards, reports, leaderboards, time-series |
+| Feature        | Computed Fields                           | Computed Views                                       |
+| -------------- | ----------------------------------------- | ---------------------------------------------------- |
+| **Scope**      | Single record + its relationships         | Across multiple models                               |
+| **Result**     | A single value per record                 | A result set (rows)                                  |
+| **Definition** | `.gelly` file in `api/models/<model>/`    | `.gelly` file in `api/views/` or inline `api.view()` |
+| **Access**     | Like any other field on the model         | Separate API call (`api.viewName()`)                 |
+| **Use case**   | Counts, sums, averages on related records | Dashboards, reports, leaderboards, time-series       |
 
 ## Computed Fields
 
@@ -33,6 +34,7 @@ field on <model> {
 ### Common patterns
 
 **Per-record arithmetic:**
+
 ```gelly
 // api/models/business/profit.gelly
 field on business {
@@ -41,6 +43,7 @@ field on business {
 ```
 
 **Aggregate across relationships:**
+
 ```gelly
 // api/models/customer/totalSpend.gelly
 field on customer {
@@ -59,6 +62,7 @@ field on store {
 ```
 
 **Conditional aggregation:**
+
 ```gelly
 // api/models/shopifyShop/publishedProductCount.gelly
 field on shopifyShop {
@@ -97,6 +101,7 @@ Computed views are read-only queries for aggregations and transformations across
 ### Defining views
 
 **Named views** — `.gelly` files in `api/views/`:
+
 ```gelly
 // api/views/customerCount.gelly
 view customerCount {
@@ -105,6 +110,7 @@ view customerCount {
 ```
 
 **Inline views** — ad-hoc with `api.view()`:
+
 ```typescript
 const result = await api.view(`{ count(customers) }`);
 ```
@@ -185,10 +191,10 @@ The 10,000 limit applies to the final result set, not intermediate records proce
 
 ### Namespaces and scoping
 
-| Location | API path | Scope |
-|---|---|---|
-| `api/views/foo.gelly` | `api.foo()` | All models |
-| `api/views/reports/foo.gelly` | `api.reports.foo()` | Models in `reports` namespace |
+| Location                                  | API path                 | Scope                         |
+| ----------------------------------------- | ------------------------ | ----------------------------- |
+| `api/views/foo.gelly`                     | `api.foo()`              | All models                    |
+| `api/views/reports/foo.gelly`             | `api.reports.foo()`      | Models in `reports` namespace |
 | `api/models/customer/views/summary.gelly` | `api.customer.summary()` | Fields on `customer` directly |
 
 Model-namespaced views can reference fields without prefixing the model name:

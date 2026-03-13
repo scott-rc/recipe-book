@@ -7,22 +7,26 @@ Actions are server-side functions that run business logic and write data. They a
 ## Two Types
 
 **Model-scoped** - Operate on a specific record
+
 - Built-in: `create`, `update`, `delete`
 - Custom: `publish`, `approve`, `archive`
 
 **Global** - No record context, operate across models
+
 - Cross-model, cross-record operations
 - Scheduled tasks
 
 ## When to Use
 
 ✅ **Use actions for:**
+
 - Writing data
 - Business logic with side effects
 - Operations requiring permissions
 - Scheduled tasks
 
 ❌ **Don't use actions for:**
+
 - Simple transformations (use computed fields)
 - Streaming/custom HTTP (use routes)
 
@@ -51,7 +55,7 @@ export const run = async ({ api, record, logger }) => {
 
 export const onSuccess = async ({ api, record }) => {
   await api.enqueue(api.notification.send, {
-    postId: record.id
+    postId: record.id,
   });
 };
 ```
@@ -61,16 +65,19 @@ export const onSuccess = async ({ api, record }) => {
 ### Action Functions
 
 **`run`** - Main logic (transactional)
+
 - Modify record
 - Validate inputs
 - Save to database
 
 **`onSuccess`** - Side effects (after commit)
+
 - Send emails
 - Call external APIs
 - Enqueue background jobs
 
 **Sample context params:**
+
 - `api` - Regular API for queries (use `api.internal` only when direct database updates are needed - bypasses permissions, validations, and action lifecycle)
 - `record` - The record being operated on
 - `params` - Input parameters
@@ -106,12 +113,12 @@ export const run = async ({ params, record }) => {
 // api/actions/generateReport.js
 export const run = async ({ api, params, logger }) => {
   const users = await api.user.findMany({
-    filter: { active: { equals: true } }
+    filter: { active: { equals: true } },
   });
 
   return {
     totalUsers: users.length,
-    generatedAt: new Date()
+    generatedAt: new Date(),
   };
 };
 ```
@@ -125,7 +132,7 @@ Enqueue actions to run asynchronously:
 ```javascript
 export const onSuccess = async ({ api, record }) => {
   await api.enqueue(api.processImage, {
-    imageId: record.id
+    imageId: record.id,
   });
 };
 ```
@@ -159,14 +166,11 @@ export const options: ActionOptions = {
 Every action gets a bulk variant automatically:
 
 ```javascript
-await api.post.bulkCreate([
-  { title: "Post 1" },
-  { title: "Post 2" }
-]);
+await api.post.bulkCreate([{ title: "Post 1" }, { title: "Post 2" }]);
 
 await api.post.bulkUpdate([
   { id: "1", title: "Updated 1" },
-  { id: "2", title: "Updated 2" }
+  { id: "2", title: "Updated 2" },
 ]);
 
 await api.post.bulkDelete(["id-1", "id-2"]);
@@ -193,8 +197,8 @@ export const run = async ({ params, connections, logger }) => {
   try {
     const response = await fetch("https://api.example.com/data", {
       method: "POST",
-      headers: { "Authorization": `Bearer ${process.env.API_KEY}` },
-      body: JSON.stringify(params)
+      headers: { Authorization: `Bearer ${process.env.API_KEY}` },
+      body: JSON.stringify(params),
     });
     return await response.json();
   } catch (error) {
@@ -211,7 +215,7 @@ export const onSuccess = async ({ api, record, connections }) => {
   const shopify = connections.shopify.current;
 
   await api.enqueue(shopify.graphql, {
-    query: `mutation { productCreate(input: { title: "${record.title}" }) { product { id } } }`
+    query: `mutation { productCreate(input: { title: "${record.title}" }) { product { id } } }`,
   });
 };
 ```
@@ -228,7 +232,7 @@ export const run = async ({ api, connections }) => {
 
   // ✅ Correct - scoped to shop
   const products = await api.product.findMany({
-    filter: { shopId: { equals: shopId } }
+    filter: { shopId: { equals: shopId } },
   });
 
   // ❌ Wrong - returns ALL shops' data
@@ -261,6 +265,7 @@ export const run = async ({ logger, params }) => {
 ```
 
 **Best practices:**
+
 - Use structured fields (objects)
 - Include context (IDs)
 - Don't log sensitive data
@@ -268,6 +273,7 @@ export const run = async ({ logger, params }) => {
 ## Best Practices
 
 **DO:**
+
 - ✅ Use actions for writes and side effects
 - ✅ Keep `run` transactional
 - ✅ Use `onSuccess` for side effects
@@ -276,6 +282,7 @@ export const run = async ({ logger, params }) => {
 - ✅ Use `api.internal` only when direct database updates are needed (bypasses permissions, validations, and action lifecycle - only available in backend code)
 
 **DON'T:**
+
 - ❌ Call external APIs in `run` (use `onSuccess`)
 - ❌ Forget to filter by tenant
 - ❌ Run long operations synchronously
@@ -295,6 +302,7 @@ export const run = async ({ logger, params }) => {
 - [shopify-integration.md](shopify-integration.md) - Shopify patterns
 
 **📖 More info:**
+
 - [Action types](https://docs.gadget.dev/guides/actions/types-of-actions.md)
 - [Writing actions](https://docs.gadget.dev/guides/actions/writing-actions.md)
 - [Background actions](https://docs.gadget.dev/guides/actions/background.md)

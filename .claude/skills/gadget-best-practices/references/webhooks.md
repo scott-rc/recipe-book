@@ -1,6 +1,7 @@
 # Webhooks
 
 **📖 Full docs:**
+
 - [Shopify webhooks](https://docs.gadget.dev/guides/plugins/shopify/shopify-webhooks.md)
 - [BigCommerce webhooks](https://docs.gadget.dev/guides/plugins/bigcommerce/webhooks.md)
 
@@ -38,7 +39,7 @@ export const run = async ({ record, api, logger, connections }) => {
 export const onSuccess = async ({ record, api }) => {
   // Enqueue side effects
   await api.enqueue(api.notifyCustomer, {
-    orderId: record.id
+    orderId: record.id,
   });
 };
 ```
@@ -72,7 +73,7 @@ export const run = async ({ params, api, connections }) => {
 
   // Fetch full data using ID from webhook
   const product = await bigcommerce?.v3.get("/catalog/products/{product_id}", {
-    path: { product_id: params.id }
+    path: { product_id: params.id },
   });
 
   // Store in Gadget
@@ -80,7 +81,7 @@ export const run = async ({ params, api, connections }) => {
     bigcommerceId: product.id,
     name: product.name,
     store: { _link: connections.bigcommerce.currentStoreId },
-    on: ["bigcommerceId", "store"]
+    on: ["bigcommerceId", "store"],
   });
 };
 ```
@@ -110,7 +111,7 @@ export default async function (request, reply) {
   // 3. Enqueue processing (don't block webhook)
   await api.enqueue(api.processGithubEvent, {
     action,
-    repository
+    repository,
   });
 
   // 4. Return 200 immediately
@@ -147,7 +148,7 @@ Webhooks can be delivered multiple times. Design handlers to handle duplicates:
 export const run = async ({ api, params }) => {
   // Check if already processed
   const existing = await api.order.findFirst({
-    filter: { externalId: { equals: params.orderId } }
+    filter: { externalId: { equals: params.orderId } },
   });
 
   if (existing) {
@@ -240,6 +241,7 @@ export const onSuccess = async ({ record, connections }) => {
 ## Testing Webhooks
 
 Many services provide webhook testing tools:
+
 - Shopify: Use development store and trigger events
 - BigCommerce: Use sandbox store
 - Others: Use tools like ngrok + webhook.site
@@ -276,7 +278,7 @@ export const run = async ({ api, params }) => {
   await api.order.upsert({
     externalId: params.orderId,
     status: params.status,
-    on: ["externalId"]
+    on: ["externalId"],
   });
 };
 ```
@@ -292,6 +294,7 @@ export const run = async ({ api, params }) => {
 ## Best Practices
 
 **DO:**
+
 - ✅ Return 200 immediately
 - ✅ Enqueue long operations
 - ✅ Verify signatures
@@ -301,6 +304,7 @@ export const run = async ({ api, params }) => {
 - ✅ Handle failures gracefully
 
 **DON'T:**
+
 - ❌ Run long operations synchronously
 - ❌ Trust unverified webhooks
 - ❌ Create duplicate records
@@ -312,6 +316,7 @@ export const run = async ({ api, params }) => {
 Webhooks notify your app of external events. Return quickly, enqueue long operations, verify signatures, and make handlers idempotent. For Shopify and BigCommerce, use specialized webhook triggers. For other services, use HTTP routes with manual verification.
 
 See also:
+
 - [shopify-integration.md](shopify-integration.md) - Shopify webhook patterns
 - [bigcommerce-integration.md](bigcommerce-integration.md) - BigCommerce webhook patterns
 - [routes.md](routes.md) - HTTP routes for general webhooks

@@ -5,6 +5,7 @@
 ## What Are Fields?
 
 Fields define the columns in your database tables (models). Each field has:
+
 - **Type** - What kind of data it stores
 - **Identifier** - The API name for the field
 - **Validations** - Rules for valid data
@@ -15,10 +16,12 @@ Fields define the columns in your database tables (models). Each field has:
 ### Text Fields
 
 **String**
+
 - Short text (up to 10,000 characters by default)
 - Use for names, titles, emails, URLs
 
 **RichText**
+
 - Long-form formatted content
 - Stores HTML or Markdown
 - Use for blog posts, descriptions, notes
@@ -26,46 +29,55 @@ Fields define the columns in your database tables (models). Each field has:
 ### Numeric Fields
 
 **Number**
+
 - Integers or decimals
 - Use for counts, prices, quantities
 
 ### Boolean Fields
 
 **Boolean**
+
 - True/false values
 - Use for flags and toggles
 
 ### Date/Time Fields
 
 **DateTime**
+
 - Timestamp with date and time
 - Use for creation times, deadlines, events
 
 **Date**
+
 - Date only (no time component)
 - Use for birthdays, due dates
 
 ### Enum Fields
 
 **Enum**
+
 - Predefined set of options
 - Use for states, categories, types (2-5 options)
 
 **When to use:**
+
 - ✅ Fixed set of known options
 - ✅ Named states or categories
 
 **When NOT to use:**
+
 - ❌ Many options - use a related model instead
 - ❌ Options that change frequently - use a related model
 
 ### JSON Fields
 
 **JSON**
+
 - Arbitrary structured data
 - Use sparingly - prefer relationships when schema is known
 
 **⚠️ Warning:** Only use JSON when:
+
 - Schema is unknown ahead of time
 - Data is truly unstructured
 - External API response you don't control
@@ -75,6 +87,7 @@ Fields define the columns in your database tables (models). Each field has:
 ### File Fields
 
 **File**
+
 - Upload and store files
 - Use for images, documents, attachments
 
@@ -83,22 +96,26 @@ Gadget handles storage automatically.
 ### Relationship Fields
 
 **belongsTo**, **hasOne**, **hasMany**, **hasManyThrough**
+
 - Connect models together
 - See [relationships.md](relationships.md) for detailed patterns
 
 ### Encrypted Fields
 
 **EncryptedString**
+
 - Encrypted at rest
 - Use for sensitive data (API keys, tokens)
 
 **Never use for:**
+
 - ❌ Passwords (use Gadget's built-in auth instead)
 - ❌ Data you need to query or filter by (encryption prevents queries)
 
 ### Computed Fields
 
 **Computed**
+
 - Calculated values (not stored)
 - Defined with Gelly expressions
 - Included by default in public API, excluded from internal API and action `record` objects
@@ -185,6 +202,7 @@ export const schema: GadgetModel = {
 **No "Id" suffix for belongsTo:**
 
 ❌ Don't do this:
+
 ```typescript
 // Wrong - don't add "Id" suffix to relationship names
 userId: {
@@ -195,6 +213,7 @@ userId: {
 ```
 
 ✅ Do this:
+
 ```typescript
 // Correct - use the model name directly
 user: {
@@ -311,7 +330,7 @@ export const schema: GadgetModel = {
   fields: {
     subtotal: { type: "number", decimals: 2, storageKey: "Yza678BcdEfg" },
     tax: { type: "number", decimals: 2, storageKey: "Hij901KlmNop" },
-    total: { type: "number", decimals: 2, storageKey: "Qrs234TuvWxy" },  // Derived - don't store!
+    total: { type: "number", decimals: 2, storageKey: "Qrs234TuvWxy" }, // Derived - don't store!
   },
 };
 
@@ -342,6 +361,7 @@ When adding fields to existing models:
 3. **Always run `ggt dev`** during development for auto-sync
 
 Example:
+
 ```bash
 ggt add field post/publishedAt:dateTime
 ggt add field post/status:enum --options=draft,published,archived
@@ -350,6 +370,7 @@ ggt add field post/status:enum --options=draft,published,archived
 ## Summary
 
 **DO:**
+
 - ✅ Use appropriate field types for your data
 - ✅ Add validations where necessary
 - ✅ Use camelCase names
@@ -358,6 +379,7 @@ ggt add field post/status:enum --options=draft,published,archived
 - ✅ Use enums for 2-5 fixed options
 
 **DON'T:**
+
 - ❌ Use JSON when you know the schema (use relationships)
 - ❌ Add computed/derived data as stored fields
 - ❌ Use encrypted fields for data you need to query
@@ -366,6 +388,7 @@ ggt add field post/status:enum --options=draft,published,archived
 - ❌ Over-validate (only add necessary validations)
 
 **📖 More info:**
+
 - [Field types](https://docs.gadget.dev/guides/models/fields.md)
 - [Storing files](https://docs.gadget.dev/guides/models/storing-files.md)
 - [Computed fields](https://docs.gadget.dev/guides/data-access/computed-fields.md)

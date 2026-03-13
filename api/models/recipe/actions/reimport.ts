@@ -1,10 +1,11 @@
-import { type ActionOptions, type ReimportRecipeActionContext } from "gadget-server";
+import type { ActionOptions, ReimportRecipeActionContext } from "gadget-server";
+
 import { importRecipe } from "../../../lib/import";
 
 export const options: ActionOptions = {
   actionType: "custom",
-  transactional: false,
   timeoutMS: 900000,
+  transactional: false,
 };
 
 export async function run({ record, logger, api }: ReimportRecipeActionContext): Promise<void> {

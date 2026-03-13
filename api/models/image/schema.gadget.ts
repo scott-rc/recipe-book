@@ -4,49 +4,49 @@ import type { GadgetModel } from "gadget-server";
 // For more information on how to update this file http://docs.gadget.dev
 
 export const schema: GadgetModel = {
-  type: "gadget/model-schema/v2",
-  storageKey: "cmN9C_tSSgVE",
   fields: {
     alt: {
-      type: "string",
-      storageKey: "cuiNgRcdIoNO",
       filterIndex: false,
+      storageKey: "cuiNgRcdIoNO",
+      type: "string",
     },
     file: {
-      type: "file",
       allowPublicAccess: true,
-      validations: { required: true },
       storageKey: "gPgO9zqmCLgA",
+      type: "file",
+      validations: { required: true },
     },
     height: {
-      type: "number",
-      storageKey: "yXseAwE2JRKm",
       filterIndex: false,
+      storageKey: "yXseAwE2JRKm",
+      type: "number",
     },
     index: {
-      type: "number",
-      storageKey: "ebQmo2cDrhu2",
       filterIndex: false,
+      storageKey: "ebQmo2cDrhu2",
+      type: "number",
     },
     recipe: {
-      type: "belongsTo",
       parent: { model: "recipe" },
       storageKey: "suyazyTKhfus",
+      type: "belongsTo",
     },
     src: {
-      type: "string",
-      storageKey: "kWiJcowQPUu3",
       filterIndex: false,
+      storageKey: "kWiJcowQPUu3",
+      type: "string",
     },
     user: {
-      type: "belongsTo",
       parent: { model: "user" },
       storageKey: "cmN9C_tSSgVE-BelongsTo-User",
+      type: "belongsTo",
     },
     width: {
-      type: "number",
-      storageKey: "5MPaIbMDoOf3",
       filterIndex: false,
+      storageKey: "5MPaIbMDoOf3",
+      type: "number",
     },
   },
+  storageKey: "cmN9C_tSSgVE",
+  type: "gadget/model-schema/v2",
 };

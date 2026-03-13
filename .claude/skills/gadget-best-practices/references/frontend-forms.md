@@ -34,7 +34,7 @@ function CreatePost() {
   const {
     submit,
     register,
-    formState: { isSubmitting, errors }
+    formState: { isSubmitting, errors },
   } = useActionForm(api.post.create);
 
   return (
@@ -58,9 +58,9 @@ function EditPost({ id }) {
   const {
     submit,
     register,
-    formState: { isSubmitting, errors }
+    formState: { isSubmitting, errors },
   } = useActionForm(api.post.update, {
-    findBy: id  // Loads existing record
+    findBy: id, // Loads existing record
   });
 
   return (
@@ -78,7 +78,9 @@ Validations are defined in the model schema and automatically enforced:
 
 ```tsx
 // Validation errors appear in formState.errors
-{errors?.email && <span>{errors.email.message}</span>}
+{
+  errors?.email && <span>{errors.email.message}</span>;
+}
 ```
 
 ## File Uploads

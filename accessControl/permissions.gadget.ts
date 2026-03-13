@@ -7,10 +7,11 @@ import type { GadgetPermissions } from "gadget-server";
  * View and edit your roles and permissions in the Gadget editor at https://recipe-book.gadget.app/edit/settings/permissions
  */
 export const permissions: GadgetPermissions = {
-  type: "gadget/permissions/v1",
   roles: {
     "signed-in": {
-      storageKey: "signed-in",
+      actions: {
+        import: true,
+      },
       default: {
         read: true,
         action: true,
@@ -65,12 +66,9 @@ export const permissions: GadgetPermissions = {
           },
         },
       },
-      actions: {
-        import: true,
-      },
+      storageKey: "signed-in",
     },
     unauthenticated: {
-      storageKey: "unauthenticated",
       models: {
         user: {
           actions: {
@@ -83,6 +81,8 @@ export const permissions: GadgetPermissions = {
           },
         },
       },
+      storageKey: "unauthenticated",
     },
   },
+  type: "gadget/permissions/v1",
 };

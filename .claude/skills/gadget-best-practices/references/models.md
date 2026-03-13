@@ -9,7 +9,7 @@ In Gadget, a **model** represents a database table. Each table row is a **record
 - Models define the schema for storing data
 - Each model auto-generates a GraphQL API for CRUD operations
 - Models support relationships, validations, and computed fields
-- Created with `ggt add model <name>` 
+- Created with `ggt add model <name>`
 
 **IMPORTANT:** Use the [ggt CLI](ggt-cli.md) to add models
 
@@ -30,6 +30,7 @@ Models should **always** be singular, never plural:
 ```
 
 **Why?** The API will pluralize automatically for collections:
+
 - `api.post.findMany()` - reads naturally
 - `api.posts.findMany()` - awkward double plural
 
@@ -78,6 +79,7 @@ Models are NOT responsible for:
 
 **Example:**
 If a requirement says "users can publish posts and see analytics", the model needs:
+
 - ✅ `post` model with `publishedAt` field (for publish action)
 - ✅ `post` model with `viewCount` field (for analytics display)
 - ❌ Does NOT need a separate `analytics` or `publishAction` model
@@ -361,7 +363,7 @@ export const schema: GadgetModel = {
     // ❌ Don't default to empty strings
     name: {
       type: "string",
-      default: "",  // Wrong!
+      default: "", // Wrong!
       storageKey: "Tuv345WxyZab",
     },
 
@@ -394,12 +396,14 @@ export const schema: GadgetModel = {
 When modifying the built-in `user` model:
 
 ⚠️ **Take great care** - it powers Gadget's authentication system
+
 - ✅ You can add new fields
 - ⚠️ Don't change existing fields or validations
 - ⚠️ Leave email/password fields alone (used for login)
 - ⚠️ Leave Google SSO fields alone (used for OAuth)
 
 The `user` model typically includes:
+
 - `email` - For email/password login
 - `emailVerified` - Email verification status
 - `googleProfileId` - For Google SSO
@@ -410,6 +414,7 @@ The `user` model typically includes:
 ## Summary
 
 **DO:**
+
 - ✅ Use singular names (post, not posts)
 - ✅ Add comments to models and fields
 - ✅ Specify display fields for autocompletes
@@ -418,6 +423,7 @@ The `user` model typically includes:
 - ✅ Use enums and booleans over models for simple states
 
 **DON'T:**
+
 - ❌ Add "Model" or "Table" suffixes
 - ❌ Create `id`, `createdAt`, `updatedAt` fields (auto-generated)
 - ❌ Create models for audit logs or analytics
@@ -426,6 +432,7 @@ The `user` model typically includes:
 - ❌ Modify core `user` model authentication fields
 
 **📖 More info:**
+
 - [Model fields](https://docs.gadget.dev/guides/models/fields.md)
 - [Relationships](https://docs.gadget.dev/guides/models/relationships.md)
 - [Storing files](https://docs.gadget.dev/guides/models/storing-files.md)

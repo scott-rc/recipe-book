@@ -5,6 +5,7 @@
 ## Built-In Auth
 
 Gadget provides built-in authentication with:
+
 - Email/password login
 - Google OAuth
 - Session management
@@ -13,6 +14,7 @@ Gadget provides built-in authentication with:
 ## User Model
 
 The `user` model includes:
+
 - `email` - User's email
 - `emailVerified` - Email verification status
 - `password` - Hashed password (never exposed)
@@ -28,7 +30,7 @@ The `user` model includes:
 // Users can create accounts via:
 await api.user.signUp({
   email: "user@example.com",
-  password: "secure-password"
+  password: "secure-password",
 });
 ```
 
@@ -37,7 +39,7 @@ await api.user.signUp({
 ```javascript
 await api.user.signIn({
   email: "user@example.com",
-  password: "password"
+  password: "password",
 });
 ```
 
@@ -46,6 +48,7 @@ await api.user.signIn({
 Sessions track authenticated users:
 
 **In actions:**
+
 ```javascript
 export const run = async ({ api, session }) => {
   if (!session?.user) {
@@ -58,6 +61,7 @@ export const run = async ({ api, session }) => {
 ```
 
 **In frontend:**
+
 ```tsx
 import { useSession } from "@gadgetinc/react";
 
@@ -73,6 +77,7 @@ function Profile() {
 ## Protected Routes
 
 **Frontend:**
+
 ```tsx
 export const SomePage = () => (
   <BrowserRouter>
@@ -103,6 +108,7 @@ export const SomePage = () => (
 ```
 
 **Backend (routes):**
+
 ```typescript
 import { preValidation, RouteHandler } from "gadget-server";
 
@@ -120,6 +126,7 @@ export default route;
 ## Shopify Auth
 
 For Shopify apps, auth is automatic:
+
 - Merchants authenticate via OAuth
 - Session includes shop context
 - `shopify-app-users` role assigned
@@ -131,6 +138,7 @@ const shopId = connections.shopify.currentShopId;
 ## BigCommerce Auth
 
 Similar to Shopify:
+
 - Stores authenticate via OAuth
 - Session includes store context
 - `bigcommerce-app-users` role assigned
@@ -148,6 +156,7 @@ Similar to Shopify:
 See [access-control.md](access-control.md) for permissions.
 
 **📖 More info:**
+
 - [Authentication overview](https://docs.gadget.dev/guides/plugins/authentication.md)
 - [Email/password auth](https://docs.gadget.dev/guides/plugins/authentication/email-pass.md)
 - [Google OAuth](https://docs.gadget.dev/guides/plugins/authentication/google-oauth.md)

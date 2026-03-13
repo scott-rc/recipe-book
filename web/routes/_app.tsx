@@ -1,5 +1,6 @@
 import { BookOpenIcon, CloudDownloadIcon } from "lucide-react";
-import { href, Link, Outlet, redirect, useLocation, useMatches } from "react-router";
+import { Link, Outlet, href, redirect, useLocation, useMatches } from "react-router";
+
 import { api } from "../api";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import {
@@ -17,19 +18,19 @@ import type { Recipe } from "./_app.r.$slug";
 export async function clientLoader() {
   const session = await api.currentSession.get({
     select: {
-      id: true,
-      userId: true,
       createdAt: true,
+      id: true,
       updatedAt: true,
       user: {
-        id: true,
+        createdAt: true,
         email: true,
         firstName: true,
-        lastName: true,
         googleImageUrl: true,
-        createdAt: true,
+        id: true,
+        lastName: true,
         updatedAt: true,
       },
+      userId: true,
     },
   });
 
@@ -55,6 +56,7 @@ export default function AppRoute({ loaderData: { session, user } }: Route.Compon
 
   // Check if we're on the edit page
   const isEditPage = location.pathname.endsWith("/edit");
+  const isHomePage = location.pathname === "/";
 
   return (
     <div className="relative mx-auto flex h-svh min-h-svh w-full max-w-md flex-col bg-white px-4 pt-8 sm:max-w-lg md:max-w-3xl lg:max-w-4xl xl:max-w-5xl">
@@ -63,12 +65,12 @@ export default function AppRoute({ loaderData: { session, user } }: Route.Compon
           <BreadcrumbList>
             <BreadcrumbItem className="flex items-center gap-x-2">
               <BookOpenIcon className="h-5 w-5" />
-              {recipe ? (
+              {isHomePage ? (
+                <BreadcrumbPage className="text-base font-semibold">Recipe Book</BreadcrumbPage>
+              ) : (
                 <BreadcrumbLink to={href("/")} className="text-base font-semibold">
                   Recipe Book
                 </BreadcrumbLink>
-              ) : (
-                <BreadcrumbPage className="text-base font-semibold">Recipe Book</BreadcrumbPage>
               )}
             </BreadcrumbItem>
             {recipe && (

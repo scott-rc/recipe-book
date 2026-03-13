@@ -14,7 +14,7 @@ Gadget auto-generates a type-safe API client for all models and actions.
 const posts = await api.post.findMany({
   filter: { published: { equals: true } },
   sort: { createdAt: "Descending" },
-  first: 20
+  first: 20,
 });
 ```
 
@@ -28,13 +28,14 @@ const post = await api.post.findOne("post-id");
 
 ```javascript
 const post = await api.post.findFirst({
-  filter: { slug: { equals: "my-post" } }
+  filter: { slug: { equals: "my-post" } },
 });
 ```
 
 ## Filter Operators
 
 **Equality:**
+
 ```javascript
 filter: { status: { equals: "published" } }
 filter: { status: { notEquals: "draft" } }
@@ -42,39 +43,61 @@ filter: { status: { in: ["published", "archived"] } }
 ```
 
 **Comparison:**
+
 ```javascript
-filter: { price: { greaterThan: 100 } }
-filter: { price: { lessThan: 500 } }
-filter: { createdAt: { greaterThanOrEqual: yesterday } }
+filter: {
+  price: {
+    greaterThan: 100;
+  }
+}
+filter: {
+  price: {
+    lessThan: 500;
+  }
+}
+filter: {
+  createdAt: {
+    greaterThanOrEqual: yesterday;
+  }
+}
 ```
 
 **Text:**
+
 ```javascript
-filter: { title: { startsWith: "How to" } }
-filter: { body: { contains: "Gadget" } }
+filter: {
+  title: {
+    startsWith: "How to";
+  }
+}
+filter: {
+  body: {
+    contains: "Gadget";
+  }
+}
 ```
 
 **Relationships:**
+
 ```javascript
 filter: {
-  author: { email: { equals: "user@example.com" } }
+  author: {
+    email: {
+      equals: "user@example.com";
+    }
+  }
 }
 ```
 
 **Combining:**
+
 ```javascript
 filter: {
-  AND: [
-    { published: { equals: true } },
-    { price: { greaterThan: 0 } }
-  ]
+  AND: [{ published: { equals: true } }, { price: { greaterThan: 0 } }];
 }
 
 filter: {
-  OR: [
-    { status: { equals: "published" } },
-    { author: { id: { equals: currentUserId } } }
-  ]
+  OR: [{ status: { equals: "published" } }, { author: { id: { equals: currentUserId } } }];
 }
 ```
 
@@ -87,9 +110,9 @@ const posts = await api.post.findMany({
     title: true,
     author: {
       name: true,
-      email: true
-    }
-  }
+      email: true,
+    },
+  },
 });
 ```
 
@@ -148,13 +171,13 @@ const firstPage = await api.post.findMany({
 // Next page (using cursor from last record)
 const nextPage = await api.post.findMany({
   first: 10,
-  after: firstPage.endCursor
+  after: firstPage.endCursor,
 });
 
 // Previous page
 const prevPage = await api.post.findMany({
   last: 10,
-  before: nextPage.startCursor
+  before: nextPage.startCursor,
 });
 ```
 
@@ -194,7 +217,7 @@ async function getAllPosts() {
     const result = await api.post.findMany({
       first: 100,
       after: cursor,
-      sort: { createdAt: "Descending" }
+      sort: { createdAt: "Descending" },
     });
 
     allPosts = allPosts.concat(result);
@@ -214,17 +237,15 @@ function PaginatedPosts() {
 
   const [{ data, fetching }] = useFindMany(api.post, {
     first: 20,
-    after: cursor
+    after: cursor,
   });
 
   return (
     <>
-      {data?.map(post => <Post key={post.id} {...post} />)}
-      {data?.pageInfo.hasNextPage && (
-        <button onClick={() => setCursor(data.endCursor)}>
-          Load More
-        </button>
-      )}
+      {data?.map((post) => (
+        <Post key={post.id} {...post} />
+      ))}
+      {data?.pageInfo.hasNextPage && <button onClick={() => setCursor(data.endCursor)}>Load More</button>}
     </>
   );
 }
@@ -236,7 +257,7 @@ function PaginatedPosts() {
 const post = await api.post.create({
   title: "My Post",
   body: "Content",
-  author: { _link: "user-id" }  // Link to related record
+  author: { _link: "user-id" }, // Link to related record
 });
 ```
 
@@ -244,7 +265,7 @@ const post = await api.post.create({
 
 ```javascript
 const post = await api.post.update("post-id", {
-  title: "Updated Title"
+  title: "Updated Title",
 });
 ```
 
@@ -253,7 +274,7 @@ const post = await api.post.update("post-id", {
 ```javascript
 const post = await api.post.upsert({
   title: "Updated Title",
-  on: ["id"]
+  on: ["id"],
 });
 ```
 
@@ -267,15 +288,12 @@ await api.post.delete("post-id");
 
 ```javascript
 // Bulk create
-await api.post.bulkCreate([
-  { title: "Post 1" },
-  { title: "Post 2" }
-]);
+await api.post.bulkCreate([{ title: "Post 1" }, { title: "Post 2" }]);
 
 // Bulk update
 await api.post.bulkUpdate([
   { id: "1", title: "Updated 1" },
-  { id: "2", title: "Updated 2" }
+  { id: "2", title: "Updated 2" },
 ]);
 
 // Bulk delete
@@ -286,13 +304,23 @@ await api.post.bulkDelete(["id-1", "id-2"]);
 
 ```javascript
 // Link to existing record
-{ author: { _link: "user-id" } }
+{
+  author: {
+    _link: "user-id";
+  }
+}
 
 // Create nested record
-{ author: { email: "new@example.com" } }
+{
+  author: {
+    email: "new@example.com";
+  }
+}
 
 // Many-to-many
-{ tags: [{ _link: "tag-1" }, { _link: "tag-2" }] }
+{
+  tags: [{ _link: "tag-1" }, { _link: "tag-2" }];
+}
 ```
 
 ## Internal API
@@ -304,7 +332,7 @@ Bypasses permissions, validations, and action lifecycle. Actions are not run whe
 ```javascript
 // Direct database update - no actions run
 const posts = await api.internal.post.create({
-  title: "My Post"
+  title: "My Post",
 });
 ```
 
@@ -326,6 +354,7 @@ const posts = await api.internal.post.create({
 - ❌ Don't use internal API if you need actions to run (use regular API instead)
 
 **📖 More info:**
+
 - [API access patterns](https://docs.gadget.dev/guides/data-access/api.md)
 - [Filtering and sorting](https://docs.gadget.dev/guides/data-access/api.md#filtering-records)
 - [Frontend React hooks](https://docs.gadget.dev/reference/react.md)

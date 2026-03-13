@@ -1,6 +1,7 @@
 # Frontend Components
 
 **📖 Full docs:**
+
 - [Autocomponents](https://docs.gadget.dev/guides/frontend/autocomponents.md)
 - [Polaris autocomponents](https://docs.gadget.dev/guides/frontend/autocomponents/polaris.md)
 - [Shadcn autocomponents](https://docs.gadget.dev/guides/frontend/autocomponents/shadcn.md)
@@ -45,11 +46,13 @@ Features: validation, error handling, loading states.
 Gadget supports two autocomponent libraries:
 
 **Polaris** - For Shopify apps:
+
 ```tsx
 import { AutoTable } from "@gadgetinc/react/auto/polaris";
 ```
 
 **Shadcn** - For general apps:
+
 ```tsx
 import { AutoTable } from "@gadgetinc/react/auto";
 ```

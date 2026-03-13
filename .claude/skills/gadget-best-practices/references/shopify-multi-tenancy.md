@@ -1,6 +1,7 @@
 # Shopify Multi-Tenancy
 
 **📖 Full docs:**
+
 - [Shopify data security](https://docs.gadget.dev/guides/plugins/shopify/advanced-topics/data-security.md)
 - [Access control](https://docs.gadget.dev/guides/access-control.md)
 
@@ -15,6 +16,7 @@ Non-negotiable for data security.
 Shopify apps serve thousands of merchants. Each merchant's data must be completely isolated.
 
 **Without tenancy:**
+
 - ❌ Data leaks across merchants
 - ❌ Security breaches
 - ❌ App rejection
@@ -22,6 +24,7 @@ Shopify apps serve thousands of merchants. Each merchant's data must be complete
 ## The Tenancy Model
 
 `shopifyShop` = tenant
+
 - One record per installed shop
 - Auto-created on install
 - Contains domain, access token, etc.
@@ -49,6 +52,7 @@ export const schema: GadgetModel = {
 ### Step 2: Add Permission Filters
 
 Create a Gelly filter file `accessControl/filters/product/shop-tenant.gelly`:
+
 ```gelly
 filter ($session: Session) on Product [
   where shopId == $session.shopId
@@ -56,6 +60,7 @@ filter ($session: Session) on Product [
 ```
 
 Then configure permissions in `accessControl/permissions.gadget.ts`:
+
 ```typescript
 import type { GadgetPermissions } from "gadget-server";
 
@@ -74,12 +79,12 @@ export const permissions: GadgetPermissions = {
           actions: {
             create: true,
             update: { filter: "accessControl/filters/product/shop-tenant.gelly" },
-            delete: { filter: "accessControl/filters/product/shop-tenant.gelly" }
-          }
-        }
-      }
-    }
-  }
+            delete: { filter: "accessControl/filters/product/shop-tenant.gelly" },
+          },
+        },
+      },
+    },
+  },
 };
 ```
 
@@ -102,7 +107,7 @@ export const run = async ({ api, connections }) => {
 
   // ✅ Correct
   const products = await api.product.findMany({
-    filter: { shopId: { equals: shopId } }
+    filter: { shopId: { equals: shopId } },
   });
 
   // ❌ WRONG - returns ALL shops' products
@@ -115,6 +120,7 @@ export const run = async ({ api, connections }) => {
 Add direct `shop` relationship even when models are nested:
 
 ✅ **Correct - Denormalized:**
+
 ```typescript
 // api/models/comment/schema.gadget.ts
 import type { GadgetModel } from "gadget-server";
@@ -131,7 +137,7 @@ export const schema: GadgetModel = {
     shop: {
       type: "belongsTo",
       parent: { model: "shopifyShop" },
-      storageKey: "Bcd890EfgHij",  // Direct relationship
+      storageKey: "Bcd890EfgHij", // Direct relationship
     },
   },
 };
@@ -145,6 +151,7 @@ filter ($session: Session) on Comment [
 ```
 
 ❌ **Avoid - Traversing:**
+
 ```typescript
 // api/models/comment/schema.gadget.ts
 import type { GadgetModel } from "gadget-server";
@@ -179,7 +186,7 @@ Pass `shopId` to use adaptive rate limiter:
 export const onSuccess = async ({ api, connections, record }) => {
   await api.enqueue(api.processProduct, {
     productId: record.id,
-    shopId: connections.shopify.currentShopId
+    shopId: connections.shopify.currentShopId,
   });
 };
 ```
@@ -210,6 +217,7 @@ export const onSuccess = async ({ connections }) => {
 ```
 
 **In background jobs:**
+
 ```javascript
 const shopify = connections.shopify.forShopId(params.shopId);
 ```
@@ -251,7 +259,7 @@ export const run = async ({ api, connections }) => {
   const shopId = connections.shopify.currentShopId;
 
   await api.product.bulkDelete({
-    filter: { shopId: { equals: shopId } }
+    filter: { shopId: { equals: shopId } },
   });
 };
 ```
@@ -259,6 +267,7 @@ export const run = async ({ api, connections }) => {
 ## Best Practices
 
 **DO:**
+
 - ✅ Add `shop` to every model
 - ✅ Add permission filters referencing Gelly files (e.g., `accessControl/filters/product/shop-tenant.gelly`)
 - ✅ Always filter by `shopId` in queries
@@ -267,6 +276,7 @@ export const run = async ({ api, connections }) => {
 - ✅ Test with multiple shops
 
 **DON'T:**
+
 - ❌ Skip `shop` relationship
 - ❌ Query without `shopId` filter
 - ❌ Traverse relationships in filters
