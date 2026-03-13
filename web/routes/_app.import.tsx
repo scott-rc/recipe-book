@@ -133,7 +133,7 @@ export default function ImportRoute(): React.ReactElement {
           <CardDescription>Paste a URL from any recipe site to import it.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form onSubmit={submit} className="flex flex-col gap-4">
+          <Form onSubmit={formState.isSubmitting ? (e) => e.preventDefault() : submit} className="flex flex-col gap-4">
             <Field>
               <div className="relative">
                 <LinkIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
@@ -141,7 +141,7 @@ export default function ImportRoute(): React.ReactElement {
               </div>
               <FieldError>{error?.message}</FieldError>
             </Field>
-            <Button disabled={formState.isSubmitting} size="lg" className={`w-full ${formState.isSubmitting ? "relative overflow-hidden" : ""}`}>
+            <Button aria-disabled={formState.isSubmitting} size="lg" className={`w-full ${formState.isSubmitting ? "relative overflow-hidden" : ""}`}>
               {formState.isSubmitting && (
                 <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               )}

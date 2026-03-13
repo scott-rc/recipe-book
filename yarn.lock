@@ -665,27 +665,27 @@
   version "0.0.0"
   uid ""
 
-"@gadgetinc/client-hooks@^0.1.5":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/client-hooks/-/client-hooks-0.1.6.tgz#920757281d4fe30c3508b5899dd01f4d751960f4"
-  integrity sha512-5kRYH19VTe0N2yAsyidow30cYytgIP7eX2N6mRW8BKKCmTW5sawmNr4Ku0j2LLC46lq9RFVTo/08umjFMPfddg==
+"@gadgetinc/client-hooks@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/client-hooks/-/client-hooks-0.1.7.tgz#fec8a885fe4872739b2da7f37030ccd184b31be1"
+  integrity sha512-ciNLtnwqqhfhbwgsg6SNpnvHtDc2afXmEMn2jCFM5BLvy/8sl//BBWwQzID9Zhve1k4nVy5SsAyMo81nEny+zg==
   dependencies:
     "@gadgetinc/core" ">=0.15.1"
     "@urql/core" "^6.0.1"
 
-"@gadgetinc/core@0.15.1", "@gadgetinc/core@>=0.14.0", "@gadgetinc/core@>=0.15.1":
+"@gadgetinc/core@0.15.1", "@gadgetinc/core@>=0.15.1":
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/@gadgetinc/core/-/core-0.15.1.tgz#7740035306c89e59b0ddf734f3ce3e6c1d87938f"
   integrity sha512-MFvJ6FfSdcwMPoNhg/1t8O9K41GwIVEmflbbgU1nalTX6KBLcib58q04mFgLv9f/WEnwud9q7aOM9nRH4lNZ1w==
 
-"@gadgetinc/react@^0.24.1":
-  version "0.24.1"
-  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.24.1.tgz#e4524f2e16525cfbb0d18e5d3162418681491afa"
-  integrity sha512-fofxo9Y6MIFoNoW9rmdw1bHMoQoJiUXMNMs3W6YkscL9MFkfAOlZUK7v0M5REDdpD5QfMziQhE0EAcgRC/a15w==
+"@gadgetinc/react@^0.24.2":
+  version "0.24.2"
+  resolved "https://registry.yarnpkg.com/@gadgetinc/react/-/react-0.24.2.tgz#b5b49c504bf8b13afe8a4a375c21726e0753fbaa"
+  integrity sha512-2atMnWe4oZfYMj66z+MEHzu6CnBBAv8rh6TxdTiyYPnCCYSjnP+jUlOjSctlbGQ9NcfpKvk1zOVV4a3MJ1FVjQ==
   dependencies:
     "@0no-co/graphql.web" "^1.0.4"
-    "@gadgetinc/client-hooks" "^0.1.5"
-    "@gadgetinc/core" ">=0.14.0"
+    "@gadgetinc/client-hooks" "^0.1.7"
+    "@gadgetinc/core" ">=0.15.1"
     "@hookform/resolvers" "^5.2.1"
     "@urql/core" "^6.0.1"
     filesize "^10.1.2"
