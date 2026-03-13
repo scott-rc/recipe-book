@@ -1,0 +1,3 @@
+filter ($user: User, $session: Session) on Category [
+  where userId == $user.id
+]

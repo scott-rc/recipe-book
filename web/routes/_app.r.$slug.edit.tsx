@@ -8,6 +8,7 @@ import { useBlocker } from "react-router";
 import { toast } from "sonner";
 
 import { api } from "../api";
+import { CategoryCombobox } from "../components/category-combobox";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,6 +93,10 @@ export default function EditRecipeRoute() {
     },
   });
 
+  // Category state
+  const [categoryId, setCategoryId] = useState<string | null>(recipe.category?.id ?? null);
+  const initialCategoryId = useRef(recipe.category?.id ?? null);
+
   // State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -107,7 +112,8 @@ export default function EditRecipeRoute() {
   const hasImageChanges = currentImagesJson !== initialImagesJson.current;
 
   // Track if form has unsaved changes
-  const hasUnsavedChanges = form.formState.isDirty || hasImageChanges || isSubmitting;
+  const hasCategoryChanges = categoryId !== initialCategoryId.current;
+  const hasUnsavedChanges = form.formState.isDirty || hasImageChanges || hasCategoryChanges || isSubmitting;
   const blocker = useBlocker(hasUnsavedChanges);
 
   // DnD Sensors
@@ -135,6 +141,7 @@ export default function EditRecipeRoute() {
     setIsSubmitting(true);
     try {
       await api.recipe.update(recipe.id, {
+        category: categoryId ? { _link: categoryId } : null,
         cookTime: cookTimeMs,
         directions: data.directions,
         images: [
@@ -167,6 +174,7 @@ export default function EditRecipeRoute() {
 
       // Update initial images to current state
       initialImagesJson.current = currentImagesJson;
+      initialCategoryId.current = categoryId;
 
       toast.success("Recipe updated successfully");
     } catch (error) {
@@ -343,6 +351,12 @@ export default function EditRecipeRoute() {
                       <Input {...form.register("source")} id="source" type="url" disabled={isSubmitting} />
                       <FieldError errors={[form.formState.errors.source]} />
                     </Field>
+
+                    <Field>
+                      <FieldLabel>Category</FieldLabel>
+                      <FieldDescription>Organize your recipe into a category (optional)</FieldDescription>
+                      <CategoryCombobox value={categoryId} onChange={setCategoryId} />
+                    </Field>
                   </FieldGroup>
                 </FieldSet>
               </div>
@@ -483,6 +497,7 @@ export default function EditRecipeRoute() {
                 onClick={() => {
                   form.reset();
                   initialImagesJson.current = JSON.stringify(initialImages.map((i) => i.id));
+                  setCategoryId(initialCategoryId.current);
                 }}
                 disabled={isSubmitting}
                 className="flex-1 sm:flex-none"

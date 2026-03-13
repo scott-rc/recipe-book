@@ -1,4 +1,4 @@
-import { ChefHatIcon, Clock, ListIcon, LockIcon, LockOpenIcon, ScaleIcon, Users } from "lucide-react";
+import { ChefHatIcon, Clock, ListIcon, LockIcon, LockOpenIcon, ScaleIcon, TagIcon, Users } from "lucide-react";
 import ms from "ms";
 import { type ReactElement, useEffect, useState } from "react";
 
@@ -103,6 +103,12 @@ export default function RecipeIndexRoute() {
             </div>
             <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pb-6 text-sm @sm:text-base">
               <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                {recipe.category && (
+                  <div className="flex items-center gap-2">
+                    <TagIcon className="text-muted-foreground h-5 w-5" />
+                    <span className="text-muted-foreground">{recipe.category.name}</span>
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <Users className="text-muted-foreground h-5 w-5" />
                   <span className="font-medium">Serves:</span>

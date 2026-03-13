@@ -12,45 +12,68 @@ import { cn } from "../lib/utils";
 import type { Route } from "./+types/_app._index";
 
 export async function clientLoader({ request }: Route.ClientLoaderArgs) {
-  const recipes = await api.recipe.findMany({
-    search: new URL(request.url).searchParams.get("s"),
-    select: {
-      cookTime: true,
-      id: true,
-      images: {
-        edges: {
-          cursor: true,
-          node: {
-            alt: true,
-            file: { url: true, mimeType: true },
-            height: true,
-            id: true,
-            index: true,
-            width: true,
+  const { searchParams } = new URL(request.url);
+  const searchQuery = searchParams.get("s");
+  const categoryFilter = searchParams.get("c");
+
+  const [recipes, categories] = await Promise.all([
+    api.recipe.findMany({
+      ...(searchQuery ? { search: searchQuery } : {}),
+      ...(categoryFilter ? { filter: { categoryId: { equals: categoryFilter } } } : {}),
+      select: {
+        category: { id: true, name: true },
+        cookTime: true,
+        id: true,
+        images: {
+          edges: {
+            cursor: true,
+            node: {
+              alt: true,
+              file: { url: true, mimeType: true },
+              height: true,
+              id: true,
+              index: true,
+              width: true,
+            },
           },
         },
+        name: true,
+        prepTime: true,
+        servingSize: true,
+        slug: true,
+        source: true,
       },
-      name: true,
-      prepTime: true,
-      servingSize: true,
-      slug: true,
-      source: true,
-    },
-  });
+    }),
+    api.category.findMany({
+      select: { id: true, name: true },
+      sort: { name: "Ascending" },
+    }),
+  ]);
 
   for (const recipe of recipes) {
     recipe.images.edges.sort((a, b) => (a.node.index ?? 0) - (b.node.index ?? 0));
   }
 
-  return recipes;
+  return { categories, recipes };
 }
 
-export type Recipe = Route.ComponentProps["loaderData"][number];
+export type Recipe = Route.ComponentProps["loaderData"]["recipes"][number];
 
-export default function IndexRoute({ loaderData: recipes }: Route.ComponentProps) {
+export default function IndexRoute({ loaderData: { recipes, categories } }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const setDebouncedSearchParams = useDebouncedCallback(
-    (s: string) => setSearchParams(s ? { s } : {}, { replace: true, viewTransition: true }),
+    (s: string) =>
+      setSearchParams(
+        (prev) => {
+          if (s) {
+            prev.set("s", s);
+          } else {
+            prev.delete("s");
+          }
+          return prev;
+        },
+        { replace: true, viewTransition: true },
+      ),
     250,
   );
 
@@ -66,6 +89,38 @@ export default function IndexRoute({ loaderData: recipes }: Route.ComponentProps
           onChange={(e) => setDebouncedSearchParams(e.currentTarget.value)}
         />
       </Form>
+      {categories.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {categories.map((category) => {
+            const isActive = searchParams.get("c") === category.id;
+            return (
+              <button
+                key={category.id}
+                type="button"
+                onClick={() => {
+                  setSearchParams(
+                    (prev) => {
+                      if (isActive) {
+                        prev.delete("c");
+                      } else {
+                        prev.set("c", category.id);
+                      }
+                      return prev;
+                    },
+                    { replace: true, viewTransition: true },
+                  );
+                }}
+                className={cn(
+                  "inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                  isActive ? "bg-primary text-primary-foreground border-transparent" : "bg-background text-foreground hover:bg-accent",
+                )}
+              >
+                {category.name}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <div className="mt-4 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {recipes.length === 0 && (
           <div className="mt-8">
@@ -95,7 +150,10 @@ export default function IndexRoute({ loaderData: recipes }: Route.ComponentProps
                   decoding="async"
                 />
                 <div className="flex items-baseline justify-between">
-                  <span className={cn("line-clamp-none leading-tight font-semibold @xs:text-xl @sm:text-2xl")}>{recipe.name}</span>
+                  <div className="flex flex-col gap-0.5">
+                    <span className={cn("line-clamp-none leading-tight font-semibold @xs:text-xl @sm:text-2xl")}>{recipe.name}</span>
+                    {recipe.category && <span className="text-muted-foreground text-xs">{recipe.category.name}</span>}
+                  </div>
                   <RecipeMenu recipe={recipe} />
                 </div>
               </div>

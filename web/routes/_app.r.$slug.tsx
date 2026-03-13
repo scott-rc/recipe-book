@@ -6,6 +6,7 @@ import type { Route } from "./+types/_app.r.$slug";
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const recipe = await api.recipe.findBySlug(params.slug, {
     select: {
+      category: { id: true, name: true },
       cookTime: true,
       directions: true,
       id: true,

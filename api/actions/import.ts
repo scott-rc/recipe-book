@@ -22,9 +22,30 @@ export async function run({ params, session, api }: ImportGlobalActionContext): 
   }
 
   const { source } = paramsSchema.parse(params);
-  const recipeParameters = await importRecipe(source);
+  const { category: categoryName, ...recipeParameters } = await importRecipe(source);
+
+  // Find or create category if GPT suggested one
+  let categoryId: string | undefined;
+  if (categoryName) {
+    const trimmed = categoryName.trim();
+    if (trimmed) {
+      const existing = await api.category.findMany({
+        filter: { name: { equals: trimmed }, userId: { equals: userId } },
+        first: 1,
+        select: { id: true },
+      });
+      if (existing[0]) {
+        categoryId = existing[0].id;
+      } else {
+        const created = await api.category.create({ name: trimmed, user: { _link: userId } });
+        categoryId = created.id;
+      }
+    }
+  }
+
   const recipe = await api.recipe.create({
     ...recipeParameters,
+    ...(categoryId ? { category: { _link: categoryId } } : {}),
     images: recipeParameters.images.map((image) => ({
       create: {
         alt: image.alt,

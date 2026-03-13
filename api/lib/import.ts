@@ -51,9 +51,7 @@ export async function importRecipe(url: string): Promise<ImportResult> {
   const json: unknown = JSON.parse(toolCall.function.arguments);
   const saveRecipeParameters = saveRecipeParametersSchema.parse(json);
 
-  const results = await Promise.allSettled(
-    images.map((image) => fetch(image.src, { method: "HEAD" }).then(() => image)),
-  );
+  const results = await Promise.allSettled(images.map((image) => fetch(image.src, { method: "HEAD" }).then(() => image)));
 
   const validImages = results.flatMap((result) => {
     if (result.status === "fulfilled") {
@@ -141,6 +139,7 @@ function fetchRecipeContentFromHtml(html: string): { images: RecipeImage[]; text
 
 const saveRecipeParametersSchema = z.object({
   name: z.string().describe("The name of the recipe."),
+  category: z.string().nullish().describe("A short category for the recipe, e.g. 'Breakfast', 'Dessert', 'Soup', 'Salad'."),
   directions: z.string().describe("A list of steps to prepare the recipe in Markdown."),
   ingredients: z.string().describe("A list of ingredients required for the recipe in Markdown."),
   nutrition: z.string().nullish().describe("The nutritional information for the recipe per serving in Markdown."),
