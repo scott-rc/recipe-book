@@ -16,8 +16,8 @@ const paramsSchema = z.object({
 });
 
 export async function run({ params, session, api }: ImportGlobalActionContext): Promise<{ slug: string }> {
-  const userId = session?.get("user") as string;
-  if (!userId) {
+  const userId: unknown = session?.get("user");
+  if (typeof userId !== "string" || userId === "") {
     throw new Error("Unauthorized");
   }
 
@@ -26,7 +26,7 @@ export async function run({ params, session, api }: ImportGlobalActionContext): 
 
   // Find or create category if GPT suggested one
   let categoryId: string | undefined;
-  if (categoryName) {
+  if (categoryName !== null && categoryName !== undefined && categoryName !== "") {
     const trimmed = categoryName.trim();
     if (trimmed) {
       const existing = await api.category.findMany({
@@ -45,7 +45,7 @@ export async function run({ params, session, api }: ImportGlobalActionContext): 
 
   const recipe = await api.recipe.create({
     ...recipeParameters,
-    ...(categoryId ? { category: { _link: categoryId } } : {}),
+    ...(categoryId === undefined ? {} : { category: { _link: categoryId } }),
     images: recipeParameters.images.map((image) => ({
       create: {
         alt: image.alt,

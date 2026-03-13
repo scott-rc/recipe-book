@@ -153,19 +153,29 @@ export default function RecipeIndexRoute() {
                 Directions
               </h2>
               <Markdown>
-                {typeof recipe.directions === "string" ? recipe.directions : (recipe.directions as string[]).join("\n- ")}
+                {typeof recipe.directions === "string"
+                  ? recipe.directions
+                  : Array.isArray(recipe.directions)
+                    ? recipe.directions.join("\n- ")
+                    : ""}
               </Markdown>
             </div>
           </div>
 
           {/* Nutrition */}
-          {recipe.nutrition && (
+          {recipe.nutrition !== null && recipe.nutrition !== undefined && (
             <div className="pt-6">
               <h2 className="mb-4 flex items-center gap-2 text-xl font-bold">
                 <ScaleIcon className="h-5 w-5" />
                 Nutrition
               </h2>
-              <Markdown>{typeof recipe.nutrition === "string" ? recipe.nutrition : (recipe.nutrition as string[]).join("\n- ")}</Markdown>
+              <Markdown>
+                {typeof recipe.nutrition === "string"
+                  ? recipe.nutrition
+                  : Array.isArray(recipe.nutrition)
+                    ? recipe.nutrition.join("\n- ")
+                    : ""}
+              </Markdown>
             </div>
           )}
         </div>
@@ -175,14 +185,15 @@ export default function RecipeIndexRoute() {
 }
 
 function IngredientsSection({ recipe, cookMode }: { recipe: Recipe; cookMode: boolean }): ReactElement {
-  const ingredientsText = typeof recipe.ingredients === "string" ? recipe.ingredients : (recipe.ingredients as string[]).join("\n- ");
+  const ingredientsText =
+    typeof recipe.ingredients === "string" ? recipe.ingredients : Array.isArray(recipe.ingredients) ? recipe.ingredients.join("\n- ") : "";
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
 
   // Parse ingredients into list items
   const ingredientsList = ingredientsText
     .split("\n")
     .map((line) => line.trim())
-    .filter((line) => line && line !== "-")
+    .filter((line) => line.length > 0 && line !== "-")
     .map((line) => line.replace(/^[-*]\s*/, ""));
 
   const toggleItem = (index: number) => {

@@ -43,9 +43,9 @@ export default function SignInRoute() {
                       placeholder="Email"
                       autoComplete="off"
                       {...register("email")}
-                      className={errors.user?.email?.message ? "border-destructive" : ""}
+                      className={errors.user?.email?.message === undefined ? "" : "border-destructive"}
                     />
-                    {errors.user?.email?.message && <p className="text-destructive text-sm">{errors.user.email.message}</p>}
+                    {errors.user?.email?.message !== undefined && <p className="text-destructive text-sm">{errors.user.email.message}</p>}
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -57,15 +57,17 @@ export default function SignInRoute() {
                       placeholder="Password"
                       autoComplete="off"
                       {...register("password")}
-                      className={errors.user?.password?.message ? "border-destructive" : ""}
+                      className={errors.user?.password?.message === undefined ? "" : "border-destructive"}
                     />
-                    {errors.user?.password?.message && <p className="text-destructive text-sm">{errors.user.password.message}</p>}
+                    {errors.user?.password?.message !== undefined && (
+                      <p className="text-destructive text-sm">{errors.user.password.message}</p>
+                    )}
                   </div>
                 </div>
                 <Button className="w-full" size="lg" disabled={isSubmitting} type="submit">
                   Continue with email
                 </Button>
-                {errors.root?.message && <p className="text-destructive text-sm">{errors.root.message}</p>}
+                {errors.root?.message !== undefined && <p className="text-destructive text-sm">{errors.root.message}</p>}
                 <p className="text-muted-foreground text-sm">
                   Forgot your password?{" "}
                   <Link to="/forgot-password" className="text-primary font-medium hover:underline">

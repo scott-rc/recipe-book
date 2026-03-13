@@ -46,7 +46,10 @@ function useTypewriter(active: boolean): string {
     }
 
     function tick(): void {
-      const message = LOADING_MESSAGES[indexRef.current % LOADING_MESSAGES.length] as string;
+      const message = LOADING_MESSAGES[indexRef.current % LOADING_MESSAGES.length];
+      if (message === undefined) {
+        return;
+      }
 
       switch (phaseRef.current) {
         case "typing": {

@@ -53,9 +53,11 @@ export default function ResetPasswordRoute() {
                     type="password"
                     autoComplete="off"
                     {...register("password")}
-                    className={errors.user?.password?.message ? "border-destructive" : ""}
+                    className={errors.user?.password?.message === undefined ? "" : "border-destructive"}
                   />
-                  {errors.user?.password?.message && <p className="text-destructive text-sm">{errors.user.password.message}</p>}
+                  {errors.user?.password?.message !== undefined && (
+                    <p className="text-destructive text-sm">{errors.user.password.message}</p>
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
@@ -66,12 +68,14 @@ export default function ResetPasswordRoute() {
                     type="password"
                     autoComplete="off"
                     {...register("confirmPassword")}
-                    className={errors.confirmPassword?.message ? "border-destructive" : ""}
+                    className={errors.confirmPassword?.message === undefined ? "" : "border-destructive"}
                   />
-                  {errors.confirmPassword?.message && <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>}
+                  {errors.confirmPassword?.message !== undefined && (
+                    <p className="text-destructive text-sm">{errors.confirmPassword.message}</p>
+                  )}
                 </div>
               </div>
-              {errors.root?.message && <p className="text-destructive text-sm">{errors.root.message}</p>}
+              {errors.root?.message !== undefined && <p className="text-destructive text-sm">{errors.root.message}</p>}
               <Button className="w-full" size="lg" disabled={isSubmitting} type="submit">
                 Reset password
               </Button>

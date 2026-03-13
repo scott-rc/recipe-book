@@ -49,7 +49,7 @@ export function CategoryCombobox({ value, onChange }: CategoryComboboxProps) {
           <CommandInput placeholder="Search categories..." value={search} onValueChange={setSearch} />
           <CommandList>
             <CommandEmpty>{fetching ? "Loading..." : "No categories found."}</CommandEmpty>
-            {value && (
+            {value !== null && (
               <CommandGroup>
                 <CommandItem
                   onSelect={() => {
@@ -81,7 +81,7 @@ export function CategoryCombobox({ value, onChange }: CategoryComboboxProps) {
                   ))}
               </CommandGroup>
             )}
-            {trimmedSearch && !hasExactMatch && (
+            {trimmedSearch.length > 0 && hasExactMatch !== true && (
               <>
                 <CommandSeparator />
                 <CommandGroup>

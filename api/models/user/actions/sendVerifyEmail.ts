@@ -21,8 +21,14 @@ export async function onSuccess({ params, record, logger, emails }: SendVerifyEm
     .catch({ user: { emailVerificationCode: "" } })
     .parse(params);
 
-  if ((record.emailVerified ?? false) || !record.emailVerificationToken || !user.emailVerificationCode) {
-    if (!record.emailVerified) {
+  if (
+    (record.emailVerified ?? false) ||
+    record.emailVerificationToken === null ||
+    record.emailVerificationToken === undefined ||
+    record.emailVerificationToken === "" ||
+    !user.emailVerificationCode
+  ) {
+    if (record.emailVerified !== true) {
       logger.error("missing email verification code or token");
     }
     return;

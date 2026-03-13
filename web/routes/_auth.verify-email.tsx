@@ -12,7 +12,7 @@ export const clientLoader = async ({ request }: Route.ClientLoaderArgs) => {
     return { error: null, success: true };
   } catch (error) {
     return {
-      error: { message: (error as Error).message },
+      error: { message: error instanceof Error ? error.message : String(error) },
       success: false,
     };
   }

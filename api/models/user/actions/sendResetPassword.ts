@@ -21,7 +21,12 @@ export async function onSuccess({ params, record, emails, logger }: SendResetPas
     .catch({ user: { resetPasswordCode: "" } })
     .parse(params);
 
-  if (!record.resetPasswordToken || !user.resetPasswordCode) {
+  if (
+    record.resetPasswordToken === null ||
+    record.resetPasswordToken === undefined ||
+    record.resetPasswordToken === "" ||
+    !user.resetPasswordCode
+  ) {
     logger.error("missing reset password code or token");
     return;
   }

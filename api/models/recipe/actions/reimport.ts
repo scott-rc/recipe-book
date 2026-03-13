@@ -10,18 +10,17 @@ export const options: ActionOptions = {
 
 export async function run({ record, logger, api }: ReimportRecipeActionContext): Promise<void> {
   logger.debug({ record }, "reimporting recipe");
-  if (!record.source) {
+  if (record.source === null || record.source === undefined || record.source === "") {
     throw new Error("Recipe has no source");
   }
 
-  const recipeParameters = await importRecipe(record.source);
+  const { name: _name, images: importedImages, category: _category, ...recipeParameters } = await importRecipe(record.source);
   await api.recipe.update(record.id, {
     ...recipeParameters,
-    name: undefined, // FIXME: causes uniqueness error
     images: [
       {
         _converge: {
-          values: recipeParameters.images.map((image) => ({
+          values: importedImages.map((image) => ({
             alt: image.alt,
             file: { copyURL: image.src },
             height: image.height,

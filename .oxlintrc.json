@@ -8,6 +8,11 @@
     "style": "warn"
   },
   "ignorePatterns": [".gadget/**", ".react-router/**", "web/components/ui/**"],
+  "options": {
+    "maxWarnings": 0,
+    "typeAware": true,
+    "typeCheck": true
+  },
   "rules": {
     "typescript/no-confusing-void-expression": ["warn", { "ignoreVoidReturningFunctions": true, "ignoreArrowShorthand": true }],
     "typescript/no-misused-promises": ["warn", { "checksVoidReturn": false }],

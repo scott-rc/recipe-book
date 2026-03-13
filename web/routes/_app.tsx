@@ -52,6 +52,7 @@ export default function AppRoute({ loaderData: { session, user } }: Route.Compon
 
   // Find the recipe route match to get recipe data
   const recipeMatch = matches.find((match) => match.id === "routes/_app.r.$slug");
+  // oxlint-disable-next-line no-unsafe-type-assertion -- loaderData is untyped from useMatches; runtime shape is guaranteed by the route loader
   const recipe = recipeMatch?.loaderData as Recipe | undefined;
 
   // Check if we're on the edit page

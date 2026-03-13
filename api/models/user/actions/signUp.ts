@@ -14,14 +14,14 @@ export async function run({ params, record, session }: SignUpUserActionContext):
   record.lastSignedIn = new Date();
   await save(record);
 
-  if (record.emailVerified) {
+  if (record.emailVerified === true) {
     // Associate the current user record with the active session
     session?.set("user", { _link: record.id });
   }
 }
 
 export async function onSuccess({ record, api }: SignUpUserActionContext): Promise<void> {
-  if (!record.emailVerified) {
+  if (record.emailVerified !== true) {
     // Send the user a verification email if they have not yet verified
     await api.user.sendVerifyEmail({ email: record.email });
   }

@@ -11,7 +11,7 @@
     "lint:fix": "oxlint --fix && oxfmt",
     "lint:oxlint": "oxlint",
     "lint:oxfmt": "oxfmt --check",
-    "lint:typescript": "react-router typegen && tsc --project tsconfig.json && tsc --project tsconfig.api.json && tsc --project tsconfig.web.json"
+    "typegen": "react-router typegen"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -58,8 +58,9 @@
     "@types/react-dom": "^19.1.7",
     "concurrently": "^8.2.2",
     "ggt": "^2.3.0",
-    "oxfmt": "latest",
-    "oxlint": "latest",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
+    "oxlint-tsgolint": "^0.16.0",
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.6",
     "type-fest": "^4.41.0",

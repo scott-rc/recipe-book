@@ -131,7 +131,10 @@ export function useImageManager(initialImages: ImageItem[]) {
       }
 
       const newItems = [...items];
-      const [removed] = newItems.splice(oldIndex, 1) as [ImageItem];
+      const [removed] = newItems.splice(oldIndex, 1);
+      if (removed === undefined) {
+        return items;
+      }
       newItems.splice(newIndex, 0, removed);
 
       return newItems.map((item, index) => ({

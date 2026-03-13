@@ -19,8 +19,8 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 
   const [recipes, categories] = await Promise.all([
     api.recipe.findMany({
-      ...(searchQuery ? { search: searchQuery } : {}),
-      ...(categoryFilter ? { filter: { categoryId: { equals: categoryFilter } } } : {}),
+      ...(searchQuery !== null && searchQuery !== "" ? { search: searchQuery } : {}),
+      ...(categoryFilter !== null && categoryFilter !== "" ? { filter: { categoryId: { equals: categoryFilter } } } : {}),
       sort: [{ favourite: "Ascending" }, { slug: "Ascending" }],
       select: {
         category: { id: true, name: true },
@@ -185,17 +185,17 @@ function FavouriteButton({ recipe }: { recipe: Recipe }): ReactElement {
         variant="ghost"
         size="icon"
         onClick={async () => {
-          await api.recipe.update(recipe.id, { favourite: !recipe.favourite });
-          revalidator.revalidate();
+          await api.recipe.update(recipe.id, { favourite: recipe.favourite !== true });
+          void revalidator.revalidate();
         }}
       >
-        <HeartIcon className={cn("size-4", recipe.favourite && "fill-current text-red-500")} />
+        <HeartIcon className={cn("size-4", recipe.favourite === true && "fill-current text-red-500")} />
       </Button>
     </div>
   );
 }
 
-export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: string }): ReactElement {
+export function RecipeMenu({ recipe, className }: { recipe: Pick<Recipe, "id" | "slug" | "source">; className?: string }): ReactElement {
   const navigate = useNavigate();
 
   const { submit: reimport, formState: reimportState } = useActionForm(api.recipe.reimport, {
@@ -233,7 +233,7 @@ export function RecipeMenu({ recipe, className }: { recipe: Recipe; className?: 
             event.stopPropagation(); // Prevent menubar from preventing child anchor tags from triggering navigation
           }}
         >
-          {recipe.source && (
+          {recipe.source !== null && recipe.source !== "" && (
             <MenubarItem asChild>
               <Link to={recipe.source} target="_blank">
                 <ExternalLinkIcon className="size-4" />

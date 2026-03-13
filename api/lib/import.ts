@@ -57,7 +57,7 @@ export async function importRecipe(url: string): Promise<ImportResult> {
     if (result.status === "fulfilled") {
       return [result.value];
     }
-    logger.warn({ reason: result.reason }, "failed to fetch image");
+    logger.warn({ reason: String(result.reason) }, "failed to fetch image");
     return [];
   });
 
@@ -97,6 +97,13 @@ function extractImagesFromMarkdown(markdown: string): RecipeImage[] {
   return images;
 }
 
+function parseOptionalInt(value: string | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+  return parseInt(value, 10);
+}
+
 function fetchRecipeContentFromHtml(html: string): { images: RecipeImage[]; text: string } {
   const $ = load(html);
   const primaryContentId =
@@ -111,10 +118,10 @@ function fetchRecipeContentFromHtml(html: string): { images: RecipeImage[]; text
       .attr("href");
 
   let contentHtml = html;
-  if (primaryContentId && primaryContentId.startsWith("#") && primaryContentId.length > 1) {
+  if (primaryContentId !== undefined && primaryContentId.startsWith("#") && primaryContentId.length > 1) {
     logger.info({ primaryContentId }, "extracting primary content");
     contentHtml =
-      $(primaryContentId).html()?.trim() || $(primaryContentId).nextAll().wrapAll("<div></div>").parent().html()?.trim() || html;
+      $(primaryContentId).html()?.trim() ?? $(primaryContentId).nextAll().wrapAll("<div></div>").parent().html()?.trim() ?? html;
   }
 
   const text = convert(contentHtml, { selectors: [{ options: { ignoreHref: true }, selector: "*" }] })
@@ -125,12 +132,12 @@ function fetchRecipeContentFromHtml(html: string): { images: RecipeImage[]; text
 
   const images = $("img")
     .toArray()
-    .filter((el) => $(el).attr("src")?.startsWith("https://"))
+    .filter((el) => $(el).attr("src")?.startsWith("https://") === true)
     .map((el) => ({
       alt: $(el).attr("alt") ?? "",
-      height: $(el).attr("height") ? parseInt($(el).attr("height")!, 10) : undefined,
+      height: parseOptionalInt($(el).attr("height")),
       src: $(el).attr("src") ?? "",
-      width: $(el).attr("width") ? parseInt($(el).attr("width")!, 10) : undefined,
+      width: parseOptionalInt($(el).attr("width")),
     }))
     .sort((a, b) => (b.width ?? 0) + (b.height ?? 0) - ((a.width ?? 0) + (a.height ?? 0)));
 

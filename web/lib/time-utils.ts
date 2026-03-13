@@ -10,6 +10,7 @@ export function parseTimeString(timeString: string): number | undefined {
   }
 
   try {
+    // oxlint-disable-next-line no-unsafe-type-assertion -- ms() requires StringValue but accepts any string at runtime
     const parsed = ms(timeString as ms.StringValue);
     if (isNaN(parsed) || parsed <= 0) {
       return undefined;
@@ -24,7 +25,7 @@ export function parseTimeString(timeString: string): number | undefined {
  * Formats milliseconds into a human-readable time string
  */
 export function formatTime(msValue: number | null | undefined): string {
-  if (!msValue) {
+  if (msValue === null || msValue === undefined || msValue === 0) {
     return "";
   }
   return ms(msValue, { long: true });
@@ -65,7 +66,7 @@ export function getTimePreview(timeString: string): string | undefined {
  * Formats milliseconds into a short time string for input (e.g., "1h 30m")
  */
 export function formatTimeForInput(msValue: number | null | undefined): string {
-  if (!msValue) {
+  if (msValue === null || msValue === undefined || msValue === 0) {
     return "";
   }
   return ms(msValue, { long: true });

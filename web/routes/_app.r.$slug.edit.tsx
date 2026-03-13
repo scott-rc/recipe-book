@@ -128,7 +128,7 @@ export default function EditRecipeRoute() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      reorderImages(active.id as string, over.id as string);
+      reorderImages(String(active.id), String(over.id));
     }
   };
 
@@ -141,7 +141,7 @@ export default function EditRecipeRoute() {
     setIsSubmitting(true);
     try {
       await api.recipe.update(recipe.id, {
-        category: categoryId ? { _link: categoryId } : null,
+        category: categoryId === null ? null : { _link: categoryId },
         cookTime: cookTimeMs,
         directions: data.directions,
         images: [
@@ -178,7 +178,7 @@ export default function EditRecipeRoute() {
 
       toast.success("Recipe updated successfully");
     } catch (error) {
-      toast.error((error as Error).message, { dismissible: true });
+      toast.error(error instanceof Error ? error.message : String(error), { dismissible: true });
     } finally {
       setIsSubmitting(false);
     }
@@ -393,7 +393,7 @@ export default function EditRecipeRoute() {
                         disabled={isSubmitting}
                         aria-required="true"
                       />
-                      {prepTimePreview && !form.formState.errors.prepTime && (
+                      {prepTimePreview !== undefined && !form.formState.errors.prepTime && (
                         <p className="text-muted-foreground text-sm">{prepTimePreview}</p>
                       )}
                       <FieldError errors={[form.formState.errors.prepTime]} />
@@ -423,7 +423,7 @@ export default function EditRecipeRoute() {
                         disabled={isSubmitting}
                         aria-required="true"
                       />
-                      {cookTimePreview && !form.formState.errors.cookTime && (
+                      {cookTimePreview !== undefined && !form.formState.errors.cookTime && (
                         <p className="text-muted-foreground text-sm">{cookTimePreview}</p>
                       )}
                       <FieldError errors={[form.formState.errors.cookTime]} />
