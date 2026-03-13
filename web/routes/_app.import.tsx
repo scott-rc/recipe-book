@@ -19,19 +19,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Field, FieldError } from "../components/ui/field";
 import { Input } from "../components/ui/input";
-
-const LOADING_MESSAGES = [
-  "Preheating the oven...",
-  "Chopping the onions...",
-  "Taste-testing for quality...",
-  "Arguing with the garlic press...",
-  "Translating from chef to English...",
-  "Sifting through the flour...",
-  "Sneaking a bite when nobody's looking...",
-  "Deciphering grandma's handwriting...",
-  "Waiting for the water to boil...",
-  "Pretending to know what 'julienne' means...",
-];
+import { LOADING_MESSAGES } from "../lib/loading-messages";
 
 const TYPE_SPEED_MS = 40;
 const ERASE_SPEED_MS = 25;
@@ -82,7 +70,11 @@ function useTypewriter(active: boolean): string {
           break;
         }
         case "waiting": {
-          indexRef.current = (indexRef.current + 1) % LOADING_MESSAGES.length;
+          let next: number;
+          do {
+            next = Math.floor(Math.random() * LOADING_MESSAGES.length);
+          } while (next === indexRef.current && LOADING_MESSAGES.length > 1);
+          indexRef.current = next;
           charRef.current = 0;
           phaseRef.current = "typing";
           break;
@@ -149,12 +141,15 @@ export default function ImportRoute(): React.ReactElement {
               </div>
               <FieldError>{error?.message}</FieldError>
             </Field>
-            <Button disabled={formState.isSubmitting} size="lg" className="w-full">
+            <Button disabled={formState.isSubmitting} size="lg" className={`w-full ${formState.isSubmitting ? "relative overflow-hidden" : ""}`}>
+              {formState.isSubmitting && (
+                <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              )}
               {formState.isSubmitting ? <LoaderCircleIcon className="size-5 animate-spin" /> : <CloudDownloadIcon className="size-5" />}
-              Import
+              {formState.isSubmitting ? "Importing..." : "Import"}
             </Button>
             {formState.isSubmitting && (
-              <p className="text-muted-foreground h-6 text-center text-sm">
+              <p className="h-6 text-center text-sm">
                 {loadingText}
                 <span className="inline-block w-px animate-pulse">|</span>
               </p>
