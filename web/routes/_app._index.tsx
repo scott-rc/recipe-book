@@ -1,11 +1,12 @@
 import { useActionForm } from "@gadgetinc/react";
-import { EllipsisVerticalIcon, ExternalLinkIcon, LoaderCircleIcon, PencilIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
+import { EllipsisVerticalIcon, ExternalLinkIcon, HeartIcon, LoaderCircleIcon, PencilIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
 import type { ReactElement } from "react";
-import { href, useNavigate } from "react-router";
+import { href, useNavigate, useRevalidator } from "react-router";
 import { Form, Link, useSearchParams } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
 import { api } from "../api";
+import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from "../components/ui/menubar";
 import { cn } from "../lib/utils";
@@ -20,9 +21,11 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     api.recipe.findMany({
       ...(searchQuery ? { search: searchQuery } : {}),
       ...(categoryFilter ? { filter: { categoryId: { equals: categoryFilter } } } : {}),
+      sort: [{ favourite: "Ascending" }, { slug: "Ascending" }],
       select: {
         category: { id: true, name: true },
         cookTime: true,
+        favourite: true,
         id: true,
         images: {
           edges: {
@@ -154,13 +157,40 @@ export default function IndexRoute({ loaderData: { recipes, categories } }: Rout
                     <span className={cn("line-clamp-none leading-tight font-semibold @xs:text-xl @sm:text-2xl")}>{recipe.name}</span>
                     {recipe.category && <span className="text-muted-foreground text-xs">{recipe.category.name}</span>}
                   </div>
-                  <RecipeMenu recipe={recipe} />
+                  <div className="flex items-center">
+                    <FavouriteButton recipe={recipe} />
+                    <RecipeMenu recipe={recipe} />
+                  </div>
                 </div>
               </div>
             </Link>
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function FavouriteButton({ recipe }: { recipe: Recipe }): ReactElement {
+  const revalidator = useRevalidator();
+
+  return (
+    <div
+      onClick={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+      }}
+    >
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={async () => {
+          await api.recipe.update(recipe.id, { favourite: !recipe.favourite });
+          revalidator.revalidate();
+        }}
+      >
+        <HeartIcon className={cn("size-4", recipe.favourite && "fill-current text-red-500")} />
+      </Button>
     </div>
   );
 }

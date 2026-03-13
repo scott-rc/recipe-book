@@ -29,6 +29,11 @@ export const schema: GadgetModel = {
       storageKey: "c68ekFKb1SNv",
       filterIndex: false,
     },
+    favourite: {
+      type: "boolean",
+      default: false,
+      storageKey: "qR7kFavBool1",
+    },
     images: {
       type: "hasMany",
       children: { model: "image", belongsToField: "recipe" },
