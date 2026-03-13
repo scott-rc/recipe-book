@@ -112,17 +112,17 @@ function useTypewriter(active: boolean): string {
 
 export default function ImportRoute(): React.ReactElement {
   const navigate = useNavigate();
-  const [succeeded, setSucceeded] = useState(false);
+  const succeededRef = useRef(false);
 
   const { register, submit, formState, error } = useActionForm(api.import, {
-    onSuccess: (data) => {
-      setSucceeded(true);
+    onSuccess: async (data) => {
+      succeededRef.current = true;
       const { slug } = z.object({ slug: z.string() }).parse(data);
-      navigate(href("/r/:slug", { slug }), { replace: true });
+      await navigate(href("/r/:slug", { slug }), { replace: true });
     },
   });
 
-  const blocker = useBlocker(formState.isSubmitting && !succeeded);
+  const blocker = useBlocker(() => formState.isSubmitting && !succeededRef.current);
   const loadingText = useTypewriter(formState.isSubmitting);
 
   return (
@@ -137,13 +137,17 @@ export default function ImportRoute(): React.ReactElement {
             <Field>
               <div className="relative">
                 <LinkIcon className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
-                <Input className="py-6 pl-9 text-base" required placeholder="https://..." {...register("source")} />
+                <Input className="py-6 pl-9 text-base" required placeholder="https://..." autoFocus {...register("source")} />
               </div>
               <FieldError>{error?.message}</FieldError>
             </Field>
-            <Button aria-disabled={formState.isSubmitting} size="lg" className={`w-full ${formState.isSubmitting ? "relative overflow-hidden" : ""}`}>
+            <Button
+              aria-disabled={formState.isSubmitting}
+              size="lg"
+              className={`w-full ${formState.isSubmitting ? "relative overflow-hidden" : ""}`}
+            >
               {formState.isSubmitting && (
-                <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <span className="animate-shimmer absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
               )}
               {formState.isSubmitting ? <LoaderCircleIcon className="size-5 animate-spin" /> : <CloudDownloadIcon className="size-5" />}
               {formState.isSubmitting ? "Importing..." : "Import"}
@@ -157,7 +161,7 @@ export default function ImportRoute(): React.ReactElement {
           </Form>
         </CardContent>
       </Card>
-      <AlertDialog open={blocker.state === "blocked" && formState.isSubmitting}>
+      <AlertDialog open={blocker.state === "blocked"}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure you want to leave?</AlertDialogTitle>
