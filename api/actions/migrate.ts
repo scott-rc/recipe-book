@@ -1,4 +1,4 @@
-import { logger, type ActionOptions, type MigrateGlobalActionContext } from "gadget-server";
+import { type ActionOptions, type MigrateGlobalActionContext, logger } from "gadget-server";
 
 export const options: ActionOptions = {
   timeoutMS: 900000,
@@ -8,10 +8,10 @@ export async function run({ api }: MigrateGlobalActionContext): Promise<void> {
   let recipes = await api.actAsAdmin.recipe.findMany({
     first: 10,
     select: {
-      id: true,
-      name: true,
-      ingredients: true,
       directions: true,
+      id: true,
+      ingredients: true,
+      name: true,
       nutrition: true,
     },
   });
@@ -22,8 +22,8 @@ export async function run({ api }: MigrateGlobalActionContext): Promise<void> {
       logger.info({ id: recipe.id, name: recipe.name }, "migrating recipe");
 
       await api.actAsAdmin.internal.recipe.update(recipe.id, {
-        ingredientsV2: typeof recipe.ingredients === "string" ? recipe.ingredients : (recipe.ingredients as string[]).join("\n- "),
         directionsV2: typeof recipe.directions === "string" ? recipe.directions : (recipe.directions as string[]).join("\n- "),
+        ingredientsV2: typeof recipe.ingredients === "string" ? recipe.ingredients : (recipe.ingredients as string[]).join("\n- "),
         nutritionV2: recipe.nutrition
           ? typeof recipe.nutrition === "string"
             ? recipe.nutrition

@@ -1,4 +1,4 @@
-import { applyParams, save, type ResetPasswordUserActionContext } from "gadget-server";
+import { type ResetPasswordUserActionContext, applyParams, save } from "gadget-server";
 
 export const options = {
   actionType: "custom",

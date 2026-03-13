@@ -1,10 +1,10 @@
-import { applyParams, save, type ActionOptions, type SignInUserActionContext } from "gadget-server";
+import { type ActionOptions, type SignInUserActionContext, applyParams, save } from "gadget-server";
 
 export const options: ActionOptions = {
   actionType: "update",
   triggers: {
-    googleOAuthSignIn: true,
     emailSignIn: true,
+    googleOAuthSignIn: true,
   },
 };
 
@@ -14,6 +14,6 @@ export async function run({ params, record, session }: SignInUserActionContext):
 
   await save(record);
 
-  // associate the current user record with the active session
+  // Associate the current user record with the active session
   session?.set("user", { _link: record.id });
 }

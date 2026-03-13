@@ -1,4 +1,4 @@
-import { applyParams, save, type ActionOptions, type VerifyEmailUserActionContext } from "gadget-server";
+import { type ActionOptions, type VerifyEmailUserActionContext, applyParams, save } from "gadget-server";
 
 export const options: ActionOptions = {
   actionType: "custom",

@@ -6,7 +6,7 @@ export const options: ActionOptions = {
 };
 
 export async function run({ record, params, logger }: DeleteRecipeActionContext): Promise<void> {
-  logger.debug({ record, params }, "deleting recipe");
+  logger.debug({ params, record }, "deleting recipe");
   await preventCrossUserDataAccess(params, record);
   await deleteRecord(record);
 }

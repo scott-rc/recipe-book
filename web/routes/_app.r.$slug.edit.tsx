@@ -1,4 +1,4 @@
-import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
+import { DndContext, type DragEndEvent, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useForm } from "@gadgetinc/react";
@@ -6,6 +6,7 @@ import { ClockIcon, GripVerticalIcon, ImageIcon, ImagePlusIcon, InfoIcon, Loader
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useBlocker } from "react-router";
 import { toast } from "sonner";
+
 import { api } from "../api";
 import {
   AlertDialog,
@@ -22,18 +23,18 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSet }
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { formatTimeForInput, getTimePreview, parseTimeString } from "../lib/time-utils";
-import { useImageManager, type ImageItem } from "../lib/use-image-manager";
+import { type ImageItem, useImageManager } from "../lib/use-image-manager";
 import { cn } from "../lib/utils";
 import { useRecipe } from "./_app.r.$slug";
 
 // Components
 function SortableImageItem({ image, onDelete, disabled }: { image: ImageItem; onDelete: (id: string) => void; disabled?: boolean }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: image.id, disabled });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ disabled, id: image.id });
 
   const style = {
+    opacity: isDragging ? 0.5 : 1,
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
   };
 
   return (
@@ -80,14 +81,14 @@ export default function EditRecipeRoute() {
   // Initialize form with properly formatted time values
   const form = useForm({
     defaultValues: {
-      name: recipe.name,
-      servingSize: recipe.servingSize,
-      source: recipe.source ?? "",
-      ingredients: typeof recipe.ingredients === "string" ? recipe.ingredients : "",
+      cookTime: formatTimeForInput(recipe.cookTime),
       directions: typeof recipe.directions === "string" ? recipe.directions : "",
+      ingredients: typeof recipe.ingredients === "string" ? recipe.ingredients : "",
+      name: recipe.name,
       nutrition: recipe.nutrition ?? "",
       prepTime: formatTimeForInput(recipe.prepTime),
-      cookTime: formatTimeForInput(recipe.cookTime),
+      servingSize: recipe.servingSize,
+      source: recipe.source ?? "",
     },
   });
 
@@ -134,22 +135,16 @@ export default function EditRecipeRoute() {
     setIsSubmitting(true);
     try {
       await api.recipe.update(recipe.id, {
-        name: data.name,
-        prepTime: prepTimeMs,
         cookTime: cookTimeMs,
-        servingSize: data.servingSize,
-        source: data.source,
-        ingredients: data.ingredients,
         directions: data.directions,
-        nutrition: data.nutrition,
         images: [
           {
             _converge: {
               values: images.map((image) =>
                 image.uploadFile
                   ? {
-                      index: image.index,
                       file: { file: image.uploadFile },
+                      index: image.index,
                     }
                   : {
                       id: image.id,
@@ -159,6 +154,12 @@ export default function EditRecipeRoute() {
             },
           },
         ],
+        ingredients: data.ingredients,
+        name: data.name,
+        nutrition: data.nutrition,
+        prepTime: prepTimeMs,
+        servingSize: data.servingSize,
+        source: data.source,
       });
 
       // Reset form with the current values to mark as not dirty
@@ -363,7 +364,9 @@ export default function EditRecipeRoute() {
                         {...form.register("prepTime", {
                           required: "Prep time is required",
                           validate: (value) => {
-                            if (!value.trim()) return "Prep time is required";
+                            if (!value.trim()) {
+                              return "Prep time is required";
+                            }
                             const parsed = parseTimeString(value);
                             if (parsed === undefined) {
                               return "Invalid format. Use formats like '5m', '1h 30m', '45s', etc.";
@@ -391,7 +394,9 @@ export default function EditRecipeRoute() {
                         {...form.register("cookTime", {
                           required: "Cook time is required",
                           validate: (value) => {
-                            if (!value.trim()) return "Cook time is required";
+                            if (!value.trim()) {
+                              return "Cook time is required";
+                            }
                             const parsed = parseTimeString(value);
                             if (parsed === undefined) {
                               return "Invalid format. Use formats like '5m', '1h 30m', '45s', etc.";

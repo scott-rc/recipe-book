@@ -1,4 +1,4 @@
-import { applyParams, save, type ChangePasswordUserActionContext } from "gadget-server";
+import { type ChangePasswordUserActionContext, applyParams, save } from "gadget-server";
 
 export const options = {
   actionType: "update",

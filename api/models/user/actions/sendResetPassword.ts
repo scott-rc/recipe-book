@@ -1,4 +1,4 @@
-import { applyParams, Config, DefaultEmailTemplates, save, type SendResetPasswordUserActionContext } from "gadget-server";
+import { Config, DefaultEmailTemplates, type SendResetPasswordUserActionContext, applyParams, save } from "gadget-server";
 import { z } from "zod";
 
 export const options = {
@@ -32,8 +32,8 @@ export async function onSuccess({ params, record, emails, logger }: SendResetPas
 
   // Sends link to user
   await emails.sendMail({
-    to: record.email,
-    subject: `Reset password request from ${Config.appName}`,
     html: DefaultEmailTemplates.renderResetPasswordTemplate({ url: url.toString() }),
+    subject: `Reset password request from ${Config.appName}`,
+    to: record.email,
   });
 }

@@ -1,4 +1,4 @@
-import { ActionOptions, applyParams, save } from "gadget-server";
+import { type ActionOptions, applyParams, save } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
 
 export const options: ActionOptions = {

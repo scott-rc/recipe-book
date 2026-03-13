@@ -1,8 +1,9 @@
 import { ChefHatIcon, Clock, ListIcon, LockIcon, LockOpenIcon, ScaleIcon, Users } from "lucide-react";
 import ms from "ms";
-import { useEffect, useState, type ReactElement } from "react";
+import { type ReactElement, useEffect, useState } from "react";
+
 import { Markdown } from "../components/markdown";
-import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
+import { Carousel, type CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
 import { Dialog, DialogContent } from "../components/ui/dialog";
 import { Label } from "../components/ui/label";
 import { Skeleton } from "../components/ui/skeleton";
@@ -10,7 +11,7 @@ import { Switch } from "../components/ui/switch";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../components/ui/tooltip";
 import { cn } from "../lib/utils";
 import { RecipeMenu } from "./_app._index";
-import { useRecipe, type Recipe } from "./_app.r.$slug";
+import { type Recipe, useRecipe } from "./_app.r.$slug";
 
 export default function RecipeIndexRoute() {
   const { recipe } = useRecipe();
@@ -23,14 +24,14 @@ export default function RecipeIndexRoute() {
   if (!images.length) {
     images = [
       {
+        alt: "Placeholder",
+        file: { mimeType: "image/svg+xml", url: "/placeholder.svg" },
+        height: 500,
         id: "placeholder",
+        index: 0,
         src: "/placeholder.svg",
         userId: null,
-        height: 500,
         width: 500,
-        index: 0,
-        file: { url: "/placeholder.svg", mimeType: "image/svg+xml" },
-        alt: "Placeholder",
       },
     ];
   }

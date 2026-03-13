@@ -1,4 +1,4 @@
-import { applyParams, save, type ActionOptions, type UpdateUserActionContext } from "gadget-server";
+import { type ActionOptions, type UpdateUserActionContext, applyParams, save } from "gadget-server";
 
 export const options: ActionOptions = {
   actionType: "update",

@@ -1,4 +1,4 @@
-import { deleteRecord, type DeleteUserActionContext } from "gadget-server";
+import { type DeleteUserActionContext, deleteRecord } from "gadget-server";
 
 export const options = {
   actionType: "delete",

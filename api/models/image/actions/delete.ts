@@ -1,4 +1,4 @@
-import { ActionOptions, deleteRecord } from "gadget-server";
+import { type ActionOptions, deleteRecord } from "gadget-server";
 import { preventCrossUserDataAccess } from "gadget-server/auth";
 
 export const options: ActionOptions = {

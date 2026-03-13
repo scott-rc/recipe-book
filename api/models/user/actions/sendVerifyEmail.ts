@@ -1,5 +1,5 @@
 // Powers the sign up flow, this action is called from api/models/user/actions/signUp.js
-import { applyParams, Config, DefaultEmailTemplates, save, type SendVerifyEmailUserActionContext } from "gadget-server";
+import { Config, DefaultEmailTemplates, type SendVerifyEmailUserActionContext, applyParams, save } from "gadget-server";
 import { z } from "zod";
 
 export const options = {
@@ -34,8 +34,8 @@ export async function onSuccess({ params, record, logger, emails }: SendVerifyEm
 
   // Sends link to user
   await emails.sendMail({
-    to: record.email,
-    subject: `Verify your email with ${Config.appName}`,
     html: DefaultEmailTemplates.renderVerifyEmailTemplate({ url: url.toString() }),
+    subject: `Verify your email with ${Config.appName}`,
+    to: record.email,
   });
 }

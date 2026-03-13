@@ -1,11 +1,11 @@
-import { applyParams, save, type ActionOptions, type SignUpUserActionContext } from "gadget-server";
+import { type ActionOptions, type SignUpUserActionContext, applyParams, save } from "gadget-server";
 
 export const options: ActionOptions = {
   actionType: "create",
   returnType: true,
   triggers: {
-    googleOAuthSignUp: true,
     emailSignUp: true,
+    googleOAuthSignUp: true,
   },
 };
 
@@ -15,14 +15,14 @@ export async function run({ params, record, session }: SignUpUserActionContext):
   await save(record);
 
   if (record.emailVerified) {
-    // associate the current user record with the active session
+    // Associate the current user record with the active session
     session?.set("user", { _link: record.id });
   }
 }
 
 export async function onSuccess({ record, api }: SignUpUserActionContext): Promise<void> {
   if (!record.emailVerified) {
-    // send the user a verification email if they have not yet verified
+    // Send the user a verification email if they have not yet verified
     await api.user.sendVerifyEmail({ email: record.email });
   }
 }

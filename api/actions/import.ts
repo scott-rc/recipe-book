@@ -1,5 +1,6 @@
-import { type ActionOptions, type ImportGlobalActionContext } from "gadget-server";
+import type { ActionOptions, ImportGlobalActionContext } from "gadget-server";
 import { z } from "zod";
+
 import { importRecipe } from "../lib/import";
 
 export const options: ActionOptions = {
@@ -24,8 +25,6 @@ export async function run({ params, session, api }: ImportGlobalActionContext): 
   const recipeParameters = await importRecipe(source);
   const recipe = await api.recipe.create({
     ...recipeParameters,
-    user: { _link: userId },
-    source,
     images: recipeParameters.images.map((image) => ({
       create: {
         alt: image.alt,
@@ -36,6 +35,8 @@ export async function run({ params, session, api }: ImportGlobalActionContext): 
         width: image.width,
       },
     })),
+    source,
+    user: { _link: userId },
   });
 
   return { slug: recipe.slug };
