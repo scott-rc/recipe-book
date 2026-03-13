@@ -89,7 +89,7 @@ function extractImagesFromMarkdown(markdown: string): RecipeImage[] {
   const images: RecipeImage[] = [];
 
   for (const match of markdown.matchAll(imagePattern)) {
-    if (match[1] != null && match[2] != null) {
+    if (match[1] !== undefined && match[2] !== undefined) {
       images.push({ alt: match[1], src: match[2] });
     }
   }
