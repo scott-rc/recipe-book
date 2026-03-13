@@ -21,7 +21,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     api.recipe.findMany({
       ...(searchQuery !== null && searchQuery !== "" ? { search: searchQuery } : {}),
       ...(categoryFilter !== null && categoryFilter !== "" ? { filter: { categoryId: { equals: categoryFilter } } } : {}),
-      sort: [{ favourite: "Ascending" }, { slug: "Ascending" }],
+      sort: [{ favourite: "Descending" }, { slug: "Ascending" }],
       select: {
         category: { id: true, name: true },
         cookTime: true,
